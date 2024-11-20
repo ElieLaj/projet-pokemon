@@ -1,0 +1,34 @@
+<div class="battle">
+    <div class="battle-screen">
+        <div class="battle-screen__monsters">
+            <div class="battle-screen__player">
+                <app-monster [monster]="playerMonster"></app-monster>
+            </div>
+            <div class="battle-screen__enemy">
+                <app-monster [monster]="enemyMonster" [isPlayer]="false"></app-monster>
+            </div>
+        </div>
+        <div class="battle-screen__actions">
+            @if (playerAction === null && dialogues.length === 0) {
+                <button (click)="setAction(ActionType.Attack)">Attack</button>
+            }
+            @if (playerAction === ActionType.Attack) {
+                <div class="battle-screen__attack-options">
+                    @for (attack of playerMonster.attacks; track attack.name) {
+                        <button (click)="playerSelectAttack = attack; enemyAction = ActionType.Attack">{{ attack.name }}</button>
+                    }
+                </div>
+                <button (click)="playerAction = null">Cancel</button>
+            }
+        </div>
+        @if (playerMonster.hp <= 0) {
+           <h2>Game Over</h2>
+        }
+        @else if (enemyMonster.hp <= 0) {
+            <h2>Victory</h2>
+        }
+        <div class="battle-screen__log">
+            <app-dialogue [dialogues]="dialogues" (next)="dialogues=$event"></app-dialogue>
+        </div>
+    </div>
+</div>

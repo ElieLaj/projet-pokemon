@@ -1,0 +1,21 @@
+<div class="monster">
+    <img class="monster__image" [src]="monsterImage" alt="{{ monster.name }}">
+    <div class="monster__details">
+        <h2 class="monster__name">{{ monster.name }}</h2>
+        <div class="monster__stats">
+            <div class="monster__stat">
+                <span>HP:</span> 
+                <span>{{ monster.hp }} / {{ monster.maxHp }}</span>
+                <div class="monster__hp-bar-container">
+                    <div class="monster__hp-bar" [style]="{width: healthBarClass, background: healthColor}"></div>
+                </div>
+            </div>
+            <div class="monster__stat">
+                <span>Attack:</span> <span>{{ monster.attack }}</span>
+            </div>
+            <div class="monster__stat">
+                <span>Speed:</span> <span>{{ monster.speed }}</span>
+            </div>
+        </div>
+    </div>
+</div>
