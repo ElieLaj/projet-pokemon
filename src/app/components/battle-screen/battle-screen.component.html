@@ -14,8 +14,11 @@
             }
             @if (playerAction === ActionType.Attack) {
                 <div class="battle-screen__attack-options">
-                    @for (attack of playerMonster.attacks; track attack.name) {
-                        <button (click)="playerSelectAttack = attack; enemyAction = ActionType.Attack">{{ attack.name }}</button>
+                    @for (pokemonMove of playerMonster.pokemonMoves; track pokemonMove.id) {
+                        <button (click)="playerSelectAttack = pokemonMove.move; enemyAction = ActionType.Attack"
+                        [style.background]="calculateAttackBg(pokemonMove.move.type.name)">
+                            {{ pokemonMove.move.name }}
+                        </button>
                     }
                 </div>
                 <button (click)="playerAction = null">Cancel</button>
