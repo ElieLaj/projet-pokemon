@@ -22,7 +22,6 @@ export class GameComponent implements OnInit {
   enemyMonster!: Monster;
   constructor() {
     this.currentYear = new Date().getFullYear();
-
   }
 
   async ngOnInit() { 

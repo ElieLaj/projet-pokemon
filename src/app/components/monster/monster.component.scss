@@ -11,6 +11,7 @@
     color: #fff;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
     font-family: 'Arial', sans-serif;
+    position: relative;
 
     &__image {
         width: 120px;
@@ -18,13 +19,29 @@
         margin-bottom: 15px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        z-index: 2;
+    }
+    &__hp {
+        width: 100%;
+        font-size: 1rem;
+        margin-bottom: 10px;
     }
 
     &__details {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        position: absolute;
+        top: 130px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+        z-index: 1;
+
+        &.visible {
+            opacity: 1;
+            visibility: visible;
+        }
     }
 
     &__name {

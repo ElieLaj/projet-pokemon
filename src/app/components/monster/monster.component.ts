@@ -12,6 +12,9 @@ export class MonsterComponent implements OnInit {
   @Input() monster!: Monster;
   @Input() isPlayer: boolean = true;
 
+  showStats: boolean = false;
+  pressedShowStats: boolean = false;
+
   monsterImage!: string;
   healthBarClass!: string;
   healthColor!: string;
