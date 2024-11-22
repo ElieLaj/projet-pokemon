@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Monster } from '../../models/monster.model';
 import { MonsterComponent } from '../monster/monster.component';
-import { TurnType, ActionType, calculateAttackBg, calculateDamage, calculateModifier } from '../../utils/game.utils';
+import { TurnType, ActionType, calculateAttackBg, calculateDamage, calculateModifier, triggerEffect } from '../../utils/game.utils';
 import { DialogueComponent } from "../dialogue/dialogue.component";
 import { Move } from '../../models/move.model';
 
@@ -18,12 +18,15 @@ export class BattleScreenComponent implements OnInit {
   @Input() playerMonster!: Monster;
   @Input() enemyMonster!: Monster;
 
-  @Output() playerMonsterChange = new EventEmitter<Monster>();
+  @Output() changeEnemyMonster = new EventEmitter<any>();
+  @Output() playerLost = new EventEmitter<number>();
 
   TurnType = TurnType;
   ActionType = ActionType;
 
   currentTurn: number = 0;
+
+  playerScore: number = 0;
 
   lastTurn!: TurnType;
   turn: TurnType = TurnType.Dialogue;
@@ -55,12 +58,13 @@ export class BattleScreenComponent implements OnInit {
     if (this.playerMonster.hp <= 0 || this.enemyMonster.hp <= 0) {
       if (this.playerMonster.hp <= 0) {
         this.dialogues.push('You lost!');
+        this.playerLost.emit(this.playerScore += 100);
       }
       else {
         this.dialogues.push('You won!');
+        this.changeEnemyMonster.emit();
       }
       this.turn = TurnType.Dialogue;
-      this.playerMonsterChange.emit(this.playerMonster);
     }
 
     else if (this.playerAction != null || this.enemyAction != null) {
@@ -127,41 +131,34 @@ export class BattleScreenComponent implements OnInit {
   }
 
   playerAttack(){    
-    const damage = calculateDamage(this.playerMonster, this.enemyMonster, this.playerSelectedAttack!);
-    const modifier = calculateModifier(this.playerSelectedAttack!.type.name, this.playerMonster.types.map(type => type.name),  this.enemyMonster.types.map(type => type.name));
-
-    this.enemyMonster.hp = Math.max(this.enemyMonster.hp - damage, 0);
+    calculateDamage(this.playerMonster, this.enemyMonster, this.playerSelectedAttack!, this.dialogues);
     
     this.lastTurn = TurnType.Player;
     this.turn = TurnType.Dialogue;
-    
+
     this.playerSelectedAttack = null;
     this.playerAction = null;
     
-    this.dialogues.push(`${this.playerMonster.name} attacked ${this.enemyMonster.name} and dealt ${damage}!`);
-    if (modifier > 1.5) this.dialogues.push('It was super effective!');
-    else if (modifier < 1) this.dialogues.push('It wasn\'t super effective...');
-    if (this.enemyMonster.hp <= 0 ) this.playerMonster.gainEnemyExp(this.enemyMonster);
+    if (this.enemyMonster.hp <= 0 ) {
+      this.playerMonster.gainEnemyExp(this.enemyMonster);
+      this.enemyAction = null;
+      this.enemySelectAttack = null;
+      this.playerScore += 100;
+    }
   }
 
 
   enemyAttack(){
+    console.log(this.enemyMonster);
     this.enemySelectAttack = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
     
-    const modifier = calculateModifier(this.enemySelectAttack!.type.name, this.enemyMonster.types.map(type => type.name),  this.playerMonster.types.map(type => type.name));
+    calculateDamage(this.enemyMonster, this.playerMonster, this.enemySelectAttack!, this.dialogues);
 
-    const damage = calculateDamage(this.enemyMonster, this.playerMonster, this.enemySelectAttack!);
-    this.playerMonster.hp = Math.max(this.playerMonster.hp - damage, 0);
-    
     this.lastTurn = TurnType.Enemy;
     this.turn = TurnType.Dialogue;
 
     this.enemyAction = null;
 
     this.enemySelectAttack = null;
-
-    this.dialogues.push(`${this.enemyMonster.name} attacked ${this.playerMonster.name} and dealt ${damage}!`);
-    if (modifier > 1.5) this.dialogues.push('It was super effective!');
-    else if (modifier < 1) this.dialogues.push('It wasn\'t super effective...');
   }
 }

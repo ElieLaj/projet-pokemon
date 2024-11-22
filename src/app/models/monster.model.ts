@@ -1,3 +1,4 @@
+import { Effect } from "./effect.model";
 import { PokemonMove } from "./pokemonMove.model";
 import { Type } from "./type.model";
 
@@ -29,6 +30,7 @@ export class Monster {
   baseSpeed: number;
   baseHp: number;
 
+  effect: Effect[] = [];
 
   constructor(
     id: number,
@@ -80,8 +82,9 @@ export class Monster {
   }
 
   learnMoves(moves: PokemonMove[]) {
-    moves.sort((a, b) => a.level - b.level);
-    for (const move of moves.splice(moves.length - 5, 4)) {
+    const _moves = [...moves]
+    _moves.sort((a, b) => a.level - b.level);
+    for (const move of _moves.splice(moves.length - 5, 4)) {
       if (this.pokemonMoves.length< 4 && move && this.level >= move.level ) {
         this.pokemonMoves.push(move);
       }

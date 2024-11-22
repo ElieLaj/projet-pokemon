@@ -51,7 +51,20 @@
               </select>
           </div>
 
-          <button type="submit" [disabled]="addPokemonForm.invalid">Add Move</button>
+          <div>
+            <label for="effect">Effect</label>
+            <select name="effect" id="effect" formControlName="effect">
+              @for (effect of effects; track effect.id) {
+                <option value="{{effect.name}}">{{effect.name}}</option>}
+            </select>
+          </div>
+
+          <div>
+              <label for="effectChance">Effect Chance</label>
+              <input type="number" id="effectChance" formControlName="odds">
+          </div>
+
+          <button type="submit" [disabled]="addMoveForm.invalid">Add Move</button>
         </form>
       </section>
 
@@ -124,6 +137,41 @@
         </form>
       </section>
       @if (createdPokemon) { <app-monster [monster]="createdPokemon"></app-monster> }
+
+      <section id="addAttack" class="form-section">
+        <h1>Add Attack to Pokémon</h1>
+        <form [formGroup]="addAttackForm" (ngSubmit)="addAttack()">
+          <app-pokemon-display
+                  [monsters]="monsters" 
+                  [maxPokemonSize]="'small'"
+                  [maxContainerWidth]="'100%'"
+                  [maxContainerHeight]="'400px'"
+                  (selectMonster)="updateAddAttackForm($event)"
+                ></app-pokemon-display>
+
+          <div>
+            <label for="move">Select Move</label>
+            <select id="move" formControlName="move">
+              @for (move of moves; track move.id) {
+                <option value="{{move.name}}">
+                  {{ move.name }}
+                </option>}
+            </select>
+          </div>
+
+          <div>
+            <label for="level">Learning Level</label>
+            <input
+              type="number"
+              id="level"
+              formControlName="level"
+              placeholder="Enter level (e.g., 5)"
+            />
+          </div>
+
+          <button type="submit" [disabled]="addAttackForm.invalid">Add Attack</button>
+        </form>
+      </section>
     </div>
     }
     <button class="toggle-form" (click)="toggleForm('put')">
@@ -169,6 +217,19 @@
                     @for (category of categories; track category.id) {
                       <option value="{{category.name}}" [style.color]="calculateAttackBg(category.name)">{{category.name}}</option>}
                   </select>
+                </div>
+
+                <div>
+                  <label for="effect">Effect</label>
+                  <select name="effect" id="effectUpdate" formControlName="effect">
+                    @for (effect of effects; track effect.id) {
+                      <option value="{{effect.name}}">{{effect.name}}</option>}
+                  </select>
+                </div>
+
+                <div>
+                  <label for="effectChance">Effect Chance</label>
+                  <input type="number" id="effectChance" formControlName="odds">
                 </div>
 
                 <button type="submit" [disabled]="changeMoveForm.invalid">Update Move</button>

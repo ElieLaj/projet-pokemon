@@ -22,8 +22,8 @@
         </div>
     }
     <div class="monster__details" 
-        [class.visible]="showStats"
-        [class.hidden]="!showStats"
+        [class.visible]="showStats && showDetails"
+        [class.hidden]="!showStats || !showDetails"
         [style.top]="detailsPosition"
     >
         <h2 class="monster__name" [style.font-size]="nameSize">{{ monster.name }}</h2>

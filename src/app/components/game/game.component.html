@@ -1,10 +1,17 @@
 @if(startBattle){
-    <app-battle-screen [playerMonster]="playerMonster" [enemyMonster]="enemyMonster" ></app-battle-screen>
+    <app-battle-screen 
+        [playerMonster]="playerMonster" [enemyMonster]="enemyMonster"
+        (changeEnemyMonster)="nextMonster()"
+        (playerLost)="gameOver($event)"
+    />
 }
 @else {
     <div class="game-start-screen">
         <div class="game-start-screen__content">
             <h1>Monster Battle Arena</h1>
+            @if (lastScore) {
+                <h1>Your last score was: {{ lastScore }}</h1>
+            }
             <p>Prepare your monster and enter the ultimate battle arena!</p>
             <button (click)="startBattle = true">Start Battle</button>
         </div>
@@ -13,7 +20,8 @@
                 <app-monster 
                     [monster]="monster" 
                     [active]="playerMonster.id == monster.id || hoverMonster== monster.id" 
-                    [isPlayer]="false" (click)="playerMonster = monster"
+                    [isPlayer]="false"
+                    (click)="playerSelectMonster(monster)"
                     (mouseover)="hoverMonster = monster.id" 
                     (mouseout)="hoverMonster = null"
                 />

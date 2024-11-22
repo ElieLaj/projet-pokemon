@@ -86,7 +86,8 @@
     transition: all 0.3s ease-in-out;
     padding: 20px;
     overflow: auto;
-    max-height: 50vh;
+    height: fit-content;
+    max-height: 70vh;
     &::-webkit-scrollbar {
             width: 8px;
             height: 8px;

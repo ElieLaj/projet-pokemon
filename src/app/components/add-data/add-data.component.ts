@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { api } from '../../../plugins/api';
 import { FormGroup, Validators, ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 import { Type } from '../../models/type.model';
@@ -10,6 +10,7 @@ import { MonsterComponent } from '../monster/monster.component';
 import { Move } from '../../models/move.model';
 import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
 import { Category } from '../../models/category.model';
+import { Effect } from '../../models/effect.model';
 
 
 @Component({
@@ -41,9 +42,11 @@ export class AddDataComponent implements OnInit {
   types: Type[] = [];
   categories: Category[]= [];
   moves: Move[] = [];
+  effects: Effect[] = [];
 
   selectedMove: Move | null = null;
-  selectedPokemon: MonsterDTO | null = null;
+  selectedPokemonChange: MonsterDTO | null = null;
+  selectedPokemonAddAttack: MonsterDTO | null = null;
 
   postForms = true;
   putForms = true;
@@ -52,6 +55,7 @@ export class AddDataComponent implements OnInit {
   addPokemonForm: FormGroup;
   changeMoveForm: FormGroup;
   changePokemonForm: FormGroup;
+  addAttackForm: FormGroup;
 
   createdPokemon: Monster | null = null;
   monsters: MonsterDTO[] = [];
@@ -63,7 +67,9 @@ export class AddDataComponent implements OnInit {
       power: ['', [Validators.required]],
       accuracy: ['', [Validators.required]],
       type: ['', [Validators.required]],
-      category: ['', [Validators.required]]
+      category: ['', [Validators.required]],
+      effect: [''],
+      odds: ['']
     });
 
     this.addPokemonForm = this.fb.group({
@@ -85,7 +91,9 @@ export class AddDataComponent implements OnInit {
       power: ['', [Validators.required]],
       accuracy: ['', [Validators.required]],
       type: ['', [Validators.required]],
-      category: ['', [Validators.required]]
+      category: ['', [Validators.required]],
+      effect: [''],
+      odds: ['']
     });
 
     this.changePokemonForm = this.fb.group({
@@ -99,6 +107,11 @@ export class AddDataComponent implements OnInit {
       expRate: ['', [Validators.required]],
       type1: ['', [Validators.required]],
       type2: [''],
+    });
+
+     this.addAttackForm = this.fb.group({
+      move: ['', [Validators.required]],
+      level: ['', [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -116,6 +129,10 @@ export class AddDataComponent implements OnInit {
     await this.fetchCategories().then((categories: Category[]) => {
       this.categories = categories;
     });
+
+    await this.fetchEffects().then((effects: Effect[]) => {
+      this.effects = effects;
+    });
   }
 
   updateChangePokemonForm(monster: MonsterDTO) {
@@ -131,8 +148,12 @@ export class AddDataComponent implements OnInit {
           type1: monster.types[0].name,
           type2: monster.types[1]?.name
         });
-    this.selectedPokemon = monster;
-    console.log(this.selectedPokemon);
+    this.selectedPokemonChange = monster;
+    console.log(this.selectedPokemonChange);
+  }
+
+  updateAddAttackForm(monster: MonsterDTO) {
+    this.selectedPokemonAddAttack = monster
   }
 
   updateChangeMoveForm() {
@@ -143,7 +164,8 @@ export class AddDataComponent implements OnInit {
       power: move.power,
       accuracy: move.accuracy,
       type: move.type.name,
-      category: move.category?.name
+      category: move.category?.name,
+      effect: move.moveEffects[0]?.effect.name
     });
     this.selectedMove = move;
   }
@@ -170,6 +192,11 @@ export class AddDataComponent implements OnInit {
 
   async fetchTypes() {
     const response = await api.get('/type');
+    return response.data;
+  }
+
+  async fetchEffects() {
+    const response = await api.get('/effect');
     return response.data;
   }
 
@@ -207,10 +234,15 @@ export class AddDataComponent implements OnInit {
       power: this.addMoveForm.get('power')?.value,
       accuracy: this.addMoveForm.get('accuracy')?.value,
       type: this.addMoveForm.get('type')?.value,
-      category: this.addMoveForm.get('category')?.value
+      category: this.addMoveForm.get('category')?.value,
+      effect: this.addMoveForm.get('effect')?.value,
+      odds: this.addMoveForm.get('odds')?.value
     };
 
-    await api.post('/move', move);
+    const response = await api.post('/move', move);
+    if (response.status === 200) {
+      this.addMoveForm.reset();
+    }
   }
 
   async changePokemon() {
@@ -227,10 +259,10 @@ export class AddDataComponent implements OnInit {
     };
     this.changePokemonForm.get('type2')?.value ? pokemon.typeName.push(this.changePokemonForm.get('type2')?.value) : null;
 
-    const response = await api.put(`/pokemon/${this.selectedPokemon?.id}`, pokemon);
+    const response = await api.put(`/pokemon/${this.selectedPokemonChange?.id}`, pokemon);
     if (response.status === 200) {
       this.changePokemonForm.reset();
-      this.selectedPokemon = response.data;
+      this.selectedPokemonChange = response.data;
     }
   }
 
@@ -240,13 +272,28 @@ export class AddDataComponent implements OnInit {
       power: this.changeMoveForm.get('power')?.value,
       accuracy: this.changeMoveForm.get('accuracy')?.value,
       type: this.changeMoveForm.get('type')?.value,
-      category: this.changeMoveForm.get('category')?.value
+      category: this.changeMoveForm.get('category')?.value,
+      effect: this.changeMoveForm.get('effect')?.value,
+      odds: this.changeMoveForm.get('odds')?.value
     }
 
     const response = await api.patch(`/move/${this.selectedMove?.id}`, move);
     if (response.status === 200) {
       this.changeMoveForm.reset();
       this.selectedMove = response.data;
+    }
+  }
+
+  async addAttack() {
+    const attack = {
+      pokemonName: this.selectedPokemonAddAttack?.name,
+      moveName: this.addAttackForm.get('move')?.value,
+      level: this.addAttackForm.get('level')?.value,
+    };
+    console.log(attack);
+    const response = await api.post('/pokemon_move', attack);
+    if (response.status === 200) {
+      this.addAttackForm.reset();
     }
   }
 }

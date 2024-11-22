@@ -23,6 +23,8 @@ export class GameComponent implements OnInit {
   monsters: Monster[] = [];
   hoverMonster: number | null = null;
 
+  lastScore: number = 0;
+
   playerMonster!: Monster;
   enemyMonster!: Monster;
 
@@ -37,13 +39,28 @@ export class GameComponent implements OnInit {
       this.monstersDTO = monsters;
     });
     this.monsters = transformManyPokemonDTO(this.monstersDTO);
-    this.playerMonster = this.monsters[0];
-    this.enemyMonster = this.monsters[1];
+    const enemyIndex = Math.floor(Math.random() * (this.monsters.length - 1));
+    this.playerMonster = this.enemyMonster = new Monster(this.monsters[0].id, this.monsters[0].name, this.monsters[0].baseHp, this.monsters[0].baseAttack, this.monsters[0].baseDefense, this.monsters[0].baseSpecialAttack, this.monsters[0].baseSpecialDefense, this.monsters[0].baseSpeed, this.monsters[0].expRate, this.monsters[0].pokemonMoves, this.monsters[0].types, this.monsters[0].level);;
+    this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
 
     await this.fetchMoves().then((moves: Move[]) => {
       this.moves = moves;
     });
 
+  }
+
+  gameOver(score: number) {
+    this.startBattle = false;
+    this.lastScore = score;
+  }
+
+  nextMonster() {
+    const enemyIndex = Math.floor(Math.random() * (this.monsters.length - 1));
+    this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
+  }
+
+  playerSelectMonster(monster: Monster) {
+    this.playerMonster = new Monster(monster.id, monster.name, monster.baseHp, monster.baseAttack, monster.baseDefense, monster.baseSpecialAttack, monster.baseSpecialDefense, monster.baseSpeed, monster.expRate, monster.pokemonMoves, monster.types, monster.level);
   }
 
 async addSelectedMove() {

@@ -60,8 +60,9 @@ export const calculateModifier = (attackingType: string, pokemonTypes: string[],
 export const calculateDamage = (
   pokemon: Monster,
   enemy: Monster,
-  move: Move
-): number => {
+  move: Move,
+  dialogues: string[]
+) => {
   const stat = move.category.name === MoveCategory.Physical ? pokemon.attack : pokemon.specialAttack;
   const enemyStat = move.category.name === MoveCategory.Physical ? enemy.defense : enemy.specialDefense;
 
@@ -71,8 +72,63 @@ export const calculateDamage = (
     (((((pokemon.level * 0.4 + 2) * stat * move.power) / enemyStat) / 50) + 2)
   );
 
-  return Math.floor(baseDamage * modifier * (Math.random() * 0.15 + 0.85));
+  const damage = Math.floor(baseDamage * modifier * (Math.random() * 0.15 + 0.85));
+  enemy.hp = Math.max(enemy.hp - damage, 0);
 
+  if (modifier === 0) dialogues.push(`${pokemon.name} used ${move.name}, but it had no effect on ${enemy.name}!`);
+  else dialogues.push(`${pokemon.name} used ${move.name} on ${enemy.name} and dealt ${damage}!`);
+
+
+  if (enemy.hp <= 0) {
+    dialogues.push(`${enemy.name} fainted!`);
+    return;
+  }
+
+  triggerEffect(enemy, move, pokemon, dialogues);
+
+};
+
+export const triggerEffect = (pokemon: Monster, move: Move, enemy: Monster, dialogues: string[]) => {
+  if (move.moveEffects) {
+    switch (move.moveEffects[0]?.effect.name.toLowerCase()) {
+      case 'burnt':
+        dialogues.push('The enemy was burned!');
+        break;
+      case 'paralyze':
+        dialogues.push('The enemy was paralyzed!');
+        break;
+      case 'freeze':
+        dialogues.push('The enemy was frozen!');
+        break;
+      case 'poison':
+        dialogues.push('The enemy was poisoned!');
+        break;
+      case 'sleep':
+        dialogues.push('The enemy fell asleep!');
+        break;
+      case 'confuse':
+        dialogues.push('The enemy was confused!');
+        break;
+      case 'flinch':
+        dialogues.push('The enemy flinched!');
+        break;
+      case 'leechseed':
+        dialogues.push('The enemy was seeded!');
+        break;
+      case 'toxic':
+        dialogues.push('The enemy was badly poisoned!');
+        break;
+      case 'trap':
+        dialogues.push('The enemy was trapped!');
+        break;
+      case 'heal':
+        pokemon.heal(move.power);
+        dialogues.push(`${pokemon.name} healed ${move.power} hp!`);
+        break;
+      default:
+        break;
+    }
+  }
 };
 
 export const calculateAttackBg = (type: string): string => {

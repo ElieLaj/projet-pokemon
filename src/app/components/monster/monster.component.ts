@@ -14,7 +14,7 @@ export class MonsterComponent implements OnInit, OnChanges {
   @Input() isPlayer: boolean = true;
   @Input() active: boolean = false;
   @Input() size: 'small' | 'normal' | 'big' = 'normal';
-
+  @Input() showDetails: boolean = true;
 
   showStats: boolean = false;
 
