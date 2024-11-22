@@ -102,4 +102,20 @@
         height: 100%;
         transition: width 0.5s ease-in-out;
     }
+
+    &__types {
+        display: flex;
+        gap: 5px;
+        margin-top: 10px;
+        justify-content: space-around;
+    }
+
+    &__type {
+        padding: 5px 10px;
+        border-radius: 10px;
+        background: #333;
+        font-size: 0.8rem;
+        text-transform: capitalize;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.9);
+    }
 }

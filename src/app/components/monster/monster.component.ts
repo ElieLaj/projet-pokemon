@@ -25,12 +25,15 @@ export class MonsterComponent implements OnInit {
   expColor!: string;
 
   borderColor!: string;
+  backgroundColor!: string;
+
+  calculateAttackBg = calculateAttackBg;
+
 
   getBorderColor(): string {
     const color = calculateAttackBg(this.monster.types[0].name);
     return this.active ? '4px solid ' + color : '2px solid';
   }
-
 
   getHpBarColor(): string {
     const hpPercentage = this.monster.hp/this.monster.maxHp*100;

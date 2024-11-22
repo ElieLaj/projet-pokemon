@@ -20,6 +20,11 @@
     <div class="monster__details" [class.visible]="showStats">
         <h2 class="monster__name">{{ monster.name }}</h2>
         <div class="monster__stats">
+            <div class="monster__types">
+                @for (type of monster.types; track type.id) {
+                    <span class="monster__type" [style.background]="calculateAttackBg(type.name)">{{ type.name }}</span>
+                }
+            </div>
             <div class="monster__stat">
                 <span>Attack:</span> <span>{{ monster.attack }}</span>
             </div>
