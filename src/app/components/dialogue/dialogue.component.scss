@@ -1,0 +1,82 @@
+.dialogue {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%; /* Ajustez selon la taille souhaitée */
+  max-width: 600px;
+  background-color: #f8f8f8; /* Couleur de fond principale */
+  border: 3px solid #333; /* Bordure sombre */
+  border-radius: 12px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre douce */
+  padding: 16px;
+  font-family: 'Press Start 2P', sans-serif; /* Typographie rétro */
+  z-index: 100; /* Priorité sur d'autres éléments */
+  overflow: hidden;
+}
+
+
+/* Texte de dialogue */
+.dialogue__text {
+  font-size: 16px; /* Taille du texte */
+  color: #222; /* Couleur du texte */
+  margin-bottom: 16px; /* Espacement avec les choix */
+  line-height: 1.5; /* Lisibilité accrue */
+  text-align: left; /* Alignement du texte */
+  animation: dialogueFadeIn 0.5s ease-in-out; /* Animation à l'affichage */
+}
+
+/* Animation pour le texte */
+@keyframes dialogueFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Conteneur des choix */
+.dialogue__choices {
+  display: flex;
+  justify-content: flex-end; /* Alignement à droite */
+  gap: 12px; /* Espacement entre les boutons */
+}
+
+/* Boutons */
+.dialogue__choices button {
+  background-color: #4caf50; 
+  color: white;
+  font-size: 14px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dialogue__choices button:hover {
+  background-color: #45a049; /* Couleur au survol */
+}
+
+.dialogue__choices button:active {
+  background-color: #3e8e41; /* Couleur à l'activation */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dialogue {
+    width: 95%; /* Réduit la largeur sur les petits écrans */
+  }
+
+  .dialogue__text {
+    font-size: 14px; /* Réduction de la taille du texte */
+  }
+
+  .dialogue__choices button {
+    font-size: 12px; /* Texte plus petit */
+    padding: 8px 16px; /* Boutons plus compacts */
+  }
+}

@@ -13,13 +13,7 @@
                 <app-monster [monster]="enemyMonster" [active]="true" [isPlayer]="false"></app-monster>
             </div>
         </div>
-        @if (playerMonster.hp <= 0) {
-           <h2>Game Over</h2>
-        }
-        @else if (enemyMonster.hp <= 0) {
-            <h2>Victory</h2>
-        }
-        <div class="battle-screen__inputs">
+                <div class="battle-screen__inputs">
             <div class="battle-screen__actions">
                 @if (!showMoves && dialogues.length === 0) {
                     <button class="battle-screen__actions-attack" (click)="showMoves = true">Attack</button>
@@ -44,6 +38,12 @@
                 <app-dialogue [dialogues]="dialogues" (next)="dialogues=$event"></app-dialogue>
             </div>
         </div>
+        @if (playerMonster.hp <= 0) {
+           <h2>Game Over</h2>
+        }
+        @else if (enemyMonster.hp <= 0) {
+            <h2>Victory</h2>
+        }
         
     </div>
 </div>

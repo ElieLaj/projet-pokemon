@@ -126,11 +126,10 @@ export class BattleScreenComponent implements OnInit {
     this.lastTurn = TurnType.Player;
   }
 
-  playerAttack(){
-    const modifier = calculateModifier(this.playerSelectedAttack!.type.name, this.playerMonster.types.map(type => type.name), this.enemyMonster.types.map(type => type.name));
-    
-    const damage = calculateDamage(this.playerMonster.level, this.playerSelectedAttack!.power, this.playerMonster.attack, this.enemyMonster.defense, modifier);
-    
+  playerAttack(){    
+    const damage = calculateDamage(this.playerMonster, this.enemyMonster, this.playerSelectedAttack!);
+    const modifier = calculateModifier(this.playerSelectedAttack!.type.name, this.playerMonster.types.map(type => type.name),  this.enemyMonster.types.map(type => type.name));
+
     this.enemyMonster.hp = Math.max(this.enemyMonster.hp - damage, 0);
     
     this.lastTurn = TurnType.Player;
@@ -151,7 +150,7 @@ export class BattleScreenComponent implements OnInit {
     
     const modifier = calculateModifier(this.enemySelectAttack!.type.name, this.enemyMonster.types.map(type => type.name),  this.playerMonster.types.map(type => type.name));
 
-    const damage = calculateDamage(this.enemyMonster.level, this.enemySelectAttack.power, this.enemyMonster.attack, this.playerMonster.defense, modifier);
+    const damage = calculateDamage(this.enemyMonster, this.playerMonster, this.enemySelectAttack!);
     this.playerMonster.hp = Math.max(this.playerMonster.hp - damage, 0);
     
     this.lastTurn = TurnType.Enemy;

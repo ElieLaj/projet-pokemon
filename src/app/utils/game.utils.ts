@@ -2,6 +2,7 @@ import e from 'express';
 import { MonsterType } from './monster.utils';
 import { MonsterDTO } from '../models/monsterDTO.model';
 import { Monster } from '../models/monster.model';
+import { Move } from '../models/move.model';
 
 export enum TurnType {
     Player = 'Player',
@@ -16,6 +17,11 @@ export enum ActionType {
     Swap = 'Swap'
 }
 
+export enum MoveCategory {
+    Physical = 'Physical',
+    Special = 'Special',
+    Effect = 'Effect'
+}
 
 const typeEffectiveness: Record<string, Record<string, number>> = {
   Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
@@ -52,17 +58,21 @@ export const calculateModifier = (attackingType: string, pokemonTypes: string[],
 };
 
 export const calculateDamage = (
-  level: number,
-  power: number,
-  attack: number,
-  defense: number,
-  modifier: number
+  pokemon: Monster,
+  enemy: Monster,
+  move: Move
 ): number => {
+  const stat = move.category.name === MoveCategory.Physical ? pokemon.attack : pokemon.specialAttack;
+  const enemyStat = move.category.name === MoveCategory.Physical ? enemy.defense : enemy.specialDefense;
+
+  const modifier = calculateModifier(move.type.name, pokemon.types.map(type => type.name), enemy.types.map(type => type.name));
+  
   const baseDamage = Math.floor(
-    (2 * level / 5 + 2) * power * (attack / defense) / 50 + 2
+    (((((pokemon.level * 0.4 + 2) * stat * move.power) / enemyStat) / 50) + 2)
   );
 
-  return Math.floor(baseDamage * modifier);
+  return Math.floor(baseDamage * modifier * (Math.random() * 0.15 + 0.85));
+
 };
 
 export const calculateAttackBg = (type: string): string => {
