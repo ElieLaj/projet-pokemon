@@ -1,12 +1,13 @@
-<div class="flex flex-col text-center gap-3">
-    <h1>Dialogue</h1>
+<div class="flex flex-col text-center gap-3 duration-300">
     <div class="dialogue">
         <!-- Faire une animation à l'affichage du texte -->
         <div class="dialogue__text">
             <p>{{ dialogues[0] }}</p>
         </div>
-        <div class="dialogue__actions">
-            <button (click)="pushNext()">Next</button>
-        </div>
+        @if (dialogues.length >= 1) {
+            <div class="dialogue__choices">
+                <button (click)="pushNext()">Next</button>
+            </div>
+        }
     </div>
 </div>

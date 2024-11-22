@@ -1,28 +1,17 @@
 <div class="battle">
     <div class="battle-screen">
+        <div class="battle-screen__header">
+            <h1>Battle</h1>
+            <h2><span class="player">{{ playerMonster.name }}</span> VS <span class="enemy">{{ enemyMonster.name }}</span></h2>
+            <h2>Turn: {{ currentTurn }} </h2>
+        </div>
         <div class="battle-screen__monsters">
             <div class="battle-screen__player">
-                <app-monster [monster]="playerMonster"></app-monster>
+                <app-monster [monster]="playerMonster" [active]="true"></app-monster>
             </div>
             <div class="battle-screen__enemy">
-                <app-monster [monster]="enemyMonster" [isPlayer]="false"></app-monster>
+                <app-monster [monster]="enemyMonster" [active]="true" [isPlayer]="false"></app-monster>
             </div>
-        </div>
-        <div class="battle-screen__actions">
-            @if (playerAction === null && dialogues.length === 0) {
-                <button (click)="setAction(ActionType.Attack)">Attack</button>
-            }
-            @if (playerAction === ActionType.Attack) {
-                <div class="battle-screen__attack-options">
-                    @for (pokemonMove of playerMonster.pokemonMoves; track pokemonMove.id) {
-                        <button (click)="playerSelectAttack = pokemonMove.move; enemyAction = ActionType.Attack"
-                        [style.background]="calculateAttackBg(pokemonMove.move.type.name)">
-                            {{ pokemonMove.move.name }}
-                        </button>
-                    }
-                </div>
-                <button (click)="playerAction = null">Cancel</button>
-            }
         </div>
         @if (playerMonster.hp <= 0) {
            <h2>Game Over</h2>
@@ -30,8 +19,31 @@
         @else if (enemyMonster.hp <= 0) {
             <h2>Victory</h2>
         }
-        <div class="battle-screen__log">
-            <app-dialogue [dialogues]="dialogues" (next)="dialogues=$event"></app-dialogue>
+        <div class="battle-screen__inputs">
+            <div class="battle-screen__actions">
+                @if (!showMoves && dialogues.length === 0) {
+                    <button class="battle-screen__actions-attack" (click)="showMoves = true">Attack</button>
+                    <button class="battle-screen__actions-item" (click)="setAction(ActionType.Item)">Item</button>
+                    <button class="battle-screen__actions-swap" (click)="setAction(ActionType.Swap)">Swap</button>
+                    <button class="battle-screen__actions-run" (click)="setAction(ActionType.Run)">Run</button>
+
+                }
+                @if (showMoves) {
+                    <div class="battle-screen__attack-options">
+                        @for (pokemonMove of playerMonster.pokemonMoves; track pokemonMove.id) {
+                            <button (click)="playerSelectedAttack = pokemonMove.move; setAction(ActionType.Attack)"
+                            [style.background]="calculateAttackBg(pokemonMove.move.type.name)">
+                                {{ pokemonMove.move.name }}
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+            @if (showMoves) { <button class="battle-screen__cancel" (click)="showMoves = false">Cancel</button> }
+            <div class="battle-screen__log">
+                <app-dialogue [dialogues]="dialogues" (next)="dialogues=$event"></app-dialogue>
+            </div>
         </div>
+        
     </div>
 </div>

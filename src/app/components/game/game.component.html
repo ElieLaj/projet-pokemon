@@ -8,6 +8,25 @@
             <p>Prepare your monster and enter the ultimate battle arena!</p>
             <button (click)="startBattle = true">Start Battle</button>
         </div>
+        <div class="game-start-screen__monsters">
+            @for (monster of monsters; track monster.id) {
+                <app-monster 
+                    [monster]="monster" 
+                    [active]="playerMonster.id == monster.id || hoverMonster== monster.id" 
+                    [isPlayer]="false" (click)="playerMonster = monster"
+                    (mouseover)="hoverMonster = monster.id" 
+                    (mouseout)="hoverMonster = null"
+                />
+                
+            }
+        </div>
+        <!-- <label for="move">Choose a move:</label>
+        <select id="move" [(ngModel)]="selectedMove" class="text-black">
+            @for (move of moves; track move.id) {
+                <option [value]="move.name" class="text-black">{{ move.name }}</option>
+            }
+        </select>
+        <button (click)="addSelectedMove()">Add move to pokemon</button> -->
         <div class="game-start-screen__footer">
             <p>&copy; {{ currentYear }} Elie</p>
         </div>

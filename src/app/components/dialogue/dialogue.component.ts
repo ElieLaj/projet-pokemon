@@ -11,6 +11,7 @@ export class DialogueComponent {
   @Input() dialogues: string[] = [];
   next = output<string[]>();
 
+
   pushNext() {
     this.dialogues.shift();
     this.next.emit(this.dialogues);

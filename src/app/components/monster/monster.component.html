@@ -1,20 +1,23 @@
-<div class="monster">
-    <img 
-        class="monster__image" 
+<div class="monster" [style.border]="borderColor">
+    <img class="monster__image" 
         [src]="monsterImage" 
-        alt="{{ monster.name }}"
+        [alt]="monster.name.toLowerCase()"
         (mouseover)="showStats = true" 
         (mouseout)="showStats = false"
-        (click)="pressedShowStats = !pressedShowStats"
     >
-    <div class="monster__hp">
-        <span>HP:</span> 
-        <span>{{ monster.hp }} / {{ monster.maxHp }}</span>
+    <div class="monster__info">
+        <div class="monster__info-infos">
+            <p>Lvl: {{ monster.level }}</p>
+            <p>HP: {{ monster.hp }} / {{ monster.maxHp }}</p>
+        </div>
         <div class="monster__hp-bar-container">
             <div class="monster__hp-bar" [style]="{width: healthBarClass, background: healthColor}"></div>
         </div>
+        <div class="monster__exp-bar-container">
+            <div class="monster__exp-bar" [style]="{width: expBarClass, background: expColor}"></div>
+        </div>
     </div>
-    <div class="monster__details" [class.visible]="showStats || pressedShowStats">
+    <div class="monster__details" [class.visible]="showStats">
         <h2 class="monster__name">{{ monster.name }}</h2>
         <div class="monster__stats">
             <div class="monster__stat">

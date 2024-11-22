@@ -9,7 +9,7 @@ export enum TurnType {
 
 export enum ActionType {
     Attack = 'Attack',
-    Heal = 'Heal',
+    Item = 'Item',
     Run = 'Run',
     Swap = 'Swap'
 }
