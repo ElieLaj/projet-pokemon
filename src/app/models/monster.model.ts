@@ -18,7 +18,8 @@ export class Monster {
   currentExp: number;
   neededExp: number;
   expRate: number;
-  pokemonMoves: PokemonMove[]; 
+  pokemonMoves: PokemonMove[] = []; 
+  learnset: PokemonMove[] = [];
   types: Type[];
 
   baseAttack: number;
@@ -66,14 +67,26 @@ export class Monster {
     this.currentExp = 0;
     this.expRate = expRate;
     this.neededExp = Math.floor((1.2 * Math.pow(level, 3)) - 15 * Math.pow(level, 2) + 100 * level - 140);
-    this.pokemonMoves = pokemonMoves;
+    this.pokemonMoves = this.learnMoves(pokemonMoves);
     this.types = types;
+
+    this.learnset = pokemonMoves;
   }
 
   levelUp() {
     this.level++;
     this.recalculateStats();
     this.calculateExpToNextLevel();
+  }
+
+  learnMoves(moves: PokemonMove[]) {
+    moves.sort((a, b) => a.level - b.level);
+    for (const move of moves.splice(moves.length - 5, 4)) {
+      if (this.pokemonMoves.length< 4 && move && this.level >= move.level ) {
+        this.pokemonMoves.push(move);
+      }
+    }
+    return this.pokemonMoves;
   }
 
   gainEnemyExp(enemy: Monster, isWild: boolean = true) {
@@ -115,5 +128,5 @@ export class Monster {
   heal(hpHealed: number) {
     this.hp = Math.min(this.hp + hpHealed, this.maxHp);
   }
-  
+
 }
