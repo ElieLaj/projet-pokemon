@@ -6,6 +6,7 @@ import { BattleScreenComponent } from '../battle-screen/battle-screen.component'
 import { Move } from '../../models/move.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { api } from '../../../plugins/api';
+import { transformManyPokemonDTO } from '../../utils/game.utils';
 
 @Component({
   selector: 'app-game',
@@ -35,21 +36,7 @@ export class GameComponent implements OnInit {
     await this.fetchMonsters().then((monsters: MonsterDTO[]) => {
       this.monstersDTO = monsters;
     });
-    this.monsters = this.monstersDTO.map((monster: MonsterDTO) => {
-      return new Monster(
-        monster.id,
-        monster.name,
-        monster.hp,
-        monster.attack,
-        monster.defense,
-        monster.specialAttack,
-        monster.specialDefense,
-        monster.speed,
-        monster.expRate,
-        monster.pokemonMoves,
-        monster.types
-      );
-    });
+    this.monsters = transformManyPokemonDTO(this.monstersDTO);
     this.playerMonster = this.monsters[0];
     this.enemyMonster = this.monsters[1];
 

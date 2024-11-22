@@ -1,48 +1,56 @@
-<div class="monster" [style.border]="borderColor">
+<div class="monster" [style]="{ border: borderColor, width: componentSize}"
+    (mouseover)="showStats = true" 
+    (mouseout)="showStats = false"
+>
     <img class="monster__image" 
         [src]="monsterImage" 
         [alt]="monster.name.toLowerCase()"
-        (mouseover)="showStats = true" 
-        (mouseout)="showStats = false"
+        [style]="{ width: imageSize, height: imageSize }"
     >
-    <div class="monster__info">
-        <div class="monster__info-infos">
-            <p>Lvl: {{ monster.level }}</p>
-            <p>HP: {{ monster.hp }} / {{ monster.maxHp }}</p>
+    @if(size != 'small') {
+        <div class="monster__info">
+            <div class="monster__info-infos">
+                <p>Lvl: {{ monster.level }}</p>
+                <p>HP: {{ monster.hp }} / {{ monster.maxHp }}</p>
+            </div>
+            <div class="monster__hp-bar-container" [class.visible]="showHp">
+                <div class="monster__hp-bar" [style]="{width: healthBarClass, background: healthColor }"></div>
+            </div>
+            <div class="monster__exp-bar-container" [class.visible]="showExp">
+                <div class="monster__exp-bar" [style]="{width: expBarClass, background: expColor}"></div>
+            </div>
         </div>
-        <div class="monster__hp-bar-container">
-            <div class="monster__hp-bar" [style]="{width: healthBarClass, background: healthColor}"></div>
-        </div>
-        <div class="monster__exp-bar-container">
-            <div class="monster__exp-bar" [style]="{width: expBarClass, background: expColor}"></div>
-        </div>
-    </div>
-    <div class="monster__details" [class.visible]="showStats">
-        <h2 class="monster__name">{{ monster.name }}</h2>
+    }
+    <div class="monster__details" 
+        [class.visible]="showStats"
+        [class.hidden]="!showStats"
+        [style.top]="detailsPosition"
+    >
+        <h2 class="monster__name" [style.font-size]="nameSize">{{ monster.name }}</h2>
         <div class="monster__stats">
             <div class="monster__types">
                 @for (type of monster.types; track type.id) {
                     <span class="monster__type" [style.background]="calculateAttackBg(type.name)">{{ type.name }}</span>
                 }
             </div>
-            <div class="monster__stat">
+            <div class="monster__stat" [style.font-size]="statSize">
                 <span>Attack:</span> <span>{{ monster.attack }}</span>
             </div>
             
-            <div class="monster__stat">
+            <div class="monster__stat" [style.font-size]="statSize">
                 <span>Defense:</span> <span>{{ monster.defense }}</span>
             </div>
 
-            <div class="monster__stat">
+            <div class="monster__stat" [style.font-size]="statSize">
                 <span>Special Attack:</span> <span>{{ monster.specialAttack }}</span>
             </div>
 
-            <div class="monster__stat">
+            <div class="monster__stat" [style.font-size]="statSize">
                 <span>Special Defense:</span> <span>{{ monster.specialDefense }}</span>
 
             </div>
 
-            <div class="monster__stat">
+            <div class="monster__stat" [style.font-size]="statSize">
                 <span>Speed:</span> <span>{{ monster.speed }}</span>
             </div>
         </div>

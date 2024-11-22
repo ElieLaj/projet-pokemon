@@ -1,10 +1,10 @@
 .game-start-screen {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
     height: 100vh;
     padding: 20px;
+    gap: 20px;
     background: linear-gradient(135deg, #1e1e2f, #3e3e5e);
     color: #fff;
     font-family: 'Arial', sans-serif;
@@ -103,11 +103,13 @@
     }
 
     &__footer {
+        position: absolute;
+        bottom: 0;
         font-size: 0.9rem;
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 
         p {
-            margin: 0;
+            margin-bottom: 5px;
         }
     }
 }

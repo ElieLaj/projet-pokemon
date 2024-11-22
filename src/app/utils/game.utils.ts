@@ -1,5 +1,7 @@
 import e from 'express';
 import { MonsterType } from './monster.utils';
+import { MonsterDTO } from '../models/monsterDTO.model';
+import { Monster } from '../models/monster.model';
 
 export enum TurnType {
     Player = 'Player',
@@ -104,4 +106,38 @@ export const calculateAttackBg = (type: string): string => {
     default:
       return '#A8A878';
   }
+};
+
+export const transformManyPokemonDTO = (pokemons: MonsterDTO[]): Monster[] => {
+  return pokemons.map((monster: MonsterDTO) => {
+      return new Monster(
+        monster.id,
+        monster.name,
+        monster.hp,
+        monster.attack,
+        monster.defense,
+        monster.specialAttack,
+        monster.specialDefense,
+        monster.speed,
+        monster.expRate,
+        monster.pokemonMoves,
+        monster.types
+      );
+    });
+};
+
+export const transformPokemonDTO = (pokemon: MonsterDTO): Monster => {
+  return new Monster(
+    pokemon.id,
+    pokemon.name,
+    pokemon.hp,
+    pokemon.attack,
+    pokemon.defense,
+    pokemon.specialAttack,
+    pokemon.specialDefense,
+    pokemon.speed,
+    pokemon.expRate,
+    pokemon.pokemonMoves,
+    pokemon.types
+  );
 };

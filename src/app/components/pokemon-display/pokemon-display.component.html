@@ -1,0 +1,21 @@
+<div 
+  class="pokemon-container"
+  [style.maxWidth]="maxContainerWidth"
+  [style.maxHeight]="maxContainerHeight"
+>
+  <div class="pokemon-list">
+    @for (monster of monsters; track monster.id) {
+        <ng-container>
+        <app-monster
+            [monster]="monster"
+            [active]="playerMonster?.id === monster.id || hoverMonster === monster.id"
+            [isPlayer]="false"
+            (click)="updateSelectedMonster(monster)"
+            (mouseover)="hoverMonster = monster.id"
+            (mouseout)="hoverMonster = null"
+            [size]="maxPokemonSize"
+        ></app-monster>
+        </ng-container>
+    }
+  </div>
+</div>
