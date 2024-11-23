@@ -1,6 +1,8 @@
 import { Effect } from "./effect.model";
 import { PokemonMove } from "./pokemonMove.model";
+import { Stage } from "./stage.model";
 import { Type } from "./type.model";
+import { calculateDamage } from "../utils/game.utils";
 
 export class Monster {
   id: number;
@@ -22,6 +24,7 @@ export class Monster {
   pokemonMoves: PokemonMove[] = []; 
   learnset: PokemonMove[] = [];
   types: Type[];
+  stages: Stage[] = [];
 
   baseAttack: number;
   baseDefense: number;
@@ -44,7 +47,8 @@ export class Monster {
     expRate: number,
     pokemonMoves: any[],
     types: any[],
-    level: number = 5
+    level: number = 5,
+    stages: Stage[] = []
   ) {
     this.level = level;
     this.baseAttack = baseAttack;
@@ -73,6 +77,7 @@ export class Monster {
     this.types = types;
 
     this.learnset = pokemonMoves;
+    this.stages = stages;
   }
 
   levelUp() {

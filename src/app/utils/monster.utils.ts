@@ -18,3 +18,21 @@ export enum MonsterType {
     Steel = 'Steel',
     Flying = 'Flying'
 }
+
+export enum StageType {
+    Field = 'Field',
+    Mountain = 'Mountain',
+    Cave = 'Cave',
+    Forest = 'Forest',
+    Sea = 'Sea',
+    Beach = 'Beach',
+    Sky = 'Sky',
+    Space = 'Space',
+    Farm = 'Farm',
+    Volcano = 'Volcano',
+    Desert = 'Desert',
+    Graveyard = 'Graveyard',
+    City = 'City',
+    IceCave = 'IceCave',
+    Factory = 'Factory'
+}

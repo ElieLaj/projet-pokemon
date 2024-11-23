@@ -1,6 +1,6 @@
 import { Component, Input, model, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Monster } from '../../models/monster.model';
-import { calculateAttackBg } from '../../utils/game.utils';
+import { calculateBg } from '../../utils/game.utils';
 
 @Component({
   selector: 'app-monster',
@@ -14,7 +14,7 @@ export class MonsterComponent implements OnInit, OnChanges {
   @Input() isPlayer: boolean = true;
   @Input() active: boolean = false;
   @Input() size: 'small' | 'normal' | 'big' = 'normal';
-  @Input() showDetails: boolean = true;
+  @Input() detailsType: 'stage' | 'stats' | 'moves' | null = 'stats';
 
   showStats: boolean = false;
 
@@ -38,7 +38,7 @@ export class MonsterComponent implements OnInit, OnChanges {
   showHp: boolean = true;
   showExp: boolean = true;
 
-  calculateAttackBg = calculateAttackBg;
+  calculateBg = calculateBg;
 
   ngOnInit(): void {
     this.monsterImage = 'https://img.pokemondb.net/sprites/black-white/anim/'+ (this.isPlayer ? 'back-' : '') +'normal/'+this.monster.name.toLowerCase()+'.gif';
@@ -87,7 +87,7 @@ export class MonsterComponent implements OnInit, OnChanges {
   
 
   getBorderColor(): string {
-    const color = calculateAttackBg(this.monster.types[0].name);
+    const color = calculateBg(this.monster.types[0].name);
     return this.active ? '2px solid ' + color : '2px solid';
   }
 

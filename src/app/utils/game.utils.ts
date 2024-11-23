@@ -1,5 +1,5 @@
 import e from 'express';
-import { MonsterType } from './monster.utils';
+import { MonsterType, StageType } from './monster.utils';
 import { MonsterDTO } from '../models/monsterDTO.model';
 import { Monster } from '../models/monster.model';
 import { Move } from '../models/move.model';
@@ -131,48 +131,65 @@ export const triggerEffect = (pokemon: Monster, move: Move, enemy: Monster, dial
   }
 };
 
-export const calculateAttackBg = (type: string): string => {
+export const calculateBg = (type: string = 'none'): string => {
   switch (type) {
     case MonsterType.Grass:
+    case 'Forest':
+    case 'Field':
+      console.log('Grass');
       return '#78C850';
     case MonsterType.Fire:
+    case StageType.Volcano:
       return '#F08030';
     case MonsterType.Water:
+    case StageType.Sea:
       return '#6890F0';
     case MonsterType.Electric:
       return '#F8D030';
     case MonsterType.Ice:
+    case StageType.IceCave:
       return '#98D8D8';
     case MonsterType.Fighting:
+    case StageType.Mountain:
       return '#C03028';
     case MonsterType.Poison:
       return '#A040A0';
     case MonsterType.Ground:
+    case StageType.Desert:
       return '#E0C068';
     case MonsterType.Flying:
+    case StageType.Sky:
       return '#A890F0';
     case MonsterType.Psychic:
       return '#F85888';
     case MonsterType.Bug:
+    case StageType.Farm:
       return '#A8B820';
     case MonsterType.Rock:
+    case StageType.Mountain:
       return '#B8A038';
     case MonsterType.Ghost:
+    case StageType.Graveyard:
       return '#705898';
     case MonsterType.Dragon:
+    case StageType.Space:
       return '#7038F8';
     case MonsterType.Dark:
+    case StageType.Graveyard:
       return '#705848';
     case MonsterType.Steel:
+    case StageType.Factory:
       return '#B8B8D0';
     case MonsterType.Fairy:
       return '#EE99AC';
     case MonsterType.Normal:
+    case StageType.City:
       return '#A8A878';
     default:
       return '#A8A878';
   }
 };
+
 
 export const transformManyPokemonDTO = (pokemons: MonsterDTO[]): Monster[] => {
   return pokemons.map((monster: MonsterDTO) => {

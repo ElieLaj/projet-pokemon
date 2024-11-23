@@ -39,7 +39,7 @@
             <label for="type">Type</label>
             <select name="type" id="type" formControlName="type">
               @for (type of types; track type.id) {
-                <option value="{{type.name}}" [style.color]="calculateAttackBg(type.name)">{{type.name}}</option>}
+                <option value="{{type.name}}" [style.color]="calculateBg(type.name)">{{type.name}}</option>}
             </select>
           </div>
 
@@ -47,7 +47,7 @@
             <label for="category">Category</label>
               <select name="category" id="category" formControlName="category">
                 @for (category of categories; track category.id) {
-                <option value="{{category.name}}" [style.color]="calculateAttackBg(category.name)">{{category.name}}</option>}
+                <option value="{{category.name}}" [style.color]="calculateBg(category.name)">{{category.name}}</option>}
               </select>
           </div>
 
@@ -120,7 +120,7 @@
             <label for="type1">Type 1</label>
             <select id="type1" formControlName="type1">
               @for (type of types; track type.id) {
-                <option value="{{type.name}}" [style.color]="calculateAttackBg(type.name)">{{type.name}}</option>}
+                <option value="{{type.name}}" [style.color]="calculateBg(type.name)">{{type.name}}</option>}
             </select>
           </div>
 
@@ -129,7 +129,7 @@
             <select id="type2" formControlName="type2">
               <option value="">None</option>
               @for (type of types; track type.id) {
-                <option value="{{type.name}}" [style.color]="calculateAttackBg(type.name)">{{type.name}}</option>}
+                <option value="{{type.name}}" [style.color]="calculateBg(type.name)">{{type.name}}</option>}
             </select>
           </div>
 
@@ -146,6 +146,7 @@
                   [maxPokemonSize]="'small'"
                   [maxContainerWidth]="'100%'"
                   [maxContainerHeight]="'400px'"
+                  [detailsType]="'moves'"
                   (selectMonster)="updateAddAttackForm($event)"
                 ></app-pokemon-display>
 
@@ -207,7 +208,7 @@
                   <label for="typeUpdate">Type</label>
                   <select name="type" id="typeUpdate" formControlName="type">
                     @for (type of types; track type.id) {
-                      <option value="{{type.name}}" [style.color]="calculateAttackBg(type.name)">{{type.name}}</option>}
+                      <option value="{{type.name}}" [style.color]="calculateBg(type.name)">{{type.name}}</option>}
                   </select>
                 </div>
 
@@ -215,7 +216,7 @@
                   <label for="categoryUpdate">Category</label>
                   <select name="category" id="categoryUpdate" formControlName="category">
                     @for (category of categories; track category.id) {
-                      <option value="{{category.name}}" [style.color]="calculateAttackBg(category.name)">{{category.name}}</option>}
+                      <option value="{{category.name}}" [style.color]="calculateBg(category.name)">{{category.name}}</option>}
                   </select>
                 </div>
 
@@ -295,7 +296,7 @@
                   <label for="type1Update">Type 1</label>
                   <select id="type1Update" formControlName="type1">
                     @for (type of types; track type.id) {
-                      <option value="{{type.name}}" [style.color]="calculateAttackBg(type.name)">{{type.name}}</option>}
+                      <option value="{{type.name}}" [style.color]="calculateBg(type.name)">{{type.name}}</option>}
                   </select>
                 </div>
 
@@ -304,11 +305,31 @@
                   <select id="type2Update" formControlName="type2">
                     <option value="">None</option>
                     @for (type of types; track type.id) {
-                      <option value="{{type.name}}" [style.color]="calculateAttackBg(type.name)">{{type.name}}</option>}
+                      <option value="{{type.name}}" [style.color]="calculateBg(type.name)">{{type.name}}</option>}
                   </select>
                 </div>
 
                 <button type="submit" [disabled]="changePokemonForm.invalid">Update Pokémon</button>
+              </form>
+            </section>
+
+            <section id="updateStages" class="form-section">
+              <h1>Update Pokemon Stages</h1>
+              <form [formGroup]="addPokemonStageForm" (submit)="addPokemonStage()">
+                <app-pokemon-display
+                  [monsters]="monsters" 
+                  [maxPokemonSize]="'small'"
+                  [maxContainerWidth]="'100%'"
+                  [maxContainerHeight]="'400px'"
+                  [detailsType]="'stage'"
+                  (selectMonster)="selectedPokemonStage = $event"
+                ></app-pokemon-display>
+                <select id="stage" formControlName="stage" (click)="updateChangeMoveForm()">
+                  @for(stage of stages; track stage.id) {
+                    <option value="{{stage.id}}" class="select-option" (click)="updateChangeMoveForm()" [style.color]="calculateBg(stage.name)">{{stage.name}}</option>
+                  }
+                </select>
+                <button type="submit" [disabled]="addPokemonStageForm.invalid || !selectedPokemonStage">Update Move</button>
               </form>
             </section>
           </div>

@@ -14,7 +14,7 @@ export class PokemonDisplayComponent {
   @Input() maxPokemonSize: 'small' | 'normal' | 'big' = 'small';
   @Input() maxContainerWidth: string = '100%';
   @Input() maxContainerHeight: string = 'auto';
-  @Input() showDetails: boolean = false;
+  @Input() detailsType: 'stage' | 'stats' | 'moves' | null = 'stats';
   @Output() selectMonster: EventEmitter<MonsterDTO> = new EventEmitter(); 
 
   playerMonster: any = null;

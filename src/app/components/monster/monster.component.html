@@ -22,15 +22,16 @@
         </div>
     }
     <div class="monster__details" 
-        [class.visible]="showStats && showDetails"
-        [class.hidden]="!showStats || !showDetails"
+        [class.visible]="showStats && detailsType"
+        [class.hidden]="!showStats || !detailsType"
         [style.top]="detailsPosition"
     >
-        <h2 class="monster__name" [style.font-size]="nameSize">{{ monster.name }}</h2>
+    <h2 class="monster__name" [style.font-size]="nameSize">{{ monster.name }}</h2>
+    @if (detailsType === 'stats') {
         <div class="monster__stats">
             <div class="monster__types">
                 @for (type of monster.types; track type.id) {
-                    <span class="monster__type" [style.background]="calculateAttackBg(type.name)">{{ type.name }}</span>
+                    <span class="monster__type" [style.background]="calculateBg(type.name)">{{ type.name }}</span>
                 }
             </div>
             <div class="monster__stat" [style.font-size]="statSize">
@@ -54,5 +55,34 @@
                 <span>Speed:</span> <span>{{ monster.speed }}</span>
             </div>
         </div>
+        }
+    @else if (detailsType === 'stage') {
+        <div class="monster__stats">
+            <div class="monster__types">
+                @if (!monster.stages.length) {
+                    <span class="monster__type" [style.background]="calculateBg()">None</span>
+                }
+                @else{
+                    @for (stage of monster.stages; track stage.id) {
+                        <span class="monster__type" [style.background]="calculateBg(stage.name)">{{ stage.name }}</span>
+                    }
+                }
+            </div>
+        </div>
+    }
+    @else if (detailsType === 'moves') {
+        <div class="monster__stats">
+            <div class="monster__types">
+                @if (!monster.pokemonMoves.length) {
+                    <span class="monster__type" [style.background]="calculateBg()">None</span>
+                }
+                @else{
+                    @for (pokemonMove of monster.pokemonMoves; track pokemonMove.id) {
+                        <span class="monster__type" [style.background]="calculateBg(pokemonMove.move.type.name)">{{ pokemonMove.move.name }}</span>
+                    }
+                }
+            </div>
+        </div>
+    }
     </div>
 </div>

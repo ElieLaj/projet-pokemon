@@ -2,7 +2,7 @@ import { Component, effect, OnInit } from '@angular/core';
 import { api } from '../../../plugins/api';
 import { FormGroup, Validators, ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 import { Type } from '../../models/type.model';
-import { calculateAttackBg } from '../../utils/game.utils';
+import { calculateBg } from '../../utils/game.utils';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Monster } from '../../models/monster.model';
 import { MonsterDTO } from '../../models/monsterDTO.model';
@@ -11,6 +11,7 @@ import { Move } from '../../models/move.model';
 import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
 import { Category } from '../../models/category.model';
 import { Effect } from '../../models/effect.model';
+import { Stage } from '../../models/stage.model';
 
 
 @Component({
@@ -38,15 +39,17 @@ import { Effect } from '../../models/effect.model';
   ]
 })
 export class AddDataComponent implements OnInit {
-  calculateAttackBg = calculateAttackBg;
+  calculateBg = calculateBg;
   types: Type[] = [];
   categories: Category[]= [];
   moves: Move[] = [];
   effects: Effect[] = [];
+  stages: Stage[] = [];
 
   selectedMove: Move | null = null;
   selectedPokemonChange: MonsterDTO | null = null;
   selectedPokemonAddAttack: MonsterDTO | null = null;
+  selectedPokemonStage: MonsterDTO | null = null;
 
   postForms = true;
   putForms = true;
@@ -56,9 +59,12 @@ export class AddDataComponent implements OnInit {
   changeMoveForm: FormGroup;
   changePokemonForm: FormGroup;
   addAttackForm: FormGroup;
+  addPokemonStageForm: FormGroup;
 
   createdPokemon: Monster | null = null;
   monsters: MonsterDTO[] = [];
+
+  
 
   
   constructor(private fb: FormBuilder) {
@@ -113,6 +119,10 @@ export class AddDataComponent implements OnInit {
       move: ['', [Validators.required]],
       level: ['', [Validators.required, Validators.min(1)]],
     });
+
+    this.addPokemonStageForm = this.fb.group({
+      stage: ['', [Validators.required]],
+    });
   }
 
   async ngOnInit() {
@@ -132,6 +142,10 @@ export class AddDataComponent implements OnInit {
 
     await this.fetchEffects().then((effects: Effect[]) => {
       this.effects = effects;
+    });
+
+    await this.fetchStages().then((stages: Stage[]) => {
+      this.stages = stages;
     });
   }
 
@@ -207,6 +221,13 @@ export class AddDataComponent implements OnInit {
     return monsters;
   }
 
+  async fetchStages() {
+    const stages = await api.get('stage').then((response: any) => {
+      return response.data;
+    });
+    return stages;
+  }
+
   async addPokemon() {
     const pokemon = {
       name: this.addPokemonForm.get('pokemonName')?.value,
@@ -235,8 +256,8 @@ export class AddDataComponent implements OnInit {
       accuracy: this.addMoveForm.get('accuracy')?.value,
       type: this.addMoveForm.get('type')?.value,
       category: this.addMoveForm.get('category')?.value,
-      effect: this.addMoveForm.get('effect')?.value,
-      odds: this.addMoveForm.get('odds')?.value
+      effect: this.addMoveForm.get('effect')?.value || null,
+      odds: this.addMoveForm.get('odds')?.value || null
     };
 
     const response = await api.post('/move', move);
@@ -294,6 +315,18 @@ export class AddDataComponent implements OnInit {
     const response = await api.post('/pokemon_move', attack);
     if (response.status === 200) {
       this.addAttackForm.reset();
+    }
+  }
+
+  async addPokemonStage() {
+    const stage = {
+      pokemonId: this.selectedPokemonStage?.id,
+      stageId: parseInt(this.addPokemonStageForm.get('stage')?.value),
+    };
+
+    const response = await api.post(`/stage_pokemon`, stage);
+    if (response.status === 200) {
+      this.addPokemonStageForm.reset();
     }
   }
 }

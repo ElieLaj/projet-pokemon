@@ -7,6 +7,9 @@ import { Move } from '../../models/move.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { api } from '../../../plugins/api';
 import { transformManyPokemonDTO } from '../../utils/game.utils';
+import { Game } from '../../models/game.model';
+import { Trainer } from '../../models/trainer.model';
+import { Bag } from '../../models/bag.model';
 
 @Component({
   selector: 'app-game',
@@ -27,6 +30,9 @@ export class GameComponent implements OnInit {
 
   playerMonster!: Monster;
   enemyMonster!: Monster;
+  game!: Game;
+  player!: Trainer;
+  playerBag!: Bag;
 
   moves: Move[] = [];
   selectedMove!: Move;
@@ -46,6 +52,11 @@ export class GameComponent implements OnInit {
     await this.fetchMoves().then((moves: Move[]) => {
       this.moves = moves;
     });
+
+    this.playerBag = new Bag([], [])
+    this.player = new Trainer('Player', [this.playerMonster], 500, this.playerBag);
+
+    this.game = new Game(this.player, this.enemyMonster);
 
   }
 

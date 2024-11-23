@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Monster } from '../../models/monster.model';
 import { MonsterComponent } from '../monster/monster.component';
-import { TurnType, ActionType, calculateAttackBg, calculateDamage, calculateModifier, triggerEffect } from '../../utils/game.utils';
+import { TurnType, ActionType, calculateBg, calculateDamage, calculateModifier, triggerEffect } from '../../utils/game.utils';
 import { DialogueComponent } from "../dialogue/dialogue.component";
 import { Move } from '../../models/move.model';
 
@@ -13,7 +13,7 @@ import { Move } from '../../models/move.model';
   styleUrl: './battle-screen.component.scss'
 })
 export class BattleScreenComponent implements OnInit {
-  calculateAttackBg = calculateAttackBg;
+  calculateBg = calculateBg;
 
   @Input() playerMonster!: Monster;
   @Input() enemyMonster!: Monster;

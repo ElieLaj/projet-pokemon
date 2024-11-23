@@ -26,7 +26,7 @@
                     <div class="battle-screen__attack-options">
                         @for (pokemonMove of playerMonster.pokemonMoves; track pokemonMove.id) {
                             <button (click)="playerSelectedAttack = pokemonMove.move; setAction(ActionType.Attack)"
-                            [style.background]="calculateAttackBg(pokemonMove.move.type.name)">
+                            [style.background]="calculateBg(pokemonMove.move.type.name)">
                                 {{ pokemonMove.move.name }}
                             </button>
                         }
