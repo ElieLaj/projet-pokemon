@@ -1,15 +1,30 @@
 import axios from "axios";
+import { environment }  from "../environments/environment";
 
 class API {
   private axios: any;
-  constructor() {
+  constructor(apiUrl:string, apiKey: string) {
     this.axios = axios.create({
-      baseURL: "http://localhost:8081/api/v1/",
+      baseURL: apiUrl,
+      headers: {
+        'X-API-KEY': apiKey
+      },
     });
   }
 
   async get(url: string) {
-    return await this.axios.get(url);
+    try {
+      
+      console.log("GET Request URL:", url);
+      return await this.axios.get(url);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("GET Request Failed:", error.response?.data || error.message);
+      } else {
+        console.error("GET Request Failed:", error);
+      }
+      throw error;
+    }
   }
 
   async post(url: string, data: object) {
@@ -29,5 +44,5 @@ class API {
   }
 }
 
-export const api = new API();
+export const api = new API(environment.apiURL, environment.apiKey);
 
