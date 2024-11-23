@@ -2,48 +2,73 @@
     <div class="battle-screen">
         <div class="battle-screen__header">
             <h1>Battle</h1>
-            <h2><span class="player">{{ playerMonster.name }}</span> VS <span class="enemy">{{ enemyMonster.name }}</span></h2>
-            <h2>Turn: {{ currentTurn }} </h2>
+            <h2>
+                <span class="player">{{ game.playerMonster.name }}</span>
+                VS
+                <span class="enemy">{{ game.enemyMonster.name }}</span>
+            </h2>
+            <h2>Turn: {{ game.currentTurn }}</h2>
         </div>
         <div class="battle-screen__monsters">
             <div class="battle-screen__player">
-                <app-monster [monster]="playerMonster" [active]="true"></app-monster>
+                <app-monster
+                    [monster]="game.playerMonster"
+                    [active]="true">
+                </app-monster>
             </div>
             <div class="battle-screen__enemy">
-                <app-monster [monster]="enemyMonster" [active]="true" [isPlayer]="false"></app-monster>
+                <app-monster
+                    [monster]="game.enemyMonster"
+                    [active]="true"
+                    [isPlayer]="false">
+                </app-monster>
             </div>
         </div>
-                <div class="battle-screen__inputs">
+        <div class="battle-screen__inputs">
             <div class="battle-screen__actions">
-                @if (!showMoves && dialogues.length === 0) {
-                    <button class="battle-screen__actions-attack" (click)="showMoves = true">Attack</button>
-                    <button class="battle-screen__actions-item" (click)="setAction(ActionType.Item)">Item</button>
-                    <button class="battle-screen__actions-swap" (click)="setAction(ActionType.Swap)">Swap</button>
-                    <button class="battle-screen__actions-run" (click)="setAction(ActionType.Run)">Run</button>
-
+                <!-- Actions disponibles lorsque le joueur est en phase de décision -->
+                @if (!game.showMoves && game.dialogues.length === 0) {
+                    <button class="battle-screen__actions-attack" (click)="game.showMoves = true">Attack</button>
+                    <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.Item)">Item</button>
+                    <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.Swap)">Swap</button>
+                    <button class="battle-screen__actions-run" (click)="game.setAction(game.ActionType.Run)">Run</button>
                 }
-                @if (showMoves) {
+                
+                <!-- Liste des attaques lorsque l'option "Attack" est sélectionnée -->
+                @if (game.showMoves) {
                     <div class="battle-screen__attack-options">
-                        @for (pokemonMove of playerMonster.pokemonMoves; track pokemonMove.id) {
-                            <button (click)="playerSelectedAttack = pokemonMove.move; setAction(ActionType.Attack)"
-                            [style.background]="calculateBg(pokemonMove.move.type.name)">
+                        @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
+                            <button
+                                (click)="game.playerSelectedAttack = pokemonMove.move; game.setAction(game.ActionType.Attack)"
+                                [style.background]="calculateBg(pokemonMove.move.type.name)">
                                 {{ pokemonMove.move.name }}
                             </button>
                         }
                     </div>
                 }
             </div>
-            @if (showMoves) { <button class="battle-screen__cancel" (click)="showMoves = false">Cancel</button> }
+            
+            <!-- Bouton pour annuler la sélection des attaques -->
+            @if (game.showMoves) {
+                <button class="battle-screen__cancel" (click)="game.showMoves = false">Cancel</button>
+            }
+            
+            <!-- Affichage des dialogues -->
             <div class="battle-screen__log">
-                <app-dialogue [dialogues]="dialogues" (next)="dialogues=$event"></app-dialogue>
+                <app-dialogue
+                    [dialogues]="game.dialogues"
+                    (next)="game.dialogues = $event">
+                </app-dialogue>
             </div>
         </div>
-        @if (playerMonster.hp <= 0) {
-           <h2>Game Over</h2>
-        }
-        @else if (enemyMonster.hp <= 0) {
-            <h2>Victory</h2>
-        }
         
+        <!-- État de la bataille -->
+        <div class="battle-screen__status">
+            @if (game.playerMonster.hp <= 0) {
+                <h2>Game Over</h2>
+            } @else if (game.enemyMonster.hp <= 0) {
+                <h2>Victory</h2>
+            }
+        </div>
     </div>
 </div>

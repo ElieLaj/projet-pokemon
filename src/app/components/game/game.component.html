@@ -1,6 +1,6 @@
 @if(startBattle){
     <app-battle-screen 
-        [playerMonster]="playerMonster" [enemyMonster]="enemyMonster"
+        [game]="game"
         (changeEnemyMonster)="nextMonster()"
         (playerLost)="gameOver($event)"
     />
