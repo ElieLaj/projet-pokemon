@@ -10,6 +10,7 @@ import { Game } from '../../models/game.model';
 import { Trainer } from '../../models/trainer.model';
 import { Bag } from '../../models/bag.model';
 import { HealingItem } from '../../models/healingItem.model';
+import { items } from '../../data/items';
 
 @Component({
   selector: 'app-game',
@@ -47,14 +48,12 @@ export class GameComponent implements OnInit {
     this.playerMonster = this.enemyMonster = new Monster(this.monsters[0].id, this.monsters[0].name, this.monsters[0].baseHp, this.monsters[0].baseAttack, this.monsters[0].baseDefense, this.monsters[0].baseSpecialAttack, this.monsters[0].baseSpecialDefense, this.monsters[0].baseSpeed, this.monsters[0].expRate, this.monsters[0].pokemonMoves, this.monsters[0].types, this.monsters[0].level);;
     this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
 
-    const healingItem = new HealingItem(1, 'Potion', 'Heals a pokemon', 200, 20, 0);
 
-    this.playerBag = new Bag([healingItem], [])
+    this.playerBag = new Bag([items.potion], [])
 
     this.player = new Trainer('Player', [this.playerMonster], 500, this.playerBag);
 
     this.game = new Game(this.player, this.enemyMonster);
-
   }
 
   gameOver(score: number) {
@@ -66,8 +65,22 @@ export class GameComponent implements OnInit {
 
   onNextEnemy() {
     const nextEnemy = this.monsters[Math.floor(Math.random() * this.monsters.length)];
-    this.game.enemyMonster = nextEnemy;
-    this.game.dialogues.push(`A new enemy appears: ${nextEnemy.name}!`);
+    const nextEnemyCopy = new Monster(
+        nextEnemy.id,
+        nextEnemy.name,
+        nextEnemy.baseHp,
+        nextEnemy.baseAttack,
+        nextEnemy.baseDefense,
+        nextEnemy.baseSpecialAttack,
+        nextEnemy.baseSpecialDefense,
+        nextEnemy.baseSpeed,
+        nextEnemy.expRate,
+        nextEnemy.pokemonMoves,
+        nextEnemy.types,
+        nextEnemy.level
+    );
+    this.game.enemyMonster = nextEnemyCopy;
+    this.game.dialogues.push(`A new enemy appears: ${nextEnemyCopy.name}!`);
   }
 
 playerSelectMonster(monster: Monster) {
@@ -90,9 +103,7 @@ playerSelectMonster(monster: Monster) {
 
     this.player = new Trainer('Player', [monsterCopy], 500, this.playerBag);
 
-    if (this.game) {
-        this.game.player = this.player;
-    }
+    this.game = new Game(this.player, this.enemyMonster);
 }
 
   onStartBattle() {
@@ -112,10 +123,12 @@ playerSelectMonster(monster: Monster) {
           selectedMonster.level
       );
 
-      this.player = new Trainer('Player', [monsterCopy], 500, this.playerBag);
+      this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));
+      this.player.bag.addHealingItem(items.potion, 5);
       this.game = new Game(this.player, this.enemyMonster);
 
       this.startBattle = true;
+      this.onNextEnemy();
   }
 
   async fetchMonsters() {

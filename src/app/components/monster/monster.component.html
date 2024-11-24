@@ -10,7 +10,9 @@
     @if(size != 'small') {
         <div class="monster__info">
             <div class="monster__info-infos">
-                <p>Lvl: {{ monster.level }}</p>
+                <p>Lvl: {{ monster.level }} 
+                    @if (monster.effect) {<span class="monster__info-effect" [style.background]="calculateBg(monster.effect.name)">{{ monster.effect.name }}</span>}
+                </p>
                 <p>HP: {{ monster.hp }} / {{ monster.maxHp }}</p>
             </div>
             <div class="monster__hp-bar-container" [class.visible]="showHp">

@@ -36,3 +36,12 @@ export enum StageType {
     IceCave = 'IceCave',
     Factory = 'Factory'
 }
+
+export enum EffectType {
+    Burnt = 'Burnt',
+    Poisoned = 'Poisoned',
+    Paralyzed = 'Paralyzed',
+    Frozen = 'Frozen',
+    Asleep = 'Asleep',
+    Confused = 'Confused'
+}

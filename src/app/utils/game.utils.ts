@@ -1,5 +1,5 @@
 import e from 'express';
-import { MonsterType, StageType } from './monster.utils';
+import { EffectType, MonsterType, StageType } from './monster.utils';
 import { MonsterDTO } from '../models/monster/monsterDTO.model';
 import { Monster } from '../models/monster/monster.model';
 import { Move } from '../models/monster/move.model';
@@ -97,50 +97,6 @@ export const calculateDamage = (
 
 };
 
-export const triggerEffect = (pokemon: Monster, move: Move, enemy: Monster, dialogues: string[]) => {
-  if (move.moveEffects) {
-    switch (move.moveEffects[0]?.effect.name.toLowerCase()) {
-      case 'burnt':
-        
-        dialogues.push('The enemy was burned!');
-        break;
-      case 'paralyze':
-        dialogues.push('The enemy was paralyzed!');
-        break;
-      case 'freeze':
-        dialogues.push('The enemy was frozen!');
-        break;
-      case 'poison':
-        dialogues.push('The enemy was poisoned!');
-        break;
-      case 'sleep':
-        dialogues.push('The enemy fell asleep!');
-        break;
-      case 'confuse':
-        dialogues.push('The enemy was confused!');
-        break;
-      case 'flinch':
-        dialogues.push('The enemy flinched!');
-        break;
-      case 'leechseed':
-        dialogues.push('The enemy was seeded!');
-        break;
-      case 'toxic':
-        dialogues.push('The enemy was badly poisoned!');
-        break;
-      case 'trap':
-        dialogues.push('The enemy was trapped!');
-        break;
-      case 'heal':
-        pokemon.heal(move.power * 0.1);
-        dialogues.push(`${pokemon.name} healed ${move.power * 0.1} hp!`);
-        break;
-      default:
-        break;
-    }
-  }
-};
-
 export const calculateBg = (type: string = 'none'): string => {
   switch (type) {
     case MonsterType.Grass:
@@ -149,6 +105,7 @@ export const calculateBg = (type: string = 'none'): string => {
       return '#78C850';
     case MonsterType.Fire:
     case StageType.Volcano:
+    case EffectType.Burnt:
       return '#F08030';
     case MonsterType.Water:
     case StageType.Sea:
