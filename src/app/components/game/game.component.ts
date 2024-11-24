@@ -65,9 +65,10 @@ export class GameComponent implements OnInit {
     this.lastScore = score;
   }
 
-  nextMonster() {
-    const enemyIndex = Math.floor(Math.random() * (this.monsters.length - 1));
-    this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
+  onNextEnemy() {
+    const nextEnemy = this.monsters[Math.floor(Math.random() * this.monsters.length)];
+    this.game.enemyMonster = nextEnemy;
+    this.game.dialogues.push(`A new enemy appears: ${nextEnemy.name}!`);
   }
 
   playerSelectMonster(monster: Monster) {
@@ -82,7 +83,6 @@ async addSelectedMove() {
       level: this.playerMonster.level
     });
     
-    console.log(response.data);
   } catch (error) {
     console.error('Error adding move:', error);
   }

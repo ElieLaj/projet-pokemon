@@ -163,7 +163,6 @@ export class AddDataComponent implements OnInit {
           type2: monster.types[1]?.name
         });
     this.selectedPokemonChange = monster;
-    console.log(this.selectedPokemonChange);
   }
 
   updateAddAttackForm(monster: MonsterDTO) {
@@ -311,7 +310,6 @@ export class AddDataComponent implements OnInit {
       moveName: this.addAttackForm.get('move')?.value,
       level: this.addAttackForm.get('level')?.value,
     };
-    console.log(attack);
     const response = await api.post('/pokemon_move', attack);
     if (response.status === 200) {
       this.addAttackForm.reset();

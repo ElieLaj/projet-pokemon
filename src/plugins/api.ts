@@ -14,8 +14,6 @@ class API {
 
   async get(url: string) {
     try {
-      
-      console.log("GET Request URL:", url);
       return await this.axios.get(url);
     } catch (error) {
       if (axios.isAxiosError(error)) {

@@ -136,7 +136,6 @@ export const calculateBg = (type: string = 'none'): string => {
     case MonsterType.Grass:
     case 'Forest':
     case 'Field':
-      console.log('Grass');
       return '#78C850';
     case MonsterType.Fire:
     case StageType.Volcano:

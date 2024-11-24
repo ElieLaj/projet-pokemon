@@ -20,7 +20,6 @@ export class Game {
   ActionType = ActionType;
 
   playerSelectedAttack: Move | null = null;
-  enemySelectedAttack: Move | null = null;
 
   playerAction: ActionType | null = null;
   enemyAction: ActionType | null = null;
@@ -61,7 +60,7 @@ export class Game {
         this.playerLost = true;
       }
       else {
-        this.dialogues.push('You won!');
+        if (!this.enemyLost) this.dialogues.push('You won!');
         this.enemyLost = true;
       }
       this.turn = TurnType.Dialogue;
@@ -113,7 +112,6 @@ export class Game {
     if (this.enemyMonster.hp <= 0 ) {
       this.playerMonster.gainEnemyExp(this.enemyMonster);
       this.enemyAction = null;
-      this.enemySelectedAttack = null;
       this.playerScore += 100;
     }
   }
@@ -123,9 +121,10 @@ export class Game {
     calculateDamage(this.enemyMonster, this.playerMonster, enemyMove, this.dialogues);
     if (this.playerMonster.hp <= 0) {
       this.enemyMonster.gainEnemyExp(this.playerMonster);
-      this.playerAction = null;
-      this.playerSelectedAttack = null;
     }
+    this.enemyAction = null;
+    this.lastTurn = this.turn;
+    this.turn = TurnType.Dialogue;
   }
 
   playerHeal() {
