@@ -13,13 +13,13 @@
                 <h1>Your last score was: {{ lastScore }}</h1>
             }
             <p>Prepare your monster and enter the ultimate battle arena!</p>
-            <button (click)="startBattle = true">Start Battle</button>
+            <button (click)="onStartBattle()">Start Battle</button>
         </div>
         <div class="game-start-screen__monsters">
             @for (monster of monsters; track monster.id) {
                 <app-monster 
                     [monster]="monster" 
-                    [active]="playerMonster.id == monster.id || hoverMonster== monster.id" 
+                    [active]="game.player.monsters[0].id == monster.id || hoverMonster== monster.id" 
                     [isPlayer]="false"
                     (click)="playerSelectMonster(monster)"
                     (mouseover)="hoverMonster = monster.id" 

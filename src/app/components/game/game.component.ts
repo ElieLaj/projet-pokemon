@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Monster } from '../../models/monster.model';
 import { MonsterDTO } from '../../models/monsterDTO.model';
 import { BattleScreenComponent } from '../battle-screen/battle-screen.component';
-import { Move } from '../../models/move.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { api } from '../../../plugins/api';
 import { transformManyPokemonDTO } from '../../utils/game.utils';
@@ -34,8 +33,6 @@ export class GameComponent implements OnInit {
   player!: Trainer;
   playerBag!: Bag;
 
-  moves: Move[] = [];
-  selectedMove!: Move;
   constructor() {
     this.currentYear = new Date().getFullYear();
   }
@@ -49,11 +46,8 @@ export class GameComponent implements OnInit {
     this.playerMonster = this.enemyMonster = new Monster(this.monsters[0].id, this.monsters[0].name, this.monsters[0].baseHp, this.monsters[0].baseAttack, this.monsters[0].baseDefense, this.monsters[0].baseSpecialAttack, this.monsters[0].baseSpecialDefense, this.monsters[0].baseSpeed, this.monsters[0].expRate, this.monsters[0].pokemonMoves, this.monsters[0].types, this.monsters[0].level);;
     this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
 
-    await this.fetchMoves().then((moves: Move[]) => {
-      this.moves = moves;
-    });
-
     this.playerBag = new Bag([], [])
+
     this.player = new Trainer('Player', [this.playerMonster], 500, this.playerBag);
 
     this.game = new Game(this.player, this.enemyMonster);
@@ -63,6 +57,8 @@ export class GameComponent implements OnInit {
   gameOver(score: number) {
     this.startBattle = false;
     this.lastScore = score;
+    this.playerBag = new Bag([], [])
+    this.playerSelectMonster(this.monsters[0]);
   }
 
   onNextEnemy() {
@@ -71,28 +67,52 @@ export class GameComponent implements OnInit {
     this.game.dialogues.push(`A new enemy appears: ${nextEnemy.name}!`);
   }
 
-  playerSelectMonster(monster: Monster) {
-    this.playerMonster = new Monster(monster.id, monster.name, monster.baseHp, monster.baseAttack, monster.baseDefense, monster.baseSpecialAttack, monster.baseSpecialDefense, monster.baseSpeed, monster.expRate, monster.pokemonMoves, monster.types, monster.level);
-  }
+playerSelectMonster(monster: Monster) {
+    const monsterCopy = new Monster(
+        monster.id,
+        monster.name,
+        monster.baseHp,
+        monster.baseAttack,
+        monster.baseDefense,
+        monster.baseSpecialAttack,
+        monster.baseSpecialDefense,
+        monster.baseSpeed,
+        monster.expRate,
+        monster.pokemonMoves,
+        monster.types,
+        monster.level
+    );
 
-async addSelectedMove() {
-  try {
-    const response = await api.post('pokemon_move', {
-      moveName: this.selectedMove,
-      pokemonName: this.playerMonster.name,
-      level: this.playerMonster.level
-    });
-    
-  } catch (error) {
-    console.error('Error adding move:', error);
-  }
+    this.playerMonster = monsterCopy;
+
+    this.player = new Trainer('Player', [monsterCopy], 500, this.playerBag);
+
+    if (this.game) {
+        this.game.player = this.player;
+    }
 }
 
-  async fetchMoves() {
-    const moves = await api.get('move').then((response: any) => {
-      return response.data;
-    });
-    return moves;
+  onStartBattle() {
+      const selectedMonster = this.playerMonster || this.monsters[0];
+      const monsterCopy = new Monster(
+          selectedMonster.id,
+          selectedMonster.name,
+          selectedMonster.baseHp,
+          selectedMonster.baseAttack,
+          selectedMonster.baseDefense,
+          selectedMonster.baseSpecialAttack,
+          selectedMonster.baseSpecialDefense,
+          selectedMonster.baseSpeed,
+          selectedMonster.expRate,
+          selectedMonster.pokemonMoves,
+          selectedMonster.types,
+          selectedMonster.level
+      );
+
+      this.player = new Trainer('Player', [monsterCopy], 500, this.playerBag);
+      this.game = new Game(this.player, this.enemyMonster);
+
+      this.startBattle = true;
   }
 
   async fetchMonsters() {
