@@ -1,8 +1,8 @@
 import { Effect } from "./effect.model";
-import { PokemonMove } from "./pokemonMove.model";
-import { Stage } from "./stage.model";
+import { PokemonMove } from "../pokemonMove.model";
+import { Stage } from "../stage.model";
 import { Type } from "./type.model";
-import { calculateDamage } from "../utils/game.utils";
+import { calculateDamage } from "../../utils/game.utils";
 
 export class Monster {
   id: number;
@@ -25,6 +25,8 @@ export class Monster {
   learnset: PokemonMove[] = [];
   types: Type[];
   stages: Stage[] = [];
+  effect: Effect | null = null;
+  effectTurn: number = 0;
 
   baseAttack: number;
   baseDefense: number;
@@ -32,8 +34,6 @@ export class Monster {
   baseSpecialDefense: number;
   baseSpeed: number;
   baseHp: number;
-
-  effect: Effect[] = [];
 
   constructor(
     id: number,
@@ -135,6 +135,36 @@ export class Monster {
 
   heal(hpHealed: number) {
     this.hp = Math.min(this.hp + hpHealed, this.maxHp);
+  }
+
+  addEffect(effect: Effect, dialogues: string[]) {
+    if (!this.effect) {
+      this.effectTurn = 0;
+      this.effect = effect;
+      dialogues.push(`${this.name} was ${effect.name}!`);
+    }
+  }
+
+  tryRemovingEffect(dialogues: string[]) {
+    if (this.effect) {
+      if (this.effect.turns) {
+        if (this.effectTurn >= this.effect.turns) {
+          this.removeEffect(dialogues);
+        }
+        else{
+          Math.random() < 0.2 ? this.removeEffect(dialogues) : dialogues.push(`${this.name} is still ${this.effect.name}!`);
+          this.effectTurn++;
+        }
+      }
+    }
+  }
+
+  removeEffect(dialogues: string[]) {
+    if (this.effect) {
+      dialogues.push(`${this.name} is no longer ${this.effect.name}!`);
+      this.effect = null;
+      this.effectTurn = 0;
+    }
   }
 
 }

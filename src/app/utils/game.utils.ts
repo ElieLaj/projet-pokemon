@@ -1,8 +1,9 @@
 import e from 'express';
 import { MonsterType, StageType } from './monster.utils';
-import { MonsterDTO } from '../models/monsterDTO.model';
-import { Monster } from '../models/monster.model';
-import { Move } from '../models/move.model';
+import { MonsterDTO } from '../models/monster/monsterDTO.model';
+import { Monster } from '../models/monster/monster.model';
+import { Move } from '../models/monster/move.model';
+import { PokemonMove } from '../models/pokemonMove.model';
 
 export enum TurnType {
     Player = 'Player',
@@ -12,7 +13,10 @@ export enum TurnType {
 
 export enum ActionType {
     Attack = 'Attack',
+    SelectAttack = 'SelectAttack',
     Item = 'Item',
+    SelectItem = 'SelectItem',
+    SelectItemType = 'SelectItemType',
     Run = 'Run',
     Swap = 'Swap'
 }
@@ -63,6 +67,11 @@ export const calculateDamage = (
   move: Move,
   dialogues: string[]
 ) => {
+  if (Math.ceil(Math.random() * 100) > move.accuracy){
+    dialogues.push(`${pokemon.name} missed!`);
+    return;
+  }
+
   const stat = move.category.name === MoveCategory.Physical ? pokemon.attack : pokemon.specialAttack;
   const enemyStat = move.category.name === MoveCategory.Physical ? enemy.defense : enemy.specialDefense;
 
@@ -84,7 +93,7 @@ export const calculateDamage = (
     return;
   }
 
-  triggerEffect(enemy, move, pokemon, dialogues);
+  Math.random() * 100 < move.moveEffects[0]?.odds ? enemy.addEffect(move.moveEffects[0].effect, dialogues) : null;
 
 };
 
@@ -92,6 +101,7 @@ export const triggerEffect = (pokemon: Monster, move: Move, enemy: Monster, dial
   if (move.moveEffects) {
     switch (move.moveEffects[0]?.effect.name.toLowerCase()) {
       case 'burnt':
+        
         dialogues.push('The enemy was burned!');
         break;
       case 'paralyze':
@@ -122,8 +132,8 @@ export const triggerEffect = (pokemon: Monster, move: Move, enemy: Monster, dial
         dialogues.push('The enemy was trapped!');
         break;
       case 'heal':
-        pokemon.heal(move.power);
-        dialogues.push(`${pokemon.name} healed ${move.power} hp!`);
+        pokemon.heal(move.power * 0.1);
+        dialogues.push(`${pokemon.name} healed ${move.power * 0.1} hp!`);
         break;
       default:
         break;

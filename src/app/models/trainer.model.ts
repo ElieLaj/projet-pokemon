@@ -1,5 +1,5 @@
 import { Bag } from "./bag.model";
-import { Monster } from "./monster.model";
+import { Monster } from "./monster/monster.model";
 
 export class Trainer {
     name: string;

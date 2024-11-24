@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Monster } from '../../models/monster.model';
-import { MonsterDTO } from '../../models/monsterDTO.model';
+import { Monster } from '../../models/monster/monster.model';
+import { MonsterDTO } from '../../models/monster/monsterDTO.model';
 import { BattleScreenComponent } from '../battle-screen/battle-screen.component';
 import { MonsterComponent } from '../monster/monster.component';
 import { api } from '../../../plugins/api';
@@ -9,6 +9,7 @@ import { transformManyPokemonDTO } from '../../utils/game.utils';
 import { Game } from '../../models/game.model';
 import { Trainer } from '../../models/trainer.model';
 import { Bag } from '../../models/bag.model';
+import { HealingItem } from '../../models/healingItem.model';
 
 @Component({
   selector: 'app-game',
@@ -46,7 +47,9 @@ export class GameComponent implements OnInit {
     this.playerMonster = this.enemyMonster = new Monster(this.monsters[0].id, this.monsters[0].name, this.monsters[0].baseHp, this.monsters[0].baseAttack, this.monsters[0].baseDefense, this.monsters[0].baseSpecialAttack, this.monsters[0].baseSpecialDefense, this.monsters[0].baseSpeed, this.monsters[0].expRate, this.monsters[0].pokemonMoves, this.monsters[0].types, this.monsters[0].level);;
     this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
 
-    this.playerBag = new Bag([], [])
+    const healingItem = new HealingItem(1, 'Potion', 'Heals a pokemon', 200, 20, 0);
+
+    this.playerBag = new Bag([healingItem], [])
 
     this.player = new Trainer('Player', [this.playerMonster], 500, this.playerBag);
 

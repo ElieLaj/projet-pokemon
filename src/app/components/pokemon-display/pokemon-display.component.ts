@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MonsterComponent } from '../monster/monster.component';
-import { MonsterDTO } from '../../models/monsterDTO.model';
+import { MonsterDTO } from '../../models/monster/monsterDTO.model';
  
 @Component({
   selector: 'app-pokemon-display',

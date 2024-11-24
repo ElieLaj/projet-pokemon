@@ -1,5 +1,5 @@
 import { Component, Input, model, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Monster } from '../../models/monster.model';
+import { Monster } from '../../models/monster/monster.model';
 import { calculateBg } from '../../utils/game.utils';
 
 @Component({

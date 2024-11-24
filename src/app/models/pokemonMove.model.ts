@@ -1,4 +1,4 @@
-import { Move } from './move.model';
+import { Move } from './monster/move.model';
 
 export class PokemonMove { 
     id: number;

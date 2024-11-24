@@ -1,5 +1,5 @@
-import { Monster } from "./monster.model";
-import { MonsterDTO } from "./monsterDTO.model";
+import { Monster } from "./monster/monster.model";
+import { MonsterDTO } from "./monster/monsterDTO.model";
 
 export class Stage {
     id: number;

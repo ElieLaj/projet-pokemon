@@ -9,6 +9,9 @@
             </h2>
             <h2>Turn: {{ game.currentTurn }}</h2>
             <h2>Score: {{ game.playerScore }}</h2>
+            <h2>Current turn: {{ game.turn }}</h2>
+            <h2>Enemy turn: {{ game.enemyAction }}</h2>
+            <h2>Last turn: {{ game.lastTurn }}</h2>
         </div>
         <div class="battle-screen__monsters">
             <div class="battle-screen__player">
@@ -27,16 +30,14 @@
         </div>
         <div class="battle-screen__inputs">
             <div class="battle-screen__actions">
-                <!-- Actions disponibles lorsque le joueur est en phase de décision -->
-                @if (!game.showMoves && game.dialogues.length === 0) {
-                    <button class="battle-screen__actions-attack" (click)="game.showMoves = true">Attack</button>
-                    <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.Item)">Item</button>
+                @if (!game.playerAction && game.dialogues.length === 0) {
+                    <button class="battle-screen__actions-attack" (click)="game.setAction(game.ActionType.SelectAttack)">Attack</button>
+                    <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.SelectItemType)">Item</button>
                     <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.Swap)">Swap</button>
                     <button class="battle-screen__actions-run" (click)="game.setAction(game.ActionType.Run)">Run</button>
                 }
                 
-                <!-- Liste des attaques lorsque l'option "Attack" est sélectionnée -->
-                @if (game.showMoves) {
+                @if (game.playerAction === game.ActionType.SelectAttack) {
                     <div class="battle-screen__attack-options">
                         @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
                             <button
@@ -47,14 +48,29 @@
                         }
                     </div>
                 }
+                @else if (game.playerAction === game.ActionType.SelectItemType) {
+                    <div class="battle-screen__item-options">
+                        <button (click)="game.chooseItemType('pokeball')">Pokeballs</button>
+                        <button (click)="game.chooseItemType('heal')">Healing Items</button>
+                    </div>
+                }
+                @else if (game.playerAction === game.ActionType.SelectItem) {
+                    <div class="battle-screen__item-options">
+                        @for (item of game.playerSelectedBag; track item.id) {
+                            <button
+                                (click)="game.playerSelectItem(item)"
+                                [style.background]="calculateBg('normal')">
+                                {{ item.name }}
+                            </button>
+                        }
+                    </div>
+                }
             </div>
             
-            <!-- Bouton pour annuler la sélection des attaques -->
-            @if (game.showMoves) {
-                <button class="battle-screen__cancel" (click)="game.showMoves = false">Cancel</button>
+            @if (game.playerAction) {
+                <button class="battle-screen__cancel" (click)="game.playerAction = null">Cancel</button>
             }
             
-            <!-- Affichage des dialogues -->
             <div class="battle-screen__log">
                 <app-dialogue
                     [dialogues]="game.dialogues"
@@ -63,7 +79,6 @@
             </div>
         </div>
         
-        <!-- État de la bataille -->
         <div class="battle-screen__status">
             @if (game.playerMonster.hp <= 0) {
                 <h2>Game Over</h2>

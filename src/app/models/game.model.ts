@@ -1,6 +1,7 @@
 import { ActionType, calculateDamage, TurnType } from "../utils/game.utils";
-import { Monster } from "./monster.model";
-import { Move } from "./move.model";
+import { Item } from "./item.model";
+import { Monster } from "./monster/monster.model";
+import { Move } from "./monster/move.model";
 import { Trainer } from "./trainer.model";
 
 export class Game {
@@ -20,6 +21,8 @@ export class Game {
   ActionType = ActionType;
 
   playerSelectedAttack: Move | null = null;
+  playerSelectedItem: Item | null = null;
+  playerSelectedBag: Item[] = [];
 
   playerAction: ActionType | null = null;
   enemyAction: ActionType | null = null;
@@ -66,7 +69,7 @@ export class Game {
       this.turn = TurnType.Dialogue;
     }
 
-    else if (this.playerAction != null || this.enemyAction != null) {
+    else if ((this.playerAction != null && this.playerAction != ActionType.SelectAttack && this.playerAction != ActionType.SelectItem  && this.playerAction != ActionType.SelectItemType) || this.enemyAction != null) {
       this.turnEnded = false;
       this.playTurn();
     }
@@ -87,14 +90,14 @@ export class Game {
   }
 
   playerTurn() {
-    this.lastTurn = this.turn;
+    this.lastTurn = TurnType.Player;
     this.turn = TurnType.Dialogue;
     switch(this.playerAction) {
       case ActionType.Attack:
         this.playerAttack();
         break;
       case ActionType.Item:
-        this.playerHeal();
+        this.playerSelectedItem ? this.playerUseItem(this.playerSelectedItem) : null; 
         break;
       case ActionType.Swap:
         this.playerSwap();
@@ -116,6 +119,24 @@ export class Game {
     }
   }
 
+  chooseItemType(itemType: string) {
+    console.log(itemType);
+    if (itemType === 'heal') {
+      this.playerSelectedBag = this.player.bag.healingItems;
+      console.log(this.player.bag.healingItems);
+    }
+    else if (itemType === 'pokeball') {
+      this.playerSelectedBag = this.player.bag.pokeballs;
+    }
+    console.log(this.playerSelectedBag);
+    this.setAction(ActionType.SelectItem);
+  }
+
+  playerSelectItem(item: Item) {
+    this.playerSelectedItem = item;
+    this.setAction(ActionType.Item);
+  }
+
   enemyAttack() {
     const enemyMove = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
     calculateDamage(this.enemyMonster, this.playerMonster, enemyMove, this.dialogues);
@@ -123,12 +144,12 @@ export class Game {
       this.enemyMonster.gainEnemyExp(this.playerMonster);
     }
     this.enemyAction = null;
-    this.lastTurn = this.turn;
+    this.lastTurn = TurnType.Enemy;
     this.turn = TurnType.Dialogue;
   }
 
-  playerHeal() {
-    this.playerMonster.heal(10);
+  playerUseItem(item: Item) {
+    this.player.bag?.useItem(item, this.playerMonster,this.dialogues);
   }
 
   playerSwap() {
@@ -140,6 +161,10 @@ export class Game {
   }
 
   setAction(action: ActionType) {
+    if (action === ActionType.SelectAttack || action === ActionType.SelectItem || action === ActionType.SelectItemType) {
+      this.playerAction = action;
+      return;
+    }
     if (this.turnEnded){
         this.playerAction = action;
         this.enemyAction = ActionType.Attack;

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { Monster } from '../../models/monster.model';
+import { Monster } from '../../models/monster/monster.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { ActionType, calculateBg } from '../../utils/game.utils';
 import { DialogueComponent } from "../dialogue/dialogue.component";
@@ -36,6 +36,7 @@ export class BattleScreenComponent implements OnInit {
     }
     else if (this.game.enemyMonster.hp <= 0 && this.game.dialogues.length === 0) {
       this.changeEnemyMonster.emit();
+      this.game.enemyLost = false;
     }
   }
 }

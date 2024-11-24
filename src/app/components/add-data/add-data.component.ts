@@ -1,16 +1,16 @@
 import { Component, effect, OnInit } from '@angular/core';
 import { api } from '../../../plugins/api';
 import { FormGroup, Validators, ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
-import { Type } from '../../models/type.model';
+import { Type } from '../../models/monster/type.model';
 import { calculateBg } from '../../utils/game.utils';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Monster } from '../../models/monster.model';
-import { MonsterDTO } from '../../models/monsterDTO.model';
+import { Monster } from '../../models/monster/monster.model';
+import { MonsterDTO } from '../../models/monster/monsterDTO.model';
 import { MonsterComponent } from '../monster/monster.component';
-import { Move } from '../../models/move.model';
+import { Move } from '../../models/monster/move.model';
 import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
 import { Category } from '../../models/category.model';
-import { Effect } from '../../models/effect.model';
+import { Effect } from '../../models/monster/effect.model';
 import { Stage } from '../../models/stage.model';
 
 
