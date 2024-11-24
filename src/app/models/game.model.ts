@@ -1,7 +1,10 @@
 import { ActionType, calculateDamage, TurnType } from "../utils/game.utils";
+import { HealingItem } from "./healingItem.model";
 import { Item } from "./item.model";
 import { Monster } from "./monster/monster.model";
 import { Move } from "./monster/move.model";
+import { Pokeball } from "./pokeball.model";
+import { PokemonMove } from "./pokemonMove.model";
 import { Trainer } from "./trainer.model";
 
 export class Game {
@@ -23,6 +26,7 @@ export class Game {
   playerSelectedAttack: Move | null = null;
   playerSelectedItem: Item | null = null;
   playerSelectedBag: Item[] = [];
+  playerSelectedMonster: Monster | null = null;
 
   playerAction: ActionType | null = null;
   enemyAction: ActionType | null = null;
@@ -38,6 +42,8 @@ export class Game {
   battleNumber: number = 0;
 
   showMoves: boolean = false;
+
+  forgetMoveSelected: PokemonMove | null = null;
 
   constructor(player: Trainer, enemyMonster: Monster) {
     this.player = player;
@@ -58,9 +64,13 @@ export class Game {
       }
     }
     if (this.playerMonster.hp <= 0 || this.enemyMonster.hp <= 0) {
-      if (this.playerMonster.hp <= 0) {
+      if (this.playerMonster.hp <= 0 && this.player.monsters.length === 1) {
         this.dialogues.push('You lost!');
         this.playerLost = true;
+      }
+      else if (this.player.monsters.length > 1 && this.playerMonster.hp <= 0) {
+        this.dialogues.push('Choose another pokemon!');
+        this.setAction(ActionType.SelectSwap);
       }
       else {
         if (!this.enemyLost) this.dialogues.push('You won!');
@@ -69,7 +79,7 @@ export class Game {
       this.turn = TurnType.Dialogue;
     }
 
-    else if ((this.playerAction != null && this.playerAction != ActionType.SelectAttack && this.playerAction != ActionType.SelectItem  && this.playerAction != ActionType.SelectItemType) || this.enemyAction != null) {
+    else if ((this.playerAction != null && this.playerAction != ActionType.SelectAttack && this.playerAction != ActionType.SelectSwap && this.playerAction != ActionType.SelectItem  && this.playerAction != ActionType.SelectItemType) || this.enemyAction != null) {
       this.turnEnded = false;
       this.playTurn();
     }
@@ -97,10 +107,18 @@ export class Game {
         this.playerAttack();
         break;
       case ActionType.Item:
-        this.playerSelectedItem ? this.playerUseItem(this.playerSelectedItem) : null; 
+        if (this.playerSelectedItem instanceof Pokeball) {
+          this.playerUsePokeball(this.playerSelectedItem, this.enemyMonster);
+          this.playerSelectedItem = null;
+        } 
+        else if (this.playerSelectedItem instanceof HealingItem) {
+          this.playerUseHealingItem(this.playerSelectedItem, this.playerMonster);
+          this.playerSelectedItem = null;
+        }
         break;
       case ActionType.Swap:
-        this.playerSwap();
+        if (this.player.monsters.length > 1 && this.playerSelectedMonster)
+          this.playerChangeMonster(this.playerSelectedMonster);
         break;
       case ActionType.Run:
         this.playerRun();
@@ -111,24 +129,48 @@ export class Game {
   }
 
   playerAttack() {
+    this.playerMonster.effect ? this.playerMonster.tryRemovingEffect(this.dialogues) : null;
+    const paralyzed = this.playerMonster.effect?.name === 'Paralyzed' && Math.random() < 0.25;
+    if (this.playerMonster.effect?.name === 'Sleeping' || this.playerMonster.effect?.name === 'Freezed' || paralyzed) {
+      paralyzed ? this.dialogues.push(`${this.playerMonster.name} is still ${this.playerMonster.effect?.name}!`) : this.dialogues.push(`${this.playerMonster.name} is ${this.playerMonster.effect?.name} and couldn't attack!`);
+      this.lastTurn = TurnType.Player;
+      this.turn = TurnType.Dialogue;
+      return;
+    }
     calculateDamage(this.playerMonster, this.enemyMonster, this.playerSelectedAttack!, this.dialogues);
+    
+    this.playerMonster.effect?.damage ? 
+      this.playerMonster.hp = Math.max(this.playerMonster.hp - Math.floor(this.playerMonster.maxHp * this.playerMonster.effect.damage), 0)
+     :
+      null;
+
+    this.playerMonster.sufferEffect(this.dialogues);
+
     if (this.enemyMonster.hp <= 0 ) {
       this.playerMonster.gainEnemyExp(this.enemyMonster);
+
       this.enemyAction = null;
       this.playerScore += 100;
     }
+  }
+
+  playerChangeMonster(newMonster: Monster) {
+    const oldMonster = this.playerMonster;
+    this.player.monsters[0] = newMonster;
+    const newMonsterIndex = this.player.monsters.findIndex(monster => monster.specialId === newMonster.specialId);
+    this.player.monsters[newMonsterIndex] = oldMonster;
+    this.playerMonster = newMonster;
+    this.dialogues.push(`${newMonster.name}, I choose you!`);
   }
 
   chooseItemType(itemType: string) {
     console.log(itemType);
     if (itemType === 'heal') {
       this.playerSelectedBag = this.player.bag.healingItems;
-      console.log(this.player.bag.healingItems);
     }
     else if (itemType === 'pokeball') {
       this.playerSelectedBag = this.player.bag.pokeballs;
     }
-    console.log(this.playerSelectedBag);
     this.setAction(ActionType.SelectItem);
   }
 
@@ -138,22 +180,40 @@ export class Game {
   }
 
   enemyAttack() {
+    this.enemyMonster.effect ? this.enemyMonster.tryRemovingEffect(this.dialogues) : null;
+    const paralyzed = this.enemyMonster.effect?.name === 'Paralyzed' && Math.random() < 0.25;
+    if (this.enemyMonster.effect?.name === 'Sleeping' || this.enemyMonster.effect?.name === 'Freezed' || paralyzed) {
+      this.dialogues.push(`${this.enemyMonster.name} is still ${this.enemyMonster.effect?.name}!`);
+      this.lastTurn = TurnType.Enemy;
+      this.turn = TurnType.Dialogue;
+      this.enemyAction = null;
+      return;
+    }
     const enemyMove = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
     calculateDamage(this.enemyMonster, this.playerMonster, enemyMove, this.dialogues);
     if (this.playerMonster.hp <= 0) {
       this.enemyMonster.gainEnemyExp(this.playerMonster);
     }
+    
+    this.enemyMonster.sufferEffect(this.dialogues);
+
     this.enemyAction = null;
     this.lastTurn = TurnType.Enemy;
     this.turn = TurnType.Dialogue;
   }
 
-  playerUseItem(item: Item) {
-    this.player.bag?.useItem(item, this.playerMonster,this.dialogues);
+  playerUseHealingItem(item: HealingItem, target: Monster) {
+    this.player.bag?.useItem(item, target, this.dialogues, this.player);
   }
 
-  playerSwap() {
-    this.playerMonster = this.player.monsters[1];
+  playerUsePokeball(item: Pokeball, target: Monster) {
+    this.player.bag?.useItem(item, target, this.dialogues, this.player);
+    if (this.dialogues.find(dialogue => dialogue === `${target.name} has been caught!`)) {
+      this.enemyLost = true;
+      this.enemyAction = null;
+      this.enemyMonster.hp = 0;
+      this.playerMonster.gainEnemyExp(this.enemyMonster);
+    }
   }
 
   playerRun() {
@@ -161,7 +221,7 @@ export class Game {
   }
 
   setAction(action: ActionType) {
-    if (action === ActionType.SelectAttack || action === ActionType.SelectItem || action === ActionType.SelectItemType) {
+    if (action === ActionType.SelectAttack || action === ActionType.SelectItem || action === ActionType.SelectItemType || action === ActionType.SelectSwap) {
       this.playerAction = action;
       return;
     }

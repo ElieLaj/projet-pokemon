@@ -1,17 +1,13 @@
 .dialogue {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%; /* Ajustez selon la taille souhaitée */
-  max-width: 600px;
+  width: 40vw; /* Ajustez selon la taille souhaitée */
+  min-height: 100px; /* Hauteur minimale */
   background-color: #f8f8f8; /* Couleur de fond principale */
   border: 3px solid #333; /* Bordure sombre */
   border-radius: 12px; /* Coins arrondis */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre douce */
   padding: 16px;
   font-family: 'Press Start 2P', sans-serif; /* Typographie rétro */
-  z-index: 100; /* Priorité sur d'autres éléments */
+  margin-top: 16px; /* Espacement par rapport aux boutons */
   overflow: hidden;
 }
 

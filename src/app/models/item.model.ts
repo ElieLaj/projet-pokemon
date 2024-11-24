@@ -1,4 +1,5 @@
 import { Monster } from "./monster/monster.model";
+import { Trainer } from "./trainer.model";
 
 export class Item {
 
@@ -9,6 +10,9 @@ export class Item {
     bagId: number;
 
     constructor(id: number, name: string, description: string, price: number, bagId: number) {
+        if (new.target === Item) {
+            throw new Error("AbstractClass cannot be instantiated directly.");
+        }
         this.id = id;
         this.name = name;
         this.description = description;
@@ -16,7 +20,7 @@ export class Item {
         this.bagId = bagId;
     }
 
-    use(monster: Monster, dialogues: String[]): void {
-        
+    use(..._args: any[]): void {
+        throw new Error("The 'use' method must be implemented by subclasses.");
     }
 }

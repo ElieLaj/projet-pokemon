@@ -87,6 +87,7 @@ export class AddDataComponent implements OnInit {
       specialDefense: ['', [Validators.required]],
       speed: ['', [Validators.required]],
       expRate: ['', [Validators.required]],
+      catchRate: ['', [Validators.required]],
       type1: ['', [Validators.required]],
       type2: [''],
     });
@@ -111,6 +112,7 @@ export class AddDataComponent implements OnInit {
       specialDefense: ['', [Validators.required]],
       speed: ['', [Validators.required]],
       expRate: ['', [Validators.required]],
+      catchRate: ['', [Validators.required]],
       type1: ['', [Validators.required]],
       type2: [''],
     });
@@ -159,6 +161,7 @@ export class AddDataComponent implements OnInit {
           specialDefense: monster.specialDefense,
           speed: monster.speed,
           expRate: monster.expRate,
+          catchRate: monster.catchRate,
           type1: monster.types[0].name,
           type2: monster.types[1]?.name
         });
@@ -178,7 +181,8 @@ export class AddDataComponent implements OnInit {
       accuracy: move.accuracy,
       type: move.type.name,
       category: move.category?.name,
-      effect: move.moveEffects[0]?.effect.name
+      effect: move.moveEffects[0]?.effect.name,
+      odds: move.moveEffects[0]?.odds
     });
     this.selectedMove = move;
   }
@@ -237,6 +241,7 @@ export class AddDataComponent implements OnInit {
       specialDefense: this.addPokemonForm.get('specialDefense')?.value,
       speed: this.addPokemonForm.get('speed')?.value,
       expRate: this.addPokemonForm.get('expRate')?.value,
+      catchRate: this.addPokemonForm.get('catchRate')?.value,
       typeName: [this.addPokemonForm.get('type1')?.value]
     };
     this.addPokemonForm.get('type2')?.value ? pokemon.typeName.push(this.addPokemonForm.get('type2')?.value) : null;
@@ -275,6 +280,7 @@ export class AddDataComponent implements OnInit {
       specialDefense: this.changePokemonForm.get('specialDefense')?.value,
       speed: this.changePokemonForm.get('speed')?.value,
       expRate: this.changePokemonForm.get('expRate')?.value,
+      catchRate: this.changePokemonForm.get('catchRate')?.value,
       typeName: [this.changePokemonForm.get('type1')?.value]
     };
     this.changePokemonForm.get('type2')?.value ? pokemon.typeName.push(this.changePokemonForm.get('type2')?.value) : null;

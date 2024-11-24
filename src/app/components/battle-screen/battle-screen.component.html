@@ -26,11 +26,48 @@
             </div>
         </div>
         <div class="battle-screen__inputs">
+            @if (game.playerMonster.learnMovewaitList.length > 0) {
+                    <div class="battle-screen__attack-options">
+                        @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
+                            <button
+                                (click)="game.forgetMoveSelected = pokemonMove;"
+                                [style.background]="calculateBg(pokemonMove.move.type.name)"
+                                [class.activated]="game.forgetMoveSelected?.id === pokemonMove.id">
+                                {{ pokemonMove.move.name }}
+                            </button>
+                        }
+                    </div>
+
+                    <div class="battle-screen__learn-options">
+                        <button 
+                            class="battle-screen__learn-options-learn" 
+                            [style.background]="calculateBg(game.playerMonster.learnMovewaitList[0].move.type.name)"
+                        >
+                            <span>{{ game.playerMonster.learnMovewaitList[0].move.name }}</span>
+                            <span>{{ game.playerMonster.learnMovewaitList[0].move.power }} - {{ game.playerMonster.learnMovewaitList[0].move.type.name }}</span> 
+                        </button>
+                    </div>
+
+                    <div class="battle-screen__learn-controls">
+                        <button
+                            class="battle-screen__learn-controls-attack"
+                            (click)="game.playerMonster.learnMove(game.forgetMoveSelected)">
+                            Learn this move
+                        </button>
+
+                        <button
+                            class="battle-screen__learn-controls-attack"
+                            (click)="game.playerMonster.learnMovewaitList.shift()">
+                            Don't learn this move
+                        </button>
+                    </div>
+                }
             <div class="battle-screen__actions">
-                @if (!game.playerAction && game.dialogues.length === 0) {
+                
+                @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0) {
                     <button class="battle-screen__actions-attack" (click)="game.setAction(game.ActionType.SelectAttack)">Attack</button>
                     <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.SelectItemType)">Item</button>
-                    <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.Swap)">Swap</button>
+                    <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.SelectSwap)">Swap</button>
                     <button class="battle-screen__actions-run" (click)="game.setAction(game.ActionType.Run)">Run</button>
                 }
                 
@@ -38,9 +75,11 @@
                     <div class="battle-screen__attack-options">
                         @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
                             <button
+                                class="battle-screen__attack-options-attack"
                                 (click)="game.playerSelectedAttack = pokemonMove.move; game.setAction(game.ActionType.Attack)"
                                 [style.background]="calculateBg(pokemonMove.move.type.name)">
-                                {{ pokemonMove.move.name }}
+                                <span>{{ pokemonMove.move.name }}</span>
+                                <span>{{ pokemonMove.move.power }} - {{ pokemonMove.move.type.name }}</span>
                             </button>
                         }
                     </div>
@@ -62,9 +101,29 @@
                         }
                     </div>
                 }
+                @else if (game.playerAction === game.ActionType.SelectSwap) {
+                    <div class="battle-screen__swap-options">
+                        @for (monster of game.player.monsters; track monster.id) {
+                            @if (monster.hp > 0 && monster.id !== game.playerMonster.id) {
+                                <button
+                                    (click)="game.playerSelectedMonster = monster; game.setAction(game.ActionType.Swap)"
+                                    [style.background]="calculateBg(monster.types[0].name)">
+                                    <img [src]="'https://img.pokemondb.net/sprites/black-white/normal/'+monster.name.toLowerCase()+'.png'">
+                                    <span>{{ monster.name }}</span>
+                                </button>
+                            }
+                            @else {
+                                <button disabled>
+                                    <img [src]="'https://img.pokemondb.net/sprites/black-white/normal/'+monster.name.toLowerCase()+'.png'">
+                                    <span>{{ monster.name }}</span>
+                                </button>
+                            }
+                        }
+                    </div>
+                }
             </div>
             
-            @if (game.playerAction) {
+            @if (game.playerAction && game.turnEnded) {
                 <button class="battle-screen__cancel" (click)="game.playerAction = null">Cancel</button>
             }
             

@@ -18,7 +18,8 @@ export enum ActionType {
     SelectItem = 'SelectItem',
     SelectItemType = 'SelectItemType',
     Run = 'Run',
-    Swap = 'Swap'
+    Swap = 'Swap',
+    SelectSwap = 'SelectSwap'
 }
 
 export enum MoveCategory {
@@ -81,12 +82,15 @@ export const calculateDamage = (
     (((((pokemon.level * 0.4 + 2) * stat * move.power) / enemyStat) / 50) + 2)
   );
 
-  const damage = Math.floor(baseDamage * modifier * (Math.random() * 0.15 + 0.85));
-  enemy.hp = Math.max(enemy.hp - damage, 0);
+  const damage = Math.max(Math.floor(baseDamage * modifier * (Math.random() * 0.15 + 0.85)), 1);
 
-  if (modifier === 0) dialogues.push(`${pokemon.name} used ${move.name}, but it had no effect on ${enemy.name}!`);
+  if (modifier === 0) {
+    dialogues.push(`${pokemon.name} used ${move.name}, but it had no effect on ${enemy.name}!`);
+    return;
+  }
   else dialogues.push(`${pokemon.name} used ${move.name} on ${enemy.name} and dealt ${damage}!`);
 
+  enemy.hp = Math.max(enemy.hp - damage, 0);
 
   if (enemy.hp <= 0) {
     dialogues.push(`${enemy.name} fainted!`);
@@ -105,7 +109,7 @@ export const calculateBg = (type: string = 'none'): string => {
       return '#78C850';
     case MonsterType.Fire:
     case StageType.Volcano:
-    case EffectType.Burnt:
+    case EffectType.Burned:
       return '#F08030';
     case MonsterType.Water:
     case StageType.Sea:
@@ -170,7 +174,10 @@ export const transformManyPokemonDTO = (pokemons: MonsterDTO[]): Monster[] => {
         monster.speed,
         monster.expRate,
         monster.pokemonMoves,
-        monster.types
+        monster.types,
+        monster.level,
+        monster.stages,
+        monster.catchRate
       );
     });
 };
@@ -187,6 +194,9 @@ export const transformPokemonDTO = (pokemon: MonsterDTO): Monster => {
     pokemon.speed,
     pokemon.expRate,
     pokemon.pokemonMoves,
-    pokemon.types
+    pokemon.types,
+    pokemon.level,
+    pokemon.stages,
+    pokemon.catchRate
   );
 };

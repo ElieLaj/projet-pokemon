@@ -21,6 +21,8 @@ export class Monster {
   currentExp: number;
   neededExp: number;
   expRate: number;
+  catchRate: number;
+
   pokemonMoves: PokemonMove[] = []; 
   learnset: PokemonMove[] = [];
   types: Type[];
@@ -34,6 +36,9 @@ export class Monster {
   baseSpecialDefense: number;
   baseSpeed: number;
   baseHp: number;
+  specialId!: number;
+
+  learnMovewaitList: PokemonMove[] = [];
 
   constructor(
     id: number,
@@ -48,7 +53,8 @@ export class Monster {
     pokemonMoves: any[],
     types: any[],
     level: number = 5,
-    stages: Stage[] = []
+    stages: Stage[] = [],
+    catchRate: number = 85
   ) {
     this.level = level;
     this.baseAttack = baseAttack;
@@ -73,15 +79,41 @@ export class Monster {
     this.currentExp = 0;
     this.expRate = expRate;
     this.neededExp = Math.floor((1.2 * Math.pow(level, 3)) - 15 * Math.pow(level, 2) + 100 * level - 140);
+    this.learnset = [...pokemonMoves];
     this.pokemonMoves = this.learnMoves(pokemonMoves);
     this.types = types;
 
-    this.learnset = pokemonMoves;
     this.stages = stages;
+    this.catchRate = catchRate;
+  }
+
+
+  learnMove(oldMove: PokemonMove | null = null) {
+    const newMove = this.learnMovewaitList.shift();
+    if (newMove) {
+      if (this.pokemonMoves.length < 4) {
+        this.pokemonMoves.push(newMove);
+        return;
+      }
+      this.pokemonMoves.push(newMove);
+      this.pokemonMoves = this.pokemonMoves.filter(move => move !== oldMove);
+    }
   }
 
   levelUp() {
     this.level++;
+
+    for (const move of this.learnset) {
+      if (move.level === this.level) {
+        if (this.pokemonMoves.length < 4) {
+          this.pokemonMoves.push(move);
+        }
+        else {
+          this.learnMovewaitList.push(move);
+        }
+      }
+    }
+
     this.recalculateStats();
     this.calculateExpToNextLevel();
   }
@@ -89,8 +121,9 @@ export class Monster {
   learnMoves(moves: PokemonMove[]) {
     const _moves = [...moves]
     _moves.sort((a, b) => a.level - b.level);
-    for (const move of _moves.splice(moves.length - 5, 4)) {
-      if (this.pokemonMoves.length< 4 && move && this.level >= move.level ) {
+    console.log(this.name, ':',_moves);
+    for (const move of _moves) {
+      if (this.pokemonMoves.length < 4 && move && this.level >= move.level ) {
         this.pokemonMoves.push(move);
       }
     }
@@ -99,7 +132,7 @@ export class Monster {
 
   gainEnemyExp(enemy: Monster, isWild: boolean = true) {
     const modifier = isWild ? 1 : 1.5;
-    const exp = Math.floor((enemy.expRate * enemy.level * modifier) / 7);
+    const exp = Math.floor((enemy.expRate * enemy.level * modifier) / 7) * enemy.level;
     this.gainExp(exp);
   }
 
@@ -164,6 +197,13 @@ export class Monster {
       dialogues.push(`${this.name} is no longer ${this.effect.name}!`);
       this.effect = null;
       this.effectTurn = 0;
+    }
+  }
+
+  sufferEffect(dialogues: string[]) {
+    if (this.effect?.damage) {
+      this.hp = Math.max(this.hp - Math.floor(this.maxHp * this.effect.damage), 0)
+      dialogues.push(`${this.name} suffered damage for being ${this.effect.name}!`);
     }
   }
 

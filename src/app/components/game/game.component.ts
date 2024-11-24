@@ -45,13 +45,8 @@ export class GameComponent implements OnInit {
     });
     this.monsters = transformManyPokemonDTO(this.monstersDTO);
     const enemyIndex = Math.floor(Math.random() * (this.monsters.length - 1));
-    this.playerMonster = this.enemyMonster = new Monster(this.monsters[0].id, this.monsters[0].name, this.monsters[0].baseHp, this.monsters[0].baseAttack, this.monsters[0].baseDefense, this.monsters[0].baseSpecialAttack, this.monsters[0].baseSpecialDefense, this.monsters[0].baseSpeed, this.monsters[0].expRate, this.monsters[0].pokemonMoves, this.monsters[0].types, this.monsters[0].level);;
-    this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].pokemonMoves, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level);
-
-
-    this.playerBag = new Bag([items.potion], [])
-
-    this.player = new Trainer('Player', [this.playerMonster], 500, this.playerBag);
+    this.playerSelectMonster(this.monsters[0]);
+    this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].learnset, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level, this.monsters[enemyIndex].stages, this.monsters[enemyIndex].catchRate);
 
     this.game = new Game(this.player, this.enemyMonster);
   }
@@ -75,9 +70,11 @@ export class GameComponent implements OnInit {
         nextEnemy.baseSpecialDefense,
         nextEnemy.baseSpeed,
         nextEnemy.expRate,
-        nextEnemy.pokemonMoves,
+        nextEnemy.learnset,
         nextEnemy.types,
-        nextEnemy.level
+        nextEnemy.level,
+        nextEnemy.stages,
+        nextEnemy.catchRate
     );
     this.game.enemyMonster = nextEnemyCopy;
     this.game.dialogues.push(`A new enemy appears: ${nextEnemyCopy.name}!`);
@@ -94,9 +91,11 @@ playerSelectMonster(monster: Monster) {
         monster.baseSpecialDefense,
         monster.baseSpeed,
         monster.expRate,
-        monster.pokemonMoves,
+        monster.learnset,
         monster.types,
-        monster.level
+        monster.level,
+        monster.stages,
+        monster.catchRate
     );
 
     this.playerMonster = monsterCopy;
@@ -118,13 +117,17 @@ playerSelectMonster(monster: Monster) {
           selectedMonster.baseSpecialDefense,
           selectedMonster.baseSpeed,
           selectedMonster.expRate,
-          selectedMonster.pokemonMoves,
+          selectedMonster.learnset,
           selectedMonster.types,
-          selectedMonster.level
+          selectedMonster.level,
+          selectedMonster.stages,
+          selectedMonster.catchRate
       );
 
       this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));
       this.player.bag.addHealingItem(items.potion, 5);
+      this.player.bag.addPokeball(items.pokeball, 10);
+      this.player.bag.addPokeball(items.masterBall, 1);
       this.game = new Game(this.player, this.enemyMonster);
 
       this.startBattle = true;

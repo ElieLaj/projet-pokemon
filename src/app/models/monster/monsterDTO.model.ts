@@ -18,10 +18,11 @@ export class MonsterDTO {
     types: Type[];
     level: number = 5;
     stages: Stage[] = [];
+    catchRate: number;
 
     constructor(id: number, name: string, type: string, hp: number,
                 attack: number, defense: number, specialAttack: number, 
-                specialDefense: number, speed: number, expRate: number
+                specialDefense: number, speed: number, expRate: number, catchRate: number
             )
     {
         this.id = id;
@@ -37,6 +38,7 @@ export class MonsterDTO {
         this.expRate = expRate;
         this.pokemonMoves = [];
         this.types = [];
+        this.catchRate = catchRate;
     }
 
 

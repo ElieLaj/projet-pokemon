@@ -38,10 +38,10 @@ export enum StageType {
 }
 
 export enum EffectType {
-    Burnt = 'Burnt',
+    Burned = 'Burned',
     Poisoned = 'Poisoned',
     Paralyzed = 'Paralyzed',
-    Frozen = 'Frozen',
+    Freezed = 'Freezed',
     Asleep = 'Asleep',
     Confused = 'Confused'
 }

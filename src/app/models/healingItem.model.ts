@@ -1,5 +1,6 @@
 import { Item } from './item.model';
 import { Monster } from './monster/monster.model';
+import { Trainer } from './trainer.model';
 
 export class HealingItem extends Item {
     healAmount: number;
