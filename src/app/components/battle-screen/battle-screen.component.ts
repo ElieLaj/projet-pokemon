@@ -4,11 +4,12 @@ import { MonsterComponent } from '../monster/monster.component';
 import { ActionType, calculateBg } from '../../utils/game.utils';
 import { DialogueComponent } from "../dialogue/dialogue.component";
 import { Game } from '../../models/game.model';
+import { DisplayStageComponent } from "../display-stage/display-stage.component";
 
 @Component({
   selector: 'app-battle-screen',
   standalone: true,
-  imports: [MonsterComponent, DialogueComponent],
+  imports: [MonsterComponent, DialogueComponent, DisplayStageComponent],
   templateUrl: './battle-screen.component.html',
   styleUrl: './battle-screen.component.scss'
 })

@@ -9,6 +9,7 @@
     <div class="game-start-screen">
         <div class="game-start-screen__content">
             <h1>Monster Battle Arena</h1>
+            <app-display-stage [stage]="currentStage" />
             @if (lastScore) {
                 <h1>Your last score was: {{ lastScore }}</h1>
             }

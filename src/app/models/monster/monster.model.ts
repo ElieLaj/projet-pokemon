@@ -121,7 +121,6 @@ export class Monster {
   learnMoves(moves: PokemonMove[]) {
     const _moves = [...moves]
     _moves.sort((a, b) => a.level - b.level);
-    console.log(this.name, ':',_moves);
     for (const move of _moves) {
       if (this.pokemonMoves.length < 4 && move && this.level >= move.level ) {
         this.pokemonMoves.push(move);

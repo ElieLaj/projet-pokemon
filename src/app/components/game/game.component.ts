@@ -9,13 +9,14 @@ import { transformManyPokemonDTO } from '../../utils/game.utils';
 import { Game } from '../../models/game.model';
 import { Trainer } from '../../models/trainer.model';
 import { Bag } from '../../models/bag.model';
-import { HealingItem } from '../../models/healingItem.model';
 import { items } from '../../data/items';
+import { Stage } from '../../models/stage.model';
+import { DisplayStageComponent } from '../display-stage/display-stage.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [BattleScreenComponent, MonsterComponent, FormsModule],
+  imports: [BattleScreenComponent, MonsterComponent, FormsModule, DisplayStageComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -25,6 +26,11 @@ export class GameComponent implements OnInit {
 
   monstersDTO: MonsterDTO[] = [];
   monsters: Monster[] = [];
+  spawnableMonsters: Monster[] = []
+  stages: Stage[] = [];
+
+  currentStage!: Stage;
+
   hoverMonster: number | null = null;
 
   lastScore: number = 0;
@@ -43,12 +49,34 @@ export class GameComponent implements OnInit {
     await this.fetchMonsters().then((monsters: MonsterDTO[]) => {
       this.monstersDTO = monsters;
     });
+
+    await this.fetchStages().then((stages: Stage[]) => {
+      this.stages = stages;
+    })
+    const stageIndex = Math.floor(Math.random() * (this.stages.length - 1));
+    this.currentStage = this.stages[stageIndex];
+    this.spawnableMonsters = transformManyPokemonDTO(this.currentStage.pokemons);
     this.monsters = transformManyPokemonDTO(this.monstersDTO);
-    const enemyIndex = Math.floor(Math.random() * (this.monsters.length - 1));
+    const enemyIndex = Math.floor(Math.random() * (this.spawnableMonsters.length - 1));
     this.playerSelectMonster(this.monsters[0]);
-    this.enemyMonster = new Monster(this.monsters[enemyIndex].id, this.monsters[enemyIndex].name, this.monsters[enemyIndex].baseHp, this.monsters[enemyIndex].baseAttack, this.monsters[enemyIndex].baseDefense, this.monsters[enemyIndex].baseSpecialAttack, this.monsters[enemyIndex].baseSpecialDefense, this.monsters[enemyIndex].baseSpeed, this.monsters[enemyIndex].expRate, this.monsters[enemyIndex].learnset, this.monsters[enemyIndex].types, this.monsters[enemyIndex].level, this.monsters[enemyIndex].stages, this.monsters[enemyIndex].catchRate);
+    this.enemyMonster = new Monster(
+      this.spawnableMonsters[enemyIndex].id,
+      this.spawnableMonsters[enemyIndex].name, 
+      this.spawnableMonsters[enemyIndex].baseHp, 
+      this.spawnableMonsters[enemyIndex].baseAttack, 
+      this.spawnableMonsters[enemyIndex].baseDefense, 
+      this.spawnableMonsters[enemyIndex].baseSpecialAttack, 
+      this.spawnableMonsters[enemyIndex].baseSpecialDefense, 
+      this.spawnableMonsters[enemyIndex].baseSpeed, 
+      this.spawnableMonsters[enemyIndex].expRate, 
+      this.spawnableMonsters[enemyIndex].learnset, 
+      this.spawnableMonsters[enemyIndex].types, 
+      this.spawnableMonsters[enemyIndex].level, 
+      this.spawnableMonsters[enemyIndex].stages, 
+      this.spawnableMonsters[enemyIndex].catchRate);
 
     this.game = new Game(this.player, this.enemyMonster);
+    this.game.stage = this.currentStage;
   }
 
   gameOver(score: number) {
@@ -59,7 +87,7 @@ export class GameComponent implements OnInit {
   }
 
   onNextEnemy() {
-    const nextEnemy = this.monsters[Math.floor(Math.random() * this.monsters.length)];
+    const nextEnemy = this.spawnableMonsters[Math.floor(Math.random() * this.spawnableMonsters.length)];
     const nextEnemyCopy = new Monster(
         nextEnemy.id,
         nextEnemy.name,
@@ -103,6 +131,7 @@ playerSelectMonster(monster: Monster) {
     this.player = new Trainer('Player', [monsterCopy], 500, this.playerBag);
 
     this.game = new Game(this.player, this.enemyMonster);
+    this.game.stage = this.currentStage;
 }
 
   onStartBattle() {
@@ -129,6 +158,7 @@ playerSelectMonster(monster: Monster) {
       this.player.bag.addPokeball(items.pokeball, 10);
       this.player.bag.addPokeball(items.masterBall, 1);
       this.game = new Game(this.player, this.enemyMonster);
+      this.game.stage = this.currentStage;
 
       this.startBattle = true;
       this.onNextEnemy();
@@ -141,5 +171,11 @@ playerSelectMonster(monster: Monster) {
     return monsters;
   }
 
+  async fetchStages() {
+    const stages = await api.get('stage').then((response: any) => {
+      return response.data
+    })
+    return stages
+  }
   startBattle = false;
 }

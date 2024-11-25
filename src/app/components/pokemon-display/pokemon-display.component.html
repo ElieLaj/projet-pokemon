@@ -2,20 +2,22 @@
   class="pokemon-container"
   [style.maxWidth]="maxContainerWidth"
   [style.maxHeight]="maxContainerHeight"
+  [style.background-color]="backgroundColor"
+  [class.inset]="style === 'dark'"
 >
   <div class="pokemon-list">
     @for (monster of monsters; track monster.id) {
         <ng-container>
-        <app-monster
-            [monster]="monster"
-            [active]="playerMonster?.id === monster.id || hoverMonster === monster.id"
-            [isPlayer]="false"
-            (click)="updateSelectedMonster(monster)"
-            (mouseover)="hoverMonster = monster.id"
-            (mouseout)="hoverMonster = null"
-            [size]="maxPokemonSize"
-            [detailsType]="detailsType"
-        ></app-monster>
+          <app-monster
+              [monster]="monster"
+              [active]="playerMonster?.id === monster.id || hoverMonster === monster.id"
+              [isPlayer]="false"
+              (click)="updateSelectedMonster(monster)"
+              (mouseover)="hoverMonster = monster.id"
+              (mouseout)="hoverMonster = null"
+              [size]="maxPokemonSize"
+              [detailsType]="detailsType"
+          ></app-monster>
         </ng-container>
     }
   </div>

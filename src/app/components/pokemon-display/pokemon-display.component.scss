@@ -8,7 +8,6 @@
   border: 1px solid #ccc;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
 
   &::-webkit-scrollbar {
             width: 8px;
@@ -26,6 +25,25 @@
 
         &::-webkit-scrollbar-track {
             background: #1e1e2f;
+        }
+
+        &.inset {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 20px;
+            padding: 30px;
+            max-width: 90%;
+            max-height: 60vh;
+            overflow: auto;
+            background: #2a2a3e; 
+            border-radius: 15px; 
+            box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.7), 
+                            inset -6px -6px 12px rgba(58, 58, 84, 0.5);
+
+            transition: all 0.3s ease-in-out;
         }
 }
 

@@ -5,6 +5,7 @@ import { Monster } from "./monster/monster.model";
 import { Move } from "./monster/move.model";
 import { Pokeball } from "./pokeball.model";
 import { PokemonMove } from "./pokemonMove.model";
+import { Stage } from "./stage.model";
 import { Trainer } from "./trainer.model";
 
 export class Game {
@@ -44,6 +45,8 @@ export class Game {
   showMoves: boolean = false;
 
   forgetMoveSelected: PokemonMove | null = null;
+
+  stage!: Stage;
 
   constructor(player: Trainer, enemyMonster: Monster) {
     this.player = player;
@@ -164,7 +167,6 @@ export class Game {
   }
 
   chooseItemType(itemType: string) {
-    console.log(itemType);
     if (itemType === 'heal') {
       this.playerSelectedBag = this.player.bag.healingItems;
     }

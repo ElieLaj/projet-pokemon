@@ -1,0 +1,21 @@
+@if (stage) {
+<div class="stage-container">
+    <h2
+        (mouseenter)="showEncounter = true"
+        (mouseleave)="showEncounter = false"
+    >
+        Current stage: {{ stage.name }}
+    </h2>
+        
+    <app-pokemon-display
+        [monsters]="stage.pokemons"
+        [maxPokemonSize]="'small'"
+        [maxContainerWidth]="'100%'"
+        [maxContainerHeight]="'400px'"
+        [style]="'dark'"
+        [detailsType]="null"
+    ></app-pokemon-display>
+
+</div>
+}
+
