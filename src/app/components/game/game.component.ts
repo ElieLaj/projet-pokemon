@@ -5,7 +5,7 @@ import { MonsterDTO } from '../../models/monster/monsterDTO.model';
 import { BattleScreenComponent } from '../battle-screen/battle-screen.component';
 import { MonsterComponent } from '../monster/monster.component';
 import { api } from '../../../plugins/api';
-import { transformManyPokemonDTO } from '../../utils/game.utils';
+import { transformManyPokemonDTO, transformManyPokemonEvolutionDTO } from '../../utils/game.utils';
 import { Game } from '../../models/game.model';
 import { Trainer } from '../../models/trainer.model';
 import { Bag } from '../../models/bag.model';
@@ -73,7 +73,9 @@ export class GameComponent implements OnInit {
       this.spawnableMonsters[enemyIndex].types, 
       this.spawnableMonsters[enemyIndex].level, 
       this.spawnableMonsters[enemyIndex].stages, 
-      this.spawnableMonsters[enemyIndex].catchRate);
+      this.spawnableMonsters[enemyIndex].catchRate,
+      this.spawnableMonsters[enemyIndex].evolutions
+    );
 
     this.game = new Game(this.player, this.enemyMonster);
     this.game.stage = this.currentStage;
@@ -102,7 +104,8 @@ export class GameComponent implements OnInit {
         nextEnemy.types,
         nextEnemy.level,
         nextEnemy.stages,
-        nextEnemy.catchRate
+        nextEnemy.catchRate,
+        nextEnemy.evolutions
     );
     this.game.enemyMonster = nextEnemyCopy;
     this.game.dialogues.push(`A new enemy appears: ${nextEnemyCopy.name}!`);
@@ -123,7 +126,8 @@ playerSelectMonster(monster: Monster) {
         monster.types,
         monster.level,
         monster.stages,
-        monster.catchRate
+        monster.catchRate,
+        monster.evolutions
     );
 
     this.playerMonster = monsterCopy;
@@ -150,7 +154,8 @@ playerSelectMonster(monster: Monster) {
           selectedMonster.types,
           selectedMonster.level,
           selectedMonster.stages,
-          selectedMonster.catchRate
+          selectedMonster.catchRate,
+          selectedMonster.evolutions
       );
 
       this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));

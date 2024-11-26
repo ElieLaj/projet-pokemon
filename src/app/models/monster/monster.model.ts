@@ -2,7 +2,8 @@ import { Effect } from "./effect.model";
 import { PokemonMove } from "../pokemonMove.model";
 import { Stage } from "../stage.model";
 import { Type } from "./type.model";
-import { calculateDamage } from "../../utils/game.utils";
+import { transformManyPokemonDTO } from '../../utils/game.utils';
+import { Evolution } from "./evolution.model";
 
 export class Monster {
   id: number;
@@ -40,6 +41,10 @@ export class Monster {
 
   learnMovewaitList: PokemonMove[] = [];
 
+  evolutions: Evolution[];
+
+  canEvolve: boolean = false;
+
   constructor(
     id: number,
     name: string,
@@ -54,7 +59,8 @@ export class Monster {
     types: any[],
     level: number = 5,
     stages: Stage[] = [],
-    catchRate: number = 85
+    catchRate: number = 85,
+    evolutions: Evolution[] = []
   ) {
     this.level = level;
     this.baseAttack = baseAttack;
@@ -85,6 +91,7 @@ export class Monster {
 
     this.stages = stages;
     this.catchRate = catchRate;
+    this.evolutions = [...evolutions];
   }
 
 
@@ -116,6 +123,12 @@ export class Monster {
 
     this.recalculateStats();
     this.calculateExpToNextLevel();
+
+    if (this.evolutions[0].levelRequired){
+      if (this.level >= this.evolutions[0].levelRequired) {
+            this.canEvolve = true;
+          }
+    }
   }
 
   learnMoves(moves: PokemonMove[]) {

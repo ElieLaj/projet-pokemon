@@ -1,9 +1,10 @@
-import e from 'express';
 import { EffectType, MonsterType, StageType } from './monster.utils';
 import { MonsterDTO } from '../models/monster/monsterDTO.model';
 import { Monster } from '../models/monster/monster.model';
 import { Move } from '../models/monster/move.model';
 import { PokemonMove } from '../models/pokemonMove.model';
+import { EvolutionDTO } from '../models/monster/evolutionDTO.model';
+import { Evolution } from '../models/monster/evolution.model';
 
 export enum TurnType {
     Player = 'Player',
@@ -177,7 +178,8 @@ export const transformManyPokemonDTO = (pokemons: MonsterDTO[]): Monster[] => {
         monster.types,
         monster.level,
         monster.stages,
-        monster.catchRate
+        monster.catchRate,
+        monster.evolutions ? transformManyPokemonEvolutionDTO([...monster.evolutions]) : []
       );
     });
 };
@@ -197,6 +199,27 @@ export const transformPokemonDTO = (pokemon: MonsterDTO): Monster => {
     pokemon.types,
     pokemon.level,
     pokemon.stages,
-    pokemon.catchRate
+    pokemon.catchRate,
+    pokemon.evolutions ? transformManyPokemonEvolutionDTO([...pokemon.evolutions]) : []
   );
 };
+
+export const transformPokemonEvolutionDTO = (evolution: EvolutionDTO): Evolution => {
+  return {
+    id: evolution.id,
+    fromPokemon: transformPokemonDTO(evolution.fromPokemon),
+    toPokemon: transformPokemonDTO(evolution.toPokemon),
+    levelRequired: evolution.levelRequired
+  };
+}
+
+export const transformManyPokemonEvolutionDTO = (evolution: EvolutionDTO[]): Evolution[] => {
+  return evolution.map((evolution: EvolutionDTO) => {
+    return {
+      id: evolution.id,
+      fromPokemon: transformPokemonDTO(evolution.fromPokemon),
+      toPokemon: transformPokemonDTO(evolution.toPokemon),
+      levelRequired: evolution.levelRequired
+    };
+  });
+}

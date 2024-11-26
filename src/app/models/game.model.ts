@@ -78,6 +78,8 @@ export class Game {
       else {
         if (!this.enemyLost) this.dialogues.push('You won!');
         this.enemyLost = true;
+        this.playerAction = null;
+        this.enemyAction = null;
       }
       this.turn = TurnType.Dialogue;
     }
@@ -155,6 +157,9 @@ export class Game {
       this.enemyAction = null;
       this.playerScore += 100;
     }
+
+    this.playerSelectedAttack = null;
+    this.playerAction = null;
   }
 
   playerChangeMonster(newMonster: Monster) {
@@ -234,4 +239,20 @@ export class Game {
     this.showMoves = false;
   }
   
+  evolveMonster(monster: Monster) {
+    const newMonster = monster.evolutions[0].toPokemon;
+    console.log(newMonster);
+    newMonster.specialId = monster.specialId;
+    newMonster.level = monster.level;
+    
+    newMonster.calculateExpToNextLevel();
+    newMonster.recalculateStats();
+
+    newMonster.currentExp = monster.currentExp;
+    newMonster.pokemonMoves = monster.pokemonMoves;
+
+    monster = newMonster;
+    this.playerMonster = monster;
+    this.dialogues.push(`${monster.name} evolved into ${newMonster.name}!`);
+  }
 }

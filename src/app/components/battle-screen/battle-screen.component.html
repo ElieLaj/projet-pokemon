@@ -7,6 +7,9 @@
                 <span class="enemy">{{ game.enemyMonster.name }}</span>
             </h2>
             <app-display-stage [stage]="game.stage"></app-display-stage>
+            {{ game.playerAction}}
+            {{ game.enemyAction}}
+
         </div>
         <div class="battle-screen__monsters">
             <div class="battle-screen__player">
@@ -60,9 +63,23 @@
                         </button>
                     </div>
                 }
+            @else if (game.playerMonster.canEvolve) {
+                <div class="battle-screen__attack-options">
+                        <button
+                            (click)="game.evolveMonster(game.playerMonster);"
+                            [style.background]="calculateBg(game.playerMonster.types[0].name)">
+                            Evovle {{ game.playerMonster.name }}
+                        </button>
+                        <button
+                            (click)="game.playerMonster.canEvolve = false;"
+                            [style.background]="'#ff4e4e'">
+                            Cancel evolution
+                        </button>
+                </div>
+            }
             <div class="battle-screen__actions">
                 
-                @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0) {
+                @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0 && !game.playerMonster.canEvolve) {
                     <button class="battle-screen__actions-attack" (click)="game.setAction(game.ActionType.SelectAttack)">Attack</button>
                     <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.SelectItemType)">Item</button>
                     <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.SelectSwap)">Swap</button>
@@ -131,6 +148,8 @@
                     (next)="game.dialogues = $event">
                 </app-dialogue>
             </div>
+            
+            
         </div>
         
         <div class="battle-screen__status">

@@ -35,7 +35,7 @@ export class BattleScreenComponent implements OnInit {
       this.game.playerLost = true;
       this.playerLost.emit(this.game.playerScore);
     }
-    else if (this.game.enemyMonster.hp <= 0 && this.game.dialogues.length === 0) {
+    else if (this.game.enemyMonster.hp <= 0 && this.game.dialogues.length === 0 && !this.game.playerMonster.canEvolve) {
       this.changeEnemyMonster.emit();
       this.game.enemyLost = false;
     }

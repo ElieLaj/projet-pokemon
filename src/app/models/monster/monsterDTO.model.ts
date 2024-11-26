@@ -1,5 +1,6 @@
 import { PokemonMove } from "../pokemonMove.model";
 import { Stage } from "../stage.model";
+import { EvolutionDTO } from "./evolutionDTO.model";
 import { Type } from "./type.model";
 
 export class MonsterDTO {
@@ -19,10 +20,12 @@ export class MonsterDTO {
     level: number = 5;
     stages: Stage[] = [];
     catchRate: number;
+    evolutions: EvolutionDTO[] = [];
 
     constructor(id: number, name: string, type: string, hp: number,
                 attack: number, defense: number, specialAttack: number, 
-                specialDefense: number, speed: number, expRate: number, catchRate: number
+                specialDefense: number, speed: number, expRate: number,
+                catchRate: number, evolutions: EvolutionDTO[] = []
             )
     {
         this.id = id;
