@@ -5,6 +5,9 @@
     justify-content: center;
     padding: 20px;
     gap: 20px;
+    height: calc(100vh - 60px);
+    box-sizing: border-box;
+    overflow: auto;
     background: linear-gradient(135deg, #1e1e2f, #3e3e5e);
     color: #fff;
     font-family: 'Arial', sans-serif;
@@ -49,6 +52,13 @@
                 transform: translateY(0);
                 box-shadow: none;
             }
+        }
+
+        button:disabled {
+            background: #cccccc;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
         }
     }
 

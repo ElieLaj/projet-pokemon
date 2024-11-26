@@ -8,16 +8,17 @@
 @else {
     <div class="game-start-screen">
         <div class="game-start-screen__content">
-            <h1>Monster Battle Arena</h1>
+            <h1>Pokemon the Farthest battle</h1>
             <app-display-stage [stage]="currentStage" />
             @if (lastScore) {
                 <h1>Your last score was: {{ lastScore }}</h1>
             }
             <p>Prepare your monster and enter the ultimate battle arena!</p>
-            <button (click)="onStartBattle()">Start Battle</button>
+            @if (stages.length > 0 && monsters.length > 0) {<button (click)="onStartBattle()">Start Battle</button>}
+            @else {<button disabled>Game is still loading</button>}
         </div>
         <div class="game-start-screen__monsters">
-            @if (stages && monsters) {
+            @if (stages.length > 0 && monsters.length > 0) {
                 <app-pokemon-display
                   [monsters]="monsters" 
                   [maxPokemonSize]="'normal'"
