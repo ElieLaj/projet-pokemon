@@ -244,7 +244,7 @@ export class Game {
     console.log(newMonster);
     newMonster.specialId = monster.specialId;
     newMonster.level = monster.level;
-    
+    newMonster.hp = monster.hp;
     newMonster.calculateExpToNextLevel();
     newMonster.recalculateStats();
 
