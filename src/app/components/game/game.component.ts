@@ -47,7 +47,8 @@ export class GameComponent implements OnInit {
 
   async ngOnInit() { 
     await this.fetchMonsters().then((monsters: MonsterDTO[]) => {
-      this.monstersDTO = monsters;
+      const evolutions = monsters.map((monster: MonsterDTO) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
+      this.monstersDTO = monsters.filter((monster: MonsterDTO) => !evolutions.includes(monster.id));
     });
 
     await this.fetchStages().then((stages: Stage[]) => {
@@ -184,3 +185,5 @@ playerSelectMonster(monster: Monster) {
   }
   startBattle = false;
 }
+
+
