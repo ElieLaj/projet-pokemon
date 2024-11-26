@@ -3,7 +3,7 @@
   [style.maxWidth]="maxContainerWidth"
   [style.maxHeight]="maxContainerHeight"
   [style.background-color]="backgroundColor"
-  [class.inset]="style === 'dark'"
+  [class]="{dark: style === 'dark', light: style === 'light'}"
 >
   <div class="pokemon-list">
     @for (monster of monsters; track monster.id) {
@@ -17,6 +17,7 @@
               (mouseout)="hoverMonster = null"
               [size]="maxPokemonSize"
               [detailsType]="detailsType"
+              [statsType]="statsType"
           ></app-monster>
         </ng-container>
     }

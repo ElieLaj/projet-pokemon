@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Stage } from '../../models/stage.model';
 import { PokemonDisplayComponent } from "../pokemon-display/pokemon-display.component";
+import { transformManyPokemonDTO } from '../../utils/game.utils';
 
 @Component({
   selector: 'app-display-stage',
@@ -11,6 +12,7 @@ import { PokemonDisplayComponent } from "../pokemon-display/pokemon-display.comp
 })
 export class DisplayStageComponent {
   @Input() stage!: Stage;
+  transformManyPokemonDTO = transformManyPokemonDTO;
 
   showEncounter: boolean = false;
   constructor() { }

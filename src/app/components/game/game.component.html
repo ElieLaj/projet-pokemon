@@ -17,16 +17,17 @@
             <button (click)="onStartBattle()">Start Battle</button>
         </div>
         <div class="game-start-screen__monsters">
-            @for (monster of monsters; track monster.id) {
-                <app-monster 
-                    [monster]="monster" 
-                    [active]="game.player.monsters[0].id == monster.id || hoverMonster== monster.id" 
-                    [isPlayer]="false"
-                    (click)="playerSelectMonster(monster)"
-                    (mouseover)="hoverMonster = monster.id" 
-                    (mouseout)="hoverMonster = null"
-                />
-                
+            @if (stages && monsters) {
+                <app-pokemon-display
+                  [monsters]="monsters" 
+                  [maxPokemonSize]="'normal'"
+                  [maxContainerWidth]="'90vw'"
+                  [maxContainerHeight]="'65vh'"
+                  [style]="'dark'"
+                  (selectMonster)="playerSelectMonster($event)"
+                  >
+
+                </app-pokemon-display>
             }
         </div>
         <div class="game-start-screen__footer">

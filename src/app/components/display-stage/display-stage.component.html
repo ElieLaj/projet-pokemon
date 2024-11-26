@@ -6,9 +6,8 @@
     >
         Current stage: {{ stage.name }}
     </h2>
-        
     <app-pokemon-display
-        [monsters]="stage.pokemons"
+        [monsters]="transformManyPokemonDTO(stage.pokemons)"
         [maxPokemonSize]="'small'"
         [maxContainerWidth]="'100%'"
         [maxContainerHeight]="'400px'"

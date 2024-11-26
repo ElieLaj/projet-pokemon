@@ -1,50 +1,59 @@
 .pokemon-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  overflow-y: scroll;
-  overflow-x: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-  &::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+    &.light{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        overflow-y: scroll;
+        overflow-x: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    &.dark {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        gap: 20px;
+        padding: 30px;
+        overflow: auto;
+        background: #2a2a3e; 
+        border-radius: 15px; 
+        box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.7), 
+                        inset -6px -6px 12px rgba(58, 58, 84, 0.5);
+
+        transition: all 0.3s ease-in-out;
+
+        margin-bottom: 50px;
+
+        &:hover {
+            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.8), 
+                        inset -4px -4px 8px rgba(58, 58, 84, 0.6);
         }
+    }
 
-        &::-webkit-scrollbar-thumb {
-            background: rgba(81, 196, 130, 0.7);
-            border-radius: 10px;
-        }
+    /* Ajout d'une apparence pour les barres de défilement */
+    &::-webkit-scrollbar {
+        width: 8px; /* Largeur de la barre de défilement */
+        height: 8px; /* Hauteur pour le défilement horizontal */
+    }
 
-        &::-webkit-scrollbar-thumb:hover {
-            background: rgba(81, 196, 130, 1);
-        }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(81, 196, 130, 0.7); /* Couleur de la barre */
+        border-radius: 10px; /* Arrondi de la barre */
+    }
 
-        &::-webkit-scrollbar-track {
-            background: #1e1e2f;
-        }
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(81, 196, 130, 1); /* Couleur au survol */
+    }
 
-        &.inset {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            gap: 20px;
-            padding: 30px;
-            max-width: 90%;
-            max-height: 60vh;
-            overflow: auto;
-            background: #2a2a3e; 
-            border-radius: 15px; 
-            box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.7), 
-                            inset -6px -6px 12px rgba(58, 58, 84, 0.5);
-
-            transition: all 0.3s ease-in-out;
-        }
+    &::-webkit-scrollbar-track {
+        background: #1e1e2f; /* Fond de la piste */
+    }
 }
 
 .pokemon-list {

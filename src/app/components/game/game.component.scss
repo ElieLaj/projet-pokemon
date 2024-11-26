@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 20px;
     gap: 20px;
     background: linear-gradient(135deg, #1e1e2f, #3e3e5e);
@@ -56,51 +57,11 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        margin-top: 20px;
-        gap: 20px;
-        padding: 30px;
-        max-width: 90%;
-        max-height: 60vh;
-        overflow: auto;
-        background: #2a2a3e; 
         border-radius: 15px; 
-        box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.7), 
-                        inset -6px -6px 12px rgba(58, 58, 84, 0.5);
 
         transition: all 0.3s ease-in-out;
 
         margin-bottom: 50px;
-
-        img {
-            width: 100px;
-            height: 100px;
-            margin: 0 10px;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
-        }
-
-        &:hover {
-            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.8), 
-                        inset -4px -4px 8px rgba(58, 58, 84, 0.6);
-        }
-
-        /* Ajout d'une apparence pour les barres de défilement */
-        &::-webkit-scrollbar {
-            width: 8px; /* Largeur de la barre de défilement */
-            height: 8px; /* Hauteur pour le défilement horizontal */
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: rgba(81, 196, 130, 0.7); /* Couleur de la barre */
-            border-radius: 10px; /* Arrondi de la barre */
-        }
-
-        &::-webkit-scrollbar-thumb:hover {
-            background: rgba(81, 196, 130, 1); /* Couleur au survol */
-        }
-
-        &::-webkit-scrollbar-track {
-            background: #1e1e2f; /* Fond de la piste */
-        }
     }
 
     &__footer {

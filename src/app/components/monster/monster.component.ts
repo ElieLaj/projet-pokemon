@@ -15,7 +15,8 @@ export class MonsterComponent implements OnInit, OnChanges {
   @Input() active: boolean = false;
   @Input() size: 'small' | 'normal' | 'big' = 'normal';
   @Input() detailsType: 'stage' | 'stats' | 'moves' | null = 'stats';
-
+  @Input() statsType: 'base' | 'current' = 'current';
+  
   showStats: boolean = false;
 
   monsterImage!: string;

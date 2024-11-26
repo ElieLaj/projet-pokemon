@@ -12,11 +12,13 @@ import { Bag } from '../../models/bag.model';
 import { items } from '../../data/items';
 import { Stage } from '../../models/stage.model';
 import { DisplayStageComponent } from '../display-stage/display-stage.component';
+import { forkJoin } from 'rxjs';
+import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [BattleScreenComponent, MonsterComponent, FormsModule, DisplayStageComponent],
+  imports: [BattleScreenComponent, MonsterComponent, FormsModule, DisplayStageComponent, PokemonDisplayComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -46,20 +48,40 @@ export class GameComponent implements OnInit {
   }
 
   async ngOnInit() { 
-    await this.fetchMonsters().then((monsters: MonsterDTO[]) => {
+    forkJoin([
+    this.fetchMonsters(),
+    this.fetchStages()
+  ]).subscribe(
+    ([monsters, stages]) => {
       const evolutions = monsters.map((monster: MonsterDTO) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
-      this.monstersDTO = monsters.filter((monster: MonsterDTO) => !evolutions.includes(monster.id));
-    });
-
-    await this.fetchStages().then((stages: Stage[]) => {
+      this.monsters = transformManyPokemonDTO(monsters.filter((monster: MonsterDTO) => !evolutions.includes(monster.id)));
       this.stages = stages;
+    },
+    error => {
+      console.error('Error fetching data', error);
     })
+  }
+
+  ngDoCheck() {
+    if(this.monsters && this.stages) {
+      this.createGame
+    }
+  }
+
+  gameOver(score: number) {
+    this.startBattle = false;
+    this.lastScore = score;
+    this.playerBag = new Bag([], [])
+    this.playerSelectMonster(this.monsters[0]);
+  }
+
+  createGame() {
     const stageIndex = Math.floor(Math.random() * (this.stages.length - 1));
     this.currentStage = this.stages[stageIndex];
-    this.spawnableMonsters = transformManyPokemonDTO(this.currentStage.pokemons);
-    this.monsters = transformManyPokemonDTO(this.monstersDTO);
+    this.spawnableMonsters = transformManyPokemonDTO(this.currentStage?.pokemons);
     const enemyIndex = Math.floor(Math.random() * (this.spawnableMonsters.length - 1));
     this.playerSelectMonster(this.monsters[0]);
+
     this.enemyMonster = new Monster(
       this.spawnableMonsters[enemyIndex].id,
       this.spawnableMonsters[enemyIndex].name, 
@@ -80,13 +102,6 @@ export class GameComponent implements OnInit {
 
     this.game = new Game(this.player, this.enemyMonster);
     this.game.stage = this.currentStage;
-  }
-
-  gameOver(score: number) {
-    this.startBattle = false;
-    this.lastScore = score;
-    this.playerBag = new Bag([], [])
-    this.playerSelectMonster(this.monsters[0]);
   }
 
   onNextEnemy() {
@@ -170,14 +185,14 @@ playerSelectMonster(monster: Monster) {
       this.onNextEnemy();
   }
 
-  async fetchMonsters() {
+  async fetchMonsters(): Promise<MonsterDTO[]> {
     const monsters = await api.get('pokemon').then((response: any) => {
       return response.data;
     });
     return monsters;
   }
 
-  async fetchStages() {
+  async fetchStages(): Promise<Stage[]> {
     const stages = await api.get('stage').then((response: any) => {
       return response.data
     })

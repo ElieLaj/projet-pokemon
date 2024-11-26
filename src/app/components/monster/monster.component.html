@@ -37,24 +37,24 @@
                 }
             </div>
             <div class="monster__stat" [style.font-size]="statSize">
-                <span>Attack:</span> <span>{{ monster.attack }}</span>
+                <span>Attack:</span> <span>{{ statsType === 'current' ? monster.attack : monster.baseAttack }}</span>
             </div>
             
             <div class="monster__stat" [style.font-size]="statSize">
-                <span>Defense:</span> <span>{{ monster.defense }}</span>
+                <span>Defense:</span> <span>{{ statsType === 'current' ? monster.defense : monster.baseDefense }}</span>
             </div>
 
             <div class="monster__stat" [style.font-size]="statSize">
-                <span>Special Attack:</span> <span>{{ monster.specialAttack }}</span>
+                <span>Special Attack:</span> <span>{{ statsType === 'current' ? monster.specialAttack : monster.baseSpecialAttack }}</span>
             </div>
 
             <div class="monster__stat" [style.font-size]="statSize">
-                <span>Special Defense:</span> <span>{{ monster.specialDefense }}</span>
+                <span>Special Defense:</span> <span>{{ statsType === 'current' ? monster.specialDefense : monster.baseSpecialDefense }}</span>
 
             </div>
 
             <div class="monster__stat" [style.font-size]="statSize">
-                <span>Speed:</span> <span>{{ monster.speed }}</span>
+                <span>Speed:</span> <span>{{ statsType === 'current' ? monster.speed : monster.baseSpeed }}</span>
             </div>
         </div>
         }

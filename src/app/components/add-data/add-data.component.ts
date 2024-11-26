@@ -12,7 +12,8 @@ import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.comp
 import { Category } from '../../models/category.model';
 import { Effect } from '../../models/monster/effect.model';
 import { Stage } from '../../models/stage.model';
-
+import { forkJoin } from 'rxjs';
+import { transformManyPokemonDTO } from '../../utils/game.utils';
 
 @Component({
   selector: 'app-add-data',
@@ -47,9 +48,9 @@ export class AddDataComponent implements OnInit {
   stages: Stage[] = [];
 
   selectedMove: Move | null = null;
-  selectedPokemonChange: MonsterDTO | null = null;
-  selectedPokemonAddAttack: MonsterDTO | null = null;
-  selectedPokemonStage: MonsterDTO | null = null;
+  selectedPokemonChange: Monster | null = null;
+  selectedPokemonAddAttack: Monster | null = null;
+  selectedPokemonStage: Monster | null = null;
 
   postForms = true;
   putForms = true;
@@ -62,7 +63,7 @@ export class AddDataComponent implements OnInit {
   addPokemonStageForm: FormGroup;
 
   createdPokemon: Monster | null = null;
-  monsters: MonsterDTO[] = [];
+  monsters: Monster[] = [];
 
   
 
@@ -127,31 +128,31 @@ export class AddDataComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    await this.fetchTypes().then((types: Type[]) => {
+
+async ngOnInit() {
+  forkJoin([
+    this.fetchTypes(),
+    this.fetchMonsters(),
+    this.fetchMoves(),
+    this.fetchCategories(),
+    this.fetchEffects(),
+    this.fetchStages()
+  ]).subscribe(
+    ([types, monsters, moves, categories, effects, stages]) => {
       this.types = types;
-    });
-    await this.fetchMonsters().then((monsters: MonsterDTO[]) => {
-      this.monsters = monsters;
-    });
-    await this.fetchMoves().then((moves: Move[]) => {
+      this.monsters = transformManyPokemonDTO(monsters);
       this.moves = moves;
-    });
-
-    await this.fetchCategories().then((categories: Category[]) => {
       this.categories = categories;
-    });
-
-    await this.fetchEffects().then((effects: Effect[]) => {
       this.effects = effects;
-    });
-
-    await this.fetchStages().then((stages: Stage[]) => {
       this.stages = stages;
-    });
-  }
+    },
+    error => {
+      console.error('Error fetching data', error);
+    }
+  );
+}
 
-  updateChangePokemonForm(monster: MonsterDTO) {
+  updateChangePokemonForm(monster: Monster) {
     this.changePokemonForm.patchValue({
           pokemonName: monster.name,
           hp: monster.hp,
@@ -168,7 +169,7 @@ export class AddDataComponent implements OnInit {
     this.selectedPokemonChange = monster;
   }
 
-  updateAddAttackForm(monster: MonsterDTO) {
+  updateAddAttackForm(monster: Monster) {
     this.selectedPokemonAddAttack = monster
   }
 

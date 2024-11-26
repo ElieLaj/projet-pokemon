@@ -153,6 +153,8 @@
                   [maxContainerHeight]="'400px'"
                   [detailsType]="'moves'"
                   (selectMonster)="updateAddAttackForm($event)"
+                  [statsType]="'base'"
+
                 ></app-pokemon-display>
 
           <div>
@@ -246,6 +248,7 @@
               <h1>Update Pokémon</h1>
               <form [formGroup]="changePokemonForm" (ngSubmit)="changePokemon()">
                 <app-pokemon-display
+                  [statsType]="'base'"
                   [monsters]="monsters" 
                   [maxPokemonSize]="'small'"
                   [maxContainerWidth]="'100%'"
@@ -333,6 +336,7 @@
                   [maxContainerHeight]="'400px'"
                   [detailsType]="'stage'"
                   (selectMonster)="selectedPokemonStage = $event"
+                  [statsType]="'base'"
                 ></app-pokemon-display>
                 <select id="stage" formControlName="stage" (click)="updateChangeMoveForm()">
                   @for(stage of stages; track stage.id) {
