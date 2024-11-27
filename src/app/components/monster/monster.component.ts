@@ -39,6 +39,9 @@ export class MonsterComponent implements OnInit, OnChanges {
   showHp: boolean = true;
   showExp: boolean = true;
 
+  mouseX: number = 0;
+  mouseY: number = 0;
+
   calculateBg = calculateBg;
 
   ngOnInit(): void {
@@ -56,6 +59,11 @@ export class MonsterComponent implements OnInit, OnChanges {
   ngDoCheck() {
     this.monsterImage = 'https://img.pokemondb.net/sprites/black-white/anim/'+ (this.isPlayer ? 'back-' : '') +'normal/'+this.monster.name.toLowerCase()+'.gif';
     this.updateBars();
+  }
+  
+  updateMousePosition(event: MouseEvent) {
+    this.mouseX = event.clientX;
+    this.mouseY = event.clientY;
   }
 
   changeSize() {

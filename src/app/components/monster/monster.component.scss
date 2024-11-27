@@ -9,7 +9,6 @@
     color: #fff;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
     font-family: 'Arial', sans-serif;
-    position: relative;
     transition: 0.5s ease;
 
     &__image {
@@ -46,6 +45,8 @@
         padding: 10px;
         border-radius: 10px;
         z-index: 10;
+        pointer-events: none;
+        transform: translate(-50%);
 
         &.visible {
             opacity: 1;

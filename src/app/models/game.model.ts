@@ -79,12 +79,14 @@ export class Game {
         this.setAction(ActionType.SelectSwap);
       }
       else {
-        if (!this.enemyLost) this.dialogues.push('You won!');
-        this.enemyLost = true;
-        this.playerAction = null;
-        this.enemyAction = null;
-        this.battleCount++;
-        this.enemyLevel = Math.floor(this.battleCount % 3) + 5;
+        if (this.enemyLost) {
+          this.dialogues.push('You won!');
+          this.playerAction = null;
+          this.enemyAction = null;
+          this.battleCount++;
+          this.enemyLevel = Math.floor(this.battleCount % 3) + 5;
+          this.enemyLost = false;
+        }
       }
       this.turn = TurnType.Dialogue;
     }
@@ -158,7 +160,7 @@ export class Game {
 
     if (this.enemyMonster.hp <= 0 ) {
       this.playerMonster.gainEnemyExp(this.enemyMonster);
-
+      this.enemyLost = true;
       this.enemyAction = null;
       this.playerScore += 100;
     }
@@ -240,6 +242,10 @@ export class Game {
     if (this.turnEnded){
         this.playerAction = action;
         this.enemyAction = ActionType.Attack;
+    }
+    else if (this.playerMonster.hp <= 0 && action === ActionType.Swap) {
+      this.playerAction = action;
+      this.playerTurn();
     }
     this.showMoves = false;
   }

@@ -31,8 +31,7 @@ export class BattleScreenComponent implements OnInit {
 
   ngDoCheck() {
     this.game.checkTurn();
-    if (this.game.playerMonster.hp <= 0) {
-      this.game.playerLost = true;
+    if (this.game.playerLost === true) {
       this.playerLost.emit(this.game.playerScore);
     }
     else if (this.game.enemyMonster.hp <= 0 && this.game.dialogues.length === 0 && !this.game.playerMonster.canEvolve) {

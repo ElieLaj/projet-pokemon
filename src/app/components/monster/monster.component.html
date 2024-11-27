@@ -1,6 +1,7 @@
 <div class="monster" [style]="{ border: borderColor, width: componentSize}"
     (mouseover)="showStats = true" 
     (mouseout)="showStats = false"
+    (mousemove)="updateMousePosition($event)"
 >
     <img class="monster__image" 
         [src]="monsterImage" 
@@ -26,7 +27,8 @@
     <div class="monster__details" 
         [class.visible]="showStats && detailsType"
         [class.hidden]="!showStats || !detailsType"
-        [style.top]="detailsPosition"
+        [style.left.px]="mouseX"
+        [style.top.px]="mouseY"
     >
     <h2 class="monster__name" [style.font-size]="nameSize">{{ monster.name }}</h2>
     @if (detailsType === 'stats') {
