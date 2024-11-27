@@ -204,6 +204,30 @@ export const transformPokemonDTO = (pokemon: MonsterDTO): Monster => {
   );
 };
 
+export const createNewPokemon = (monster: Monster, monsterSpecialId: number | null = null): Monster => {
+  const newMonster =  new Monster(
+    monster.id,
+    monster.name,
+    monster.baseHp,
+    monster.baseAttack,
+    monster.baseDefense,
+    monster.baseSpecialAttack,
+    monster.baseSpecialDefense,
+    monster.baseSpeed,
+    monster.expRate,
+    monster.pokemonMoves,
+    monster.types,
+    monster.level,
+    monster.stages,
+    monster.catchRate,
+    monster.evolutions
+  );
+  if (monsterSpecialId !== null) {
+    newMonster.specialId = monsterSpecialId;
+  }
+  return newMonster;
+}
+
 export const transformPokemonEvolutionDTO = (evolution: EvolutionDTO): Evolution => {
   return {
     id: evolution.id,

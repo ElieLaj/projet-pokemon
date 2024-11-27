@@ -31,7 +31,7 @@ export class BattleScreenComponent implements OnDestroy {
   constructor(private render: Renderer2) {
     this.keyDownListener = this.render.listen('document', 'keydown', (event: KeyboardEvent) => {
       console.log(event.key);
-      if (!this.game.playerAction && this.game.dialogues.length === 0 && this.game.playerMonster.learnMovewaitList.length === 0 && !this.game.playerMonster.canEvolve) {
+      if (!this.game.playerAction && this.game.dialogues.length === 0 && this.game.playerMonster.learnMovewaitList.length === 0 && !this.game.checkPokemonEvolution()) {
             switch(event.key){
               case("&"):
                 this.game.setAction(ActionType.SelectAttack);

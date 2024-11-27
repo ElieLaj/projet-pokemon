@@ -84,7 +84,8 @@ export class GameComponent implements OnInit {
   }
 
   createGame() {
-    const stageIndex = Math.floor(Math.random() * (this.stages.length - 1));
+    // const stageIndex = Math.floor(Math.random() * (this.stages.length - 1));
+        const stageIndex = this.stages.length - 1;
     this.currentStage = this.stages[stageIndex];
     this.spawnableMonsters = transformManyPokemonDTO(this.currentStage?.pokemons).filter((monster: Monster) => this.spawnableMonsters.find((m: Monster) => m.id === monster.id) === undefined);
     const enemyIndex = Math.floor(Math.random() * (this.spawnableMonsters.length - 1));

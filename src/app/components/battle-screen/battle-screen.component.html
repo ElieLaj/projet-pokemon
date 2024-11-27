@@ -53,7 +53,7 @@
                     </div>
                 }
 
-                @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0 && !game.playerMonster.canEvolve) {
+                @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0 && !game.checkPokemonEvolution()) {
                     <button class="battle-screen__actions-attack" (click)="game.setAction(game.ActionType.SelectAttack)">Attack</button>
                     <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.SelectItemType)">Item</button>
                     <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.SelectSwap)">Swap</button>
@@ -93,7 +93,7 @@
                 @else if (game.playerAction === game.ActionType.SelectSwap) {
                     <div class="battle-screen__swap-options">
                         @for (monster of game.player.monsters; track monster.id) {
-                            @if (monster.hp > 0 && monster.id !== game.playerMonster.id) {
+                            @if (monster.hp > 0 && monster.specialId !== game.playerMonster.specialId) {
                                 <button
                                     (click)="game.playerSelectedMonster = monster; game.setAction(game.ActionType.Swap)"
                                     [style.background]="calculateBg(monster.types[0].name)">
