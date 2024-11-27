@@ -46,14 +46,21 @@
             }
             <div class="battle-screen__actions">
                 
+                 @if (confirmRun && game.playerAction === null) {
+                    <div class="battle-screen__item-options">
+                        <button (click)="game.setAction(game.ActionType.Run)">Go back to home page</button>
+                        <button (click)="confirmRun = false">Stay to fight</button>
+                    </div>
+                }
+
                 @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0 && !game.playerMonster.canEvolve) {
                     <button class="battle-screen__actions-attack" (click)="game.setAction(game.ActionType.SelectAttack)">Attack</button>
                     <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.SelectItemType)">Item</button>
                     <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.SelectSwap)">Swap</button>
-                    <button class="battle-screen__actions-run" (click)="game.setAction(game.ActionType.Run)">Run</button>
+                    <button class="battle-screen__actions-run" (click)="confirmRun = true">Run</button>
                 }
                 
-                @if (game.playerAction === game.ActionType.SelectAttack) {
+                @else if (game.playerAction === game.ActionType.SelectAttack) {
                     <div class="battle-screen__attack-options">
                         @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
                             <button
@@ -103,6 +110,7 @@
                         }
                     </div>
                 }
+                
             </div>
             
             @if (game.playerAction && game.turnEnded) {
