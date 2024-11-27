@@ -121,7 +121,7 @@ export class Game {
         this.playerTurn();
     }
     if (this.turn === TurnType.Enemy)
-      this.enemyAttack();
+      this.performAttack(this.enemyMonster, this.playerMonster, null, false);
     
     else if (this.turn === TurnType.Player) 
       this.playerTurn();
@@ -132,7 +132,7 @@ export class Game {
     this.turn = TurnType.Dialogue;
     switch(this.playerAction) {
       case ActionType.Attack:
-        this.playerAttack();
+          this.performAttack(this.playerMonster, this.enemyMonster, this.playerSelectedAttack, true);;
         break;
       case ActionType.Item:
         if (this.playerSelectedItem instanceof Pokeball) {
@@ -156,43 +156,72 @@ export class Game {
     this.currentTurn++;
   }
 
-  playerAttack() {
-    this.playerMonster.effect ? this.playerMonster.tryRemovingEffect(this.dialogues) : null;
-    const paralyzed = this.playerMonster.effect?.name === 'Paralyzed' && Math.random() < 0.25;
-    if (this.playerMonster.effect?.name === 'Sleeping' || this.playerMonster.effect?.name === 'Freezed' || paralyzed) {
-      paralyzed ? this.dialogues.push(`${this.playerMonster.name} is still ${this.playerMonster.effect?.name}!`) : this.dialogues.push(`${this.playerMonster.name} is ${this.playerMonster.effect?.name} and couldn't attack!`);
-      this.lastTurn = TurnType.Player;
-      this.turn = TurnType.Dialogue;
+  performAttack(attacker: Monster, defender: Monster, selectedAttack: Move | null, isPlayer: boolean) {
+
+    attacker.tryRemovingEffect(this.dialogues);
+
+    const paralyzed = attacker.effect?.name === 'Paralyzed' && Math.random() < 0.25;
+    if (attacker.effect?.name === 'Sleeping' || attacker.effect?.name === 'Freezed' || paralyzed) {
+      this.dialogues.push(`${attacker.name} is still ${attacker.effect?.name}!`);
+      if (isPlayer) {
+        this.playerAction = null;
+        this.lastTurn = TurnType.Player;
+        this.turn = TurnType.Dialogue;
+      } else {
+        this.enemyAction = null;
+        this.lastTurn = TurnType.Enemy;
+        this.turn = TurnType.Dialogue;
+      }
       return;
     }
-    if (this.playerMonster.effect?.name === 'Flinched') { this.playerMonster.removeEffect(this.dialogues); return; }
-    calculateDamage(this.playerMonster, this.enemyMonster, this.playerSelectedAttack!, this.dialogues);
-    
-    this.playerMonster.effect?.damage ? 
-      this.playerMonster.hp = Math.max(this.playerMonster.hp - Math.floor(this.playerMonster.maxHp * this.playerMonster.effect.damage), 0)
-     :
-      null;
 
-    this.playerMonster.sufferEffect(this.dialogues);
+    if (attacker.effect?.name === 'Flinched') {
+      attacker.removeEffect(this.dialogues);
+      if (isPlayer) this.playerAction = null;
+      else this.enemyAction = null;
+      return;
+    }
 
-    if (this.enemyMonster.hp <= 0 ) {
-      this.playerMonster.gainEnemyExp(this.enemyMonster, this.dialogues);
-      for (let i = 0; i < this.player.monsters.length; i++) {
-        if (this.player.monsters[i].hp > 0 && this.player.monsters[i].specialId != this.playerMonster.specialId) {
-          this.player.monsters[i].gainEnemyExp(this.enemyMonster, this.dialogues);
+    const attack = selectedAttack ?? 
+      attacker.pokemonMoves[Math.floor(Math.random() * attacker.pokemonMoves.length)].move;
+
+    calculateDamage(attacker, defender, attack, this.dialogues);
+
+    if (attacker.effect?.damage) {
+      attacker.hp = Math.max(attacker.hp - Math.floor(attacker.maxHp * attacker.effect.damage), 0);
+    }
+
+    attacker.sufferEffect(this.dialogues);
+
+    if (defender.hp <= 0) {
+      if (isPlayer) {
+        this.enemyLost = true;
+        this.playerScore += 100;
+        attacker.gainEnemyExp(defender, this.dialogues);
+        for (const ally of this.player.monsters) {
+          if (ally.hp > 0 && ally.specialId !== attacker.specialId) {
+            ally.gainEnemyExp(defender, this.dialogues);
+          }
         }
+      } else {
+        this.playerLost = true;
       }
-      this.enemyLost = true;
-      this.enemyAction = null;
-      this.playerScore += 100;
       this.turnEnded = true;
-    }
-    else if (this.enemyMonster.effect?.name === "Flinched") {
-      this.enemyMonster.effect = null;
+      return;
     }
 
-    this.playerSelectedAttack = null;
-    this.playerAction = null;
+    if (defender.effect?.name === "Flinched") {
+      defender.effect = null;
+    }
+
+    if (isPlayer) {
+      this.playerAction = null;
+      this.playerSelectedAttack = null;
+    } else {
+      this.enemyAction = null;
+      this.lastTurn = TurnType.Enemy;
+      this.turn = TurnType.Dialogue;
+    }
   }
 
 playerChangeMonster(newMonster: Monster) {
@@ -227,30 +256,6 @@ playerChangeMonster(newMonster: Monster) {
     this.setAction(ActionType.Item);
   }
 
-  enemyAttack() {
-    this.enemyMonster.effect ? this.enemyMonster.tryRemovingEffect(this.dialogues) : null;
-    const paralyzed = this.enemyMonster.effect?.name === 'Paralyzed' && Math.random() < 0.25;
-    if (this.enemyMonster.effect?.name === 'Sleeping' || this.enemyMonster.effect?.name === 'Freezed' || paralyzed) {
-      this.dialogues.push(`${this.enemyMonster.name} is still ${this.enemyMonster.effect?.name}!`);
-      this.lastTurn = TurnType.Enemy;
-      this.turn = TurnType.Dialogue;
-      this.enemyAction = null;
-      return;
-    }
-    if (this.enemyMonster.effect?.name === 'Flinched') { this.enemyMonster.removeEffect(this.dialogues); return; }
-    
-    const enemyMove = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
-    calculateDamage(this.enemyMonster, this.playerMonster, enemyMove, this.dialogues);
-    
-    this.enemyMonster.sufferEffect(this.dialogues);
-    if (this.playerMonster.effect?.name === "Flinched") {
-      this.playerMonster.effect = null;
-    }
-    this.enemyAction = null;
-    this.lastTurn = TurnType.Enemy;
-    this.turn = TurnType.Dialogue;
-  }
-
   playerUseHealingItem(item: HealingItem, target: Monster) {
     this.player.bag?.useItem(item, target, this.dialogues, this.player);
   }
@@ -262,13 +267,11 @@ playerChangeMonster(newMonster: Monster) {
       this.enemyAction = null;
       this.enemyMonster.hp = 0;
       this.playerMonster.gainEnemyExp(this.enemyMonster, this.dialogues);
-      for (let i = 1; i < this.player.monsters.length; i++) {
-        for (let i = 0; i < this.player.monsters.length; i++) {
-          if (this.player.monsters[i].hp > 0 && this.player.monsters[i].specialId != this.playerMonster.specialId && this.player.monsters[this.player.monsters.length - 1].specialId != this.player.monsters[i].specialId) {
-            this.player.monsters[i].gainEnemyExp(this.enemyMonster, this.dialogues);
+      for (const ally of this.player.monsters) {
+          if (ally.hp > 0 && ally.specialId !== this.playerMonster.specialId && ally.specialId !== this.player.pokemonId) {
+            ally.gainEnemyExp(target, this.dialogues);
           }
         }
-      }
     }
   }
 
@@ -293,35 +296,35 @@ playerChangeMonster(newMonster: Monster) {
     this.showMoves = false;
   }
   
-evolveMonster(monster: Monster) {
+  evolveMonster(monster: Monster) {
 
-  const evolution = monster.evolutions[0]?.toPokemon;
+    const evolution = monster.evolutions[0]?.toPokemon;
 
-  const newMonster = createNewPokemon(evolution, monster.specialId);
+    const newMonster = createNewPokemon(evolution, monster.specialId);
 
-  newMonster.specialId = monster.specialId;
-  newMonster.level = monster.level;
-  newMonster.hp = Math.min(monster.hp, newMonster.maxHp);
+    newMonster.specialId = monster.specialId;
+    newMonster.level = monster.level;
+    newMonster.hp = Math.min(monster.hp, newMonster.maxHp);
 
-  newMonster.calculateExpToNextLevel();
-  newMonster.recalculateStats();
+    newMonster.calculateExpToNextLevel();
+    newMonster.recalculateStats();
 
-  newMonster.currentExp = monster.currentExp;
-  newMonster.pokemonMoves = [...monster.pokemonMoves];
-  newMonster.canEvolve = false;
-
-
-  const oldMonsterIndex = this.player.monsters.findIndex(
-    m => m.specialId === monster.specialId
-  );
+    newMonster.currentExp = monster.currentExp;
+    newMonster.pokemonMoves = [...monster.pokemonMoves];
+    newMonster.canEvolve = false;
 
 
-  this.player.monsters[oldMonsterIndex] = newMonster;
+    const oldMonsterIndex = this.player.monsters.findIndex(
+      m => m.specialId === monster.specialId
+    );
 
-  if (this.playerMonster.specialId === monster.specialId) {
-    this.playerMonster = newMonster;
+
+    this.player.monsters[oldMonsterIndex] = newMonster;
+
+    if (this.playerMonster.specialId === monster.specialId) {
+      this.playerMonster = newMonster;
+    }
+
+    this.dialogues.push(`${monster.name} evolved into ${newMonster.name}!`);
   }
-
-  this.dialogues.push(`${monster.name} evolved into ${newMonster.name}!`);
-}
 }
