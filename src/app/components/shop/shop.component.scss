@@ -1,26 +1,29 @@
 /* Shop container */
 .shop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8); /* Transparent black background */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* Ensure it is above everything */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Transparent black background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it is above everything */
+    font-family: 'Press Start 2P', sans-serif; /* Typographie rétro */
+    padding: 20px;
+
 }
 
 /* Shop header */
 .shop__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  color: white;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    color: white;
+    margin-bottom: 20px;
 }
 
 .shop__title {
@@ -39,12 +42,38 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  width: 90%;
-  max-height: 70%;
-  overflow-y: auto; /* Scroll for large item lists */
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(81, 196, 130, 0.7);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(81, 196, 130, 1);
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #1e1e2f;
+    }
+}
+
+.shop__heals, .shop__balls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 90%;
+  padding: 10px;
 }
 
 /* Individual item styles */
@@ -53,11 +82,12 @@
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  width: 200px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: space-between;
 }
 
 /* Item header */

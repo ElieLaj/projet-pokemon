@@ -9,11 +9,12 @@ import { transformManyPokemonDTO, transformManyPokemonEvolutionDTO } from '../..
 import { Game } from '../../models/game.model';
 import { Trainer } from '../../models/trainer.model';
 import { Bag } from '../../models/bag.model';
-import { items } from '../../data/items';
 import { Stage } from '../../models/stage.model';
 import { DisplayStageComponent } from '../display-stage/display-stage.component';
 import { forkJoin } from 'rxjs';
 import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
+import { Pokeball } from '../../models/pokeball.model';
+import { HealingItem } from '../../models/healingItem.model';
 
 @Component({
   selector: 'app-game',
@@ -30,6 +31,8 @@ export class GameComponent implements OnInit {
   monsters: Monster[] = [];
   spawnableMonsters: Monster[] = []
   stages: Stage[] = [];
+  pokeballs: Pokeball[] = [];
+  healingItems: HealingItem[] = [];
 
   currentStage!: Stage;
 
@@ -50,12 +53,16 @@ export class GameComponent implements OnInit {
   async ngOnInit() { 
     forkJoin([
     this.fetchMonsters(),
-    this.fetchStages()
+    this.fetchStages(),
+    this.fetchPokeball(),
+    this.fetchHealingItem()
   ]).subscribe(
-    ([monsters, stages]) => {
+    ([monsters, stages, pokeballs, healingItems]) => {
       const evolutions = monsters.map((monster: MonsterDTO) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
       this.monsters = transformManyPokemonDTO(monsters.filter((monster: MonsterDTO) => !evolutions.includes(monster.id)));
       this.stages = stages;
+      this.pokeballs = pokeballs;
+      this.healingItems = healingItems;
       this.createGame();
     },
     error => {
@@ -96,8 +103,8 @@ export class GameComponent implements OnInit {
     );
 
     this.game = new Game(this.player, this.enemyMonster);
-    this.game.balls = [items.pokeball, items.greatBall, items.ultraBall, items.masterBall];
-    this.game.hItems = [items.potion, items.superPotion, items.hyperPotion, items.maxPotion];
+    this.game.balls = [...this.pokeballs];
+    this.game.hItems = [...this.healingItems];
     this.game.stage = this.currentStage;
   }
 
@@ -172,13 +179,13 @@ playerSelectMonster(monster: Monster) {
       );
 
       this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));
-      this.player.bag.addHealingItem(items.potion, 5);
-      this.player.bag.addPokeball(items.pokeball, 10);
-      this.player.bag.addPokeball(items.masterBall, 1);
+      this.player.bag.addHealingItem(this.healingItems.sort((a, b) => a.healAmount - b.healAmount)[0], 5);
+      this.player.bag.addPokeball(this.pokeballs.sort((a, b) => a.catchRate - b.catchRate)[0], 10);
+      this.player.bag.addPokeball(this.pokeballs.sort((a, b) => b.catchRate - a.catchRate)[0], 1);
       this.game = new Game(this.player, this.enemyMonster);
       this.game.stage = this.currentStage;
-      this.game.balls = [items.pokeball, items.greatBall, items.ultraBall, items.masterBall];
-      this.game.hItems = [items.potion, items.superPotion, items.hyperPotion, items.maxPotion];
+      this.game.balls = [...this.pokeballs];
+      this.game.hItems = [...this.healingItems];
       this.startBattle = true;
       this.onNextEnemy();
   }
@@ -188,6 +195,20 @@ playerSelectMonster(monster: Monster) {
       return response.data;
     });
     return monsters;
+  }
+
+    async fetchPokeball(): Promise<Pokeball[]> {
+    const pokeballs = await api.get('pokeball').then((response: any) => {
+      return response.data;
+    });
+    return pokeballs;
+  }
+
+    async fetchHealingItem(): Promise<HealingItem[]> {
+    const healingItems = await api.get('healingItem').then((response: any) => {
+      return response.data;
+    });
+    return healingItems;
   }
 
   async fetchStages(): Promise<Stage[]> {

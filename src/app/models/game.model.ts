@@ -75,7 +75,7 @@ export class Game {
       }
     }
     if (this.playerMonster.hp <= 0 || this.enemyMonster.hp <= 0) {
-      if (this.playerMonster.hp <= 0 && this.player.monsters.length === 1 && !this.checkPokemonsHealth()) {
+      if (this.playerMonster.hp <= 0 && !this.checkPokemonsHealth()) {
         this.dialogues.push('You lost!');
         this.playerLost = true;
       }
