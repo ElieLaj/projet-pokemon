@@ -89,7 +89,8 @@ export class Game {
           this.playerAction = null;
           this.enemyAction = null;
           this.battleCount++;
-          this.enemyLevel = Math.floor(this.battleCount / 2) + 5;
+          this.player.money += this.battleCount + 100;
+          this.enemyLevel = Math.floor(this.battleCount / 3) + 5;
           this.shopOpen = this.battleCount % 3 === 0;
           this.enemyLost = false;
         }
@@ -169,7 +170,12 @@ export class Game {
     this.playerMonster.sufferEffect(this.dialogues);
 
     if (this.enemyMonster.hp <= 0 ) {
-      this.playerMonster.gainEnemyExp(this.enemyMonster);
+      this.playerMonster.gainEnemyExp(this.enemyMonster, this.dialogues);
+      for (let i = 1; i < this.player.monsters.length - 1; i++) {
+        if (this.player.monsters[i].hp > 0) {
+          this.player.monsters[i].gainEnemyExp(this.enemyMonster, this.dialogues);
+        }
+      }
       this.enemyLost = true;
       this.enemyAction = null;
       this.playerScore += 100;
@@ -179,14 +185,22 @@ export class Game {
     this.playerAction = null;
   }
 
-  playerChangeMonster(newMonster: Monster) {
-    const oldMonster = this.playerMonster;
-    this.player.monsters[0] = newMonster;
-    const newMonsterIndex = this.player.monsters.findIndex(monster => monster.specialId === newMonster.specialId);
-    this.player.monsters[newMonsterIndex] = oldMonster;
-    this.playerMonster = newMonster;
-    this.dialogues.push(`${newMonster.name}, I choose you!`);
-  }
+playerChangeMonster(newMonster: Monster) {
+  const oldMonster = this.playerMonster;
+
+  const newMonsterIndex = this.player.monsters.findIndex(
+    monster => monster.specialId === newMonster.specialId
+  );
+
+  this.player.monsters[newMonsterIndex] = oldMonster;
+  this.player.monsters[this.player.monsters.indexOf(oldMonster)] = newMonster;
+
+  this.playerMonster = newMonster;
+
+
+  this.dialogues.push(`${oldMonster.name}, return!`);
+  this.dialogues.push(`${newMonster.name}, I choose you!`);
+}
 
   chooseItemType(itemType: string) {
     if (itemType === 'heal') {
@@ -215,9 +229,6 @@ export class Game {
     }
     const enemyMove = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
     calculateDamage(this.enemyMonster, this.playerMonster, enemyMove, this.dialogues);
-    if (this.playerMonster.hp <= 0) {
-      this.enemyMonster.gainEnemyExp(this.playerMonster);
-    }
     
     this.enemyMonster.sufferEffect(this.dialogues);
 
@@ -236,7 +247,12 @@ export class Game {
       this.enemyLost = true;
       this.enemyAction = null;
       this.enemyMonster.hp = 0;
-      this.playerMonster.gainEnemyExp(this.enemyMonster);
+      this.playerMonster.gainEnemyExp(this.enemyMonster, this.dialogues);
+      for (let i = 1; i < this.player.monsters.length - 1; i++) {
+        if (this.player.monsters[i].hp > 0) {
+          this.player.monsters[i].gainEnemyExp(this.enemyMonster, this.dialogues);
+        }
+      }
     }
   }
 
@@ -262,7 +278,6 @@ export class Game {
   
   evolveMonster(monster: Monster) {
     const newMonster = monster.evolutions[0].toPokemon;
-    console.log(newMonster);
     newMonster.specialId = monster.specialId;
     newMonster.level = monster.level;
     newMonster.hp = monster.hp;

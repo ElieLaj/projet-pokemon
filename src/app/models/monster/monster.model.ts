@@ -142,9 +142,10 @@ export class Monster {
     return this.pokemonMoves;
   }
 
-  gainEnemyExp(enemy: Monster, isWild: boolean = true) {
+  gainEnemyExp(enemy: Monster, dialogues:string[], isWild: boolean = true) {
     const modifier = isWild ? 1 : 1.5;
     const exp = Math.floor((enemy.expRate * enemy.level * modifier) / 7) * enemy.level;
+    dialogues.push(`${this.name} gained ${exp} exp!`);
     this.gainExp(exp);
   }
 

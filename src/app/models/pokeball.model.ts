@@ -24,7 +24,10 @@ export class Pokeball extends Item {
                 target.expRate,
                 target.pokemonMoves,
                 target.types,
-                target.level
+                target.level,
+                target.stages,
+                target.catchRate,
+                target.evolutions
         );       
 
         monsterCopy.hp = target.hp;
@@ -32,8 +35,8 @@ export class Pokeball extends Item {
         monsterCopy.effectTurn = target.effectTurn;
 
         const bonus = target.effect ? 2 : 1;
-        const a = Math.floor(((1 - 2/3 * (target.hp/target.maxHp)) * this.catchRate * target.catchRate * bonus));
-        if (a >= 255) {
+        const a = Math.floor(((1 - 4/5 * (target.hp/target.maxHp)) * this.catchRate * target.catchRate * bonus));
+        if (a >= 210) {
             trainer.addMonster(monsterCopy);
             dialogues.push(`${target.name} has been caught!`);
         } else {

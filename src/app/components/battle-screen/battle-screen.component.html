@@ -159,6 +159,6 @@
         </div>
     </div>
     @if (game.shopOpen) {
-        <app-shop [player]="game.player" [balls]="game.balls" [hItems]="game.hItems"></app-shop>            
+        <app-shop [player]="game.player" [balls]="game.balls" [hItems]="game.hItems" (exitShop)="game.shopOpen = false"></app-shop>            
     }
 </div>

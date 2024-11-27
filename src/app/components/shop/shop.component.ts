@@ -17,16 +17,21 @@ export class ShopComponent {
 
   @Output() exitShop = new EventEmitter();
 
-  buyItem(item: Pokeball | HealingItem) {
+  buyHealingItem(item: HealingItem) {
     if (this.player.money >= item.price) {
       this.player.money -= item.price;
-      if (item instanceof Pokeball) {
-        this.player.bag.pokeballs.push(item);
-      } else {
-        this.player.bag.healingItems.push(item);
-      }
+        this.player.bag.addHealingItem(item, 1);
     }
     else {
+      alert('You don\'t have enough money!');
+    }
+  }
+
+  buyBall(item: Pokeball) {
+    if (this.player.money >= item.price) {
+            this.player.money -= item.price;
+            this.player.bag.addPokeball(item, 1);
+    } else {
       alert('You don\'t have enough money!');
     }
   }

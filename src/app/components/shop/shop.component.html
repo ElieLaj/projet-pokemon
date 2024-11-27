@@ -18,7 +18,7 @@
                     <span class="shop__item-special-tag">{{ item.healAmount }}</span>
                     <span class="shop__item-desc">{{ item.description }}</span>
                 </div>
-                <button class="shop__item-buy" (click)="buyItem(item)" [class.disabled]="item.price > player.money">Buy - {{ item.price }}</button>
+                <button class="shop__item-buy" (click)="buyHealingItem(item)" [class.disabled]="item.price > player.money">Buy - {{ item.price }}</button>
             </div>
             }
     </section>   
@@ -37,7 +37,7 @@
                 <span class="shop__item-special-tag">Catch rate: {{ item.catchRate }}</span>
                 <span class="shop__item-desc">{{ item.description }}</span>
             </div>
-            <button class="shop__item-buy" (click)="buyItem(item)" [class.disabled]="item.price > player.money">Buy - {{ item.price }}</button>
+            <button class="shop__item-buy" (click)="buyBall(item)" [class.disabled]="item.price > player.money">Buy - {{ item.price }}</button>
         </div>
         }
         </section>
