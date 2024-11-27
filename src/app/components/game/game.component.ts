@@ -96,6 +96,8 @@ export class GameComponent implements OnInit {
     );
 
     this.game = new Game(this.player, this.enemyMonster);
+    this.game.balls = [items.pokeball, items.greatBall, items.ultraBall, items.masterBall];
+    this.game.hItems = [items.potion, items.superPotion, items.hyperPotion, items.maxPotion];
     this.game.stage = this.currentStage;
   }
 
@@ -175,7 +177,8 @@ playerSelectMonster(monster: Monster) {
       this.player.bag.addPokeball(items.masterBall, 1);
       this.game = new Game(this.player, this.enemyMonster);
       this.game.stage = this.currentStage;
-
+      this.game.balls = [items.pokeball, items.greatBall, items.ultraBall, items.masterBall];
+      this.game.hItems = [items.potion, items.superPotion, items.hyperPotion, items.maxPotion];
       this.startBattle = true;
       this.onNextEnemy();
   }

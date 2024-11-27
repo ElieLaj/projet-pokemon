@@ -51,6 +51,11 @@ export class Game {
   battleCount: number = 1;
   enemyLevel: number = 5;
 
+  shopOpen: boolean = false;
+
+  balls: Pokeball[] = [];
+  hItems: HealingItem[] = [];
+
   constructor(player: Trainer, enemyMonster: Monster) {
     this.player = player;
     this.enemyMonster = enemyMonster;
@@ -70,11 +75,11 @@ export class Game {
       }
     }
     if (this.playerMonster.hp <= 0 || this.enemyMonster.hp <= 0) {
-      if (this.playerMonster.hp <= 0 && this.player.monsters.length === 1) {
+      if (this.playerMonster.hp <= 0 && this.player.monsters.length === 1 && !this.checkPokemonsHealth()) {
         this.dialogues.push('You lost!');
         this.playerLost = true;
       }
-      else if (this.player.monsters.length > 1 && this.playerMonster.hp <= 0) {
+      else if (this.player.monsters.length > 1 && this.playerMonster.hp <= 0 && this.checkPokemonsHealth()) {
         this.dialogues.push('Choose another pokemon!');
         this.setAction(ActionType.SelectSwap);
       }
@@ -84,7 +89,8 @@ export class Game {
           this.playerAction = null;
           this.enemyAction = null;
           this.battleCount++;
-          this.enemyLevel = Math.floor(this.battleCount % 3) + 5;
+          this.enemyLevel = Math.floor(this.battleCount / 2) + 5;
+          this.shopOpen = this.battleCount % 3 === 0;
           this.enemyLost = false;
         }
       }
@@ -98,6 +104,10 @@ export class Game {
     else {
       this.turnEnded = true;
     }
+  }
+
+  checkPokemonsHealth(): boolean {
+    return this.player.monsters.some(monster => monster.hp > 0);
   }
 
   playTurn() {

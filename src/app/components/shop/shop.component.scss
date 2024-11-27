@@ -1,0 +1,148 @@
+/* Shop container */
+.shop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Transparent black background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it is above everything */
+}
+
+/* Shop header */
+.shop__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.shop__title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.shop__money {
+  font-size: 1.5rem;
+  color: gold;
+}
+
+/* Shop items container */
+.shop__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 90%;
+  max-height: 70%;
+  overflow-y: auto; /* Scroll for large item lists */
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Individual item styles */
+.shop__item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Item header */
+.shop__item-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shop__item-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.shop__item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* Item content */
+.shop__item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.shop__item-special-tag {
+  font-size: 0.9rem;
+  color: darkblue;
+  margin-bottom: 5px;
+}
+
+.shop__item-desc {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.shop__item-buy {
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+    &:hover {
+      background-color: rgb(97, 97, 97);
+    }
+  }
+}
+
+.shop__item-buy:hover {
+  background-color: #218838;
+}
+
+/* Exit button */
+.shop__exit {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.shop__exit:hover {
+  background-color: darkred;
+}
+
+.shop__separator{
+    width: 100%;
+    height: 1px;
+    background-color: black;
+    margin: 20px 0;
+}

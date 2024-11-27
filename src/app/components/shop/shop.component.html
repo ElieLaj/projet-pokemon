@@ -1,0 +1,34 @@
+<div class="shop">
+    <div class="shop__header">
+        <h1 class="shop__title">Shop</h1>
+        <span class="shop__money">{{ player.money }}</span>
+    </div>
+    <div class="shop__items">
+        @for (item of hItems; track item.id) {
+        <div class="shop__item">
+            <div class="shop__item-header">
+                <h2 class="shop__item-title">{{ item.name }}</h2>
+                <img class="shop__item-image" [src]="'img/items/'+item.name.toLowerCase()+'.webp'" [alt]="item.name">
+            </div>
+            <div class="shop__item-content">
+                <span class="shop__item-special-tag">{{ item.healAmount }}</span>
+                <span class="shop__item-desc">{{ item.description }}</span>
+                <button class="shop__item-buy" (click)="buyItem(item)" [class.disabled]="item.price > player.money">Buy - {{ item.price }}</button>
+            </div>
+        </div>
+        }
+        <hr class="shop__separator">
+        @for (item of balls; track item.id) {
+        <div class="shop__item">
+            <div class="shop__item-header">
+                <h2 class="shop__item-title">{{ item.name }}</h2>
+                <img class="shop__item-image" [src]="'img/items/'+item.name.toLowerCase()+'.webp'" [alt]="item.name">
+                <span class="shop__item-special-tag">{{ item.catchRate }}</span>
+                <span class="shop__item-desc">{{ item.description }}</span>
+                <button class="shop__item-buy" (click)="buyItem(item)" [class.disabled]="item.price > player.money">Buy - {{ item.price }}</button>
+            </div>
+        </div>
+        }
+    </div>
+    <button class="shop__exit" (click)="exit()">Exit</button>
+</div>
