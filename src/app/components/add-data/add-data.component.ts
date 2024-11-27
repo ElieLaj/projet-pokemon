@@ -61,8 +61,13 @@ export class AddDataComponent implements OnInit {
   changePokemonForm: FormGroup;
   addAttackForm: FormGroup;
   addPokemonStageForm: FormGroup;
+  addPokemonEvolutionForm: FormGroup;
+
+  selectedPokemonFrom: Monster | null = null;
+  selectedPokemonTo: Monster | null = null;
 
   createdPokemon: Monster | null = null;
+
   monsters: Monster[] = [];
 
   
@@ -126,6 +131,10 @@ export class AddDataComponent implements OnInit {
     this.addPokemonStageForm = this.fb.group({
       stage: ['', [Validators.required]],
     });
+
+    this.addPokemonEvolutionForm = this.fb.group({
+      level: ['', [Validators.required]]
+    });
   }
 
 
@@ -141,7 +150,7 @@ async ngOnInit() {
     ([types, monsters, moves, categories, effects, stages]) => {
       this.types = types;
       this.monsters = transformManyPokemonDTO(monsters);
-      this.moves = moves;
+      this.moves = moves.sort((a: Move, b: Move) => a.type.id - b.type.id);
       this.categories = categories;
       this.effects = effects;
       this.stages = stages;
@@ -155,12 +164,12 @@ async ngOnInit() {
   updateChangePokemonForm(monster: Monster) {
     this.changePokemonForm.patchValue({
           pokemonName: monster.name,
-          hp: monster.hp,
-          attack: monster.attack,
-          defense: monster.defense,
-          specialAttack: monster.specialAttack,
-          specialDefense: monster.specialDefense,
-          speed: monster.speed,
+          hp: monster.maxHp,
+          attack: monster.baseAttack,
+          defense: monster.baseDefense,
+          specialAttack: monster.baseSpecialAttack,
+          specialDefense: monster.baseSpecialDefense,
+          speed: monster.baseSpeed,
           expRate: monster.expRate,
           catchRate: monster.catchRate,
           type1: monster.types[0].name,
@@ -319,7 +328,21 @@ async ngOnInit() {
     };
     const response = await api.post('/pokemon_move', attack);
     if (response.status === 200) {
-      this.addAttackForm.reset();
+    }
+  }
+
+  async addPokemonEvolution() {
+    const evolution = {
+      fromPokemon: this.selectedPokemonFrom?.id,
+      toPokemon: this.selectedPokemonTo?.id,
+      level: this.addPokemonEvolutionForm.get('level')?.value,
+    };
+
+    const response = await api.post(`/pokemon_evolution`, evolution);
+    if (response.status === 200) {
+      this.selectedPokemonFrom = null;
+      this.selectedPokemonTo = null;
+      this.addPokemonEvolutionForm.reset();
     }
   }
 

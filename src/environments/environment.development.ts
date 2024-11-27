@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiURL: 'http://localhost:808/api/v1/',
+  apiURL: 'https://pokemon-api-spring.onrender.com/api/v1',
   apiKey: 'elie'
 };

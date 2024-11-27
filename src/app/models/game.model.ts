@@ -48,6 +48,9 @@ export class Game {
 
   stage!: Stage;
 
+  battleCount: number = 1;
+  enemyLevel: number = 5;
+
   constructor(player: Trainer, enemyMonster: Monster) {
     this.player = player;
     this.enemyMonster = enemyMonster;
@@ -80,6 +83,8 @@ export class Game {
         this.enemyLost = true;
         this.playerAction = null;
         this.enemyAction = null;
+        this.battleCount++;
+        this.enemyLevel = Math.floor(this.battleCount % 3) + 5;
       }
       this.turn = TurnType.Dialogue;
     }

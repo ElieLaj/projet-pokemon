@@ -56,16 +56,11 @@ export class GameComponent implements OnInit {
       const evolutions = monsters.map((monster: MonsterDTO) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
       this.monsters = transformManyPokemonDTO(monsters.filter((monster: MonsterDTO) => !evolutions.includes(monster.id)));
       this.stages = stages;
+      this.createGame();
     },
     error => {
       console.error('Error fetching data', error);
     })
-  }
-
-  ngDoCheck() {
-    if(this.monsters && this.stages) {
-      this.createGame
-    }
   }
 
   gameOver(score: number) {
@@ -118,7 +113,7 @@ export class GameComponent implements OnInit {
         nextEnemy.expRate,
         nextEnemy.learnset,
         nextEnemy.types,
-        nextEnemy.level,
+        this.game.enemyLevel,
         nextEnemy.stages,
         nextEnemy.catchRate,
         nextEnemy.evolutions

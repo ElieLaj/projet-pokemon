@@ -13,6 +13,6 @@ export const items = {
     pokeball: new Pokeball(9, 'Pokeball', 'Catches a monster', 200, 1, 0),
     greatBall: new Pokeball(10, 'Great Ball', 'Catches a monster', 600, 1.5, 0),
     ultraBall: new Pokeball(11, 'Ultra Ball', 'Catches a monster', 1200, 2, 0),
-    masterBall: new Pokeball(12, 'Master Ball', 'Catches a monster', 9999, 255, 0),
+    masterBall: new Pokeball(12, 'Master Ball', 'Catches a monster', 9999, 9999, 0),
     premierBall: new Pokeball(13, 'Premier Ball', 'Catches a monster', 200, 1, 0),
 }

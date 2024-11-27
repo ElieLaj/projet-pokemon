@@ -143,6 +143,42 @@
       </section>
       @if (createdPokemon) { <app-monster [monster]="createdPokemon"></app-monster> }
 
+      <section id="addEvolution" class="form-section">
+              <h1>Add Pokemon Evolution</h1>
+              <form [formGroup]="addPokemonEvolutionForm" (submit)="addPokemonEvolution()">
+                <label>Base</label>
+                <app-pokemon-display
+                  [monsters]="monsters" 
+                  [maxPokemonSize]="'small'"
+                  [maxContainerWidth]="'100%'"
+                  [maxContainerHeight]="'400px'"
+                  [detailsType]="'stage'"
+                  (selectMonster)="selectedPokemonFrom = $event"
+                  [statsType]="'base'"
+                ></app-pokemon-display>
+                <label>Evolution</label>
+                <app-pokemon-display
+                  [monsters]="monsters" 
+                  [maxPokemonSize]="'small'"
+                  [maxContainerWidth]="'100%'"
+                  [maxContainerHeight]="'400px'"
+                  [detailsType]="'stage'"
+                  (selectMonster)="selectedPokemonTo = $event"
+                  [statsType]="'base'"
+                ></app-pokemon-display>
+                <div>
+                  <label for="level">Evolution Level</label>
+                  <input
+                    type="number"
+                    id="level"
+                    formControlName="level"
+                    placeholder="Enter level (e.g., 5)"
+                  />
+                </div>
+                <button type="submit" [disabled]="!selectedPokemonFrom || !selectedPokemonTo || addPokemonEvolutionForm.invalid">Update Move</button>
+              </form>
+            </section>
+
       <section id="addAttack" class="form-section">
         <h1>Add Attack to Pokémon</h1>
         <form [formGroup]="addAttackForm" (ngSubmit)="addAttack()">

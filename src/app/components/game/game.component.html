@@ -8,12 +8,12 @@
 @else {
     <div class="game-start-screen">
         <div class="game-start-screen__content">
-            <h1>Pokemon the Farthest battle</h1>
+            <h1>The PokeDev Journey</h1>
             <app-display-stage [stage]="currentStage" />
             @if (lastScore) {
                 <h1>Your last score was: {{ lastScore }}</h1>
             }
-            <p>Prepare your monster and enter the ultimate battle arena!</p>
+            <p>I hope you can enjoy this game I made to test my knowledge as a Fullstack Developer!</p>
             @if (stages.length > 0 && monsters.length > 0) {<button (click)="onStartBattle()">Start Battle</button>}
             @else {<button disabled>Game is still loading</button>}
         </div>
@@ -32,7 +32,7 @@
             }
         </div>
         <div class="game-start-screen__footer">
-            <p>&copy; {{ currentYear }} Elie</p>
+            <p>&copy; {{ currentYear }} - Elie Lajoinie</p>
         </div>
     </div>
 }
