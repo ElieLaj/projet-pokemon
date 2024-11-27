@@ -1,4 +1,4 @@
-import { Component, Input, output, Output } from '@angular/core';
+import { Component, Input, output, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-dialogue',
@@ -11,6 +11,19 @@ export class DialogueComponent {
   @Input() dialogues: string[] = [];
   next = output<string[]>();
 
+  private keyDownListener: () => void;
+
+  constructor(private render: Renderer2) {
+    this.keyDownListener = this.render.listen('document', 'keydown', (event: KeyboardEvent) => {
+      if (event.key === "Enter") this.pushNext();
+    })
+  }
+  
+  ngOnDestroy(): void {
+      if (this.keyDownListener){
+        this.keyDownListener();
+      }
+  }
 
   pushNext() {
     this.dialogues.shift();

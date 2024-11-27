@@ -160,6 +160,7 @@ export class Game {
       this.turn = TurnType.Dialogue;
       return;
     }
+    if (this.playerMonster.effect?.name === 'Flinched') { this.playerMonster.removeEffect(this.dialogues); return; }
     calculateDamage(this.playerMonster, this.enemyMonster, this.playerSelectedAttack!, this.dialogues);
     
     this.playerMonster.effect?.damage ? 
@@ -179,6 +180,9 @@ export class Game {
       this.enemyLost = true;
       this.enemyAction = null;
       this.playerScore += 100;
+    }
+    else if (this.enemyMonster.effect?.name === "Flinched") {
+      this.enemyMonster.effect = null;
     }
 
     this.playerSelectedAttack = null;
@@ -227,11 +231,15 @@ playerChangeMonster(newMonster: Monster) {
       this.enemyAction = null;
       return;
     }
+    if (this.enemyMonster.effect?.name === 'Flinched') { this.enemyMonster.removeEffect(this.dialogues); return; }
+    
     const enemyMove = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
     calculateDamage(this.enemyMonster, this.playerMonster, enemyMove, this.dialogues);
     
     this.enemyMonster.sufferEffect(this.dialogues);
-
+    if (this.playerMonster.effect?.name === "Flinched") {
+      this.playerMonster.effect = null;
+    }
     this.enemyAction = null;
     this.lastTurn = TurnType.Enemy;
     this.turn = TurnType.Dialogue;
@@ -258,6 +266,7 @@ playerChangeMonster(newMonster: Monster) {
 
   playerRun() {
     this.dialogues.push('You ran away!');
+    this.playerLost = true;
   }
 
   setAction(action: ActionType) {
@@ -277,18 +286,25 @@ playerChangeMonster(newMonster: Monster) {
   }
   
   evolveMonster(monster: Monster) {
-    const newMonster = monster.evolutions[0].toPokemon;
+    const newMonster = monster.evolutions[0]?.toPokemon;
+
     newMonster.specialId = monster.specialId;
     newMonster.level = monster.level;
     newMonster.hp = monster.hp;
     newMonster.calculateExpToNextLevel();
     newMonster.recalculateStats();
-
+    
     newMonster.currentExp = monster.currentExp;
     newMonster.pokemonMoves = monster.pokemonMoves;
+    newMonster.canEvolve = false;
 
-    monster = newMonster;
-    this.playerMonster = monster;
-    this.dialogues.push(`${monster.name} evolved into ${newMonster.name}!`);
+    const oldMonsterIndex = this.player.monsters.findIndex(
+      m => m.specialId === monster.specialId
+    );
+
+  this.player.monsters[oldMonsterIndex] = newMonster;
+  if (this.player.monsters.indexOf(newMonster) == oldMonsterIndex) { this.playerMonster = newMonster};
+
+  this.dialogues.push(`${monster.name} evolved into ${newMonster.name}!`);
   }
 }

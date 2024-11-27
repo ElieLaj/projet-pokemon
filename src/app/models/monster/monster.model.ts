@@ -98,10 +98,10 @@ export class Monster {
   learnMove(oldMove: PokemonMove | null = null) {
     const newMove = this.learnMovewaitList.shift();
     if (newMove) {
-      if (this.pokemonMoves.length < 4) {
-        this.pokemonMoves.push(newMove);
-        return;
-      }
+      // if (this.pokemonMoves.length < 4) {
+      //   this.pokemonMoves.push(newMove);
+      //   return;
+      // }
       this.pokemonMoves.push(newMove);
       this.pokemonMoves = this.pokemonMoves.filter(move => move !== oldMove);
     }
@@ -112,12 +112,12 @@ export class Monster {
 
     for (const move of this.learnset) {
       if (move.level === this.level) {
-        if (this.pokemonMoves.length < 4) {
-          this.pokemonMoves.push(move);
-        }
-        else {
+        // if (this.pokemonMoves.length < 4) {
+        //   this.pokemonMoves.push(move);
+        // }
+        // else {
           this.learnMovewaitList.push(move);
-        }
+        // }
       }
     }
 

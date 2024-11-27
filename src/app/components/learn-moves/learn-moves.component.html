@@ -1,0 +1,31 @@
+<div class="battle-screen__attack-options">
+    @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
+        <button
+            (click)="game.forgetMoveSelected = pokemonMove;"
+            [style.background]="calculateBg(pokemonMove.move.type.name)"
+            [class.activated]="game.forgetMoveSelected?.id === pokemonMove.id">
+            {{ pokemonMove.move.name }}
+        </button>
+    }
+</div>
+<div class="battle-screen__learn-options">
+    <button 
+        class="battle-screen__learn-options-learn" 
+        [style.background]="calculateBg(game.playerMonster.learnMovewaitList[0].move.type.name)"
+    >
+        <span>{{ game.playerMonster.learnMovewaitList[0].move.name }}</span>
+        <span>{{ game.playerMonster.learnMovewaitList[0].move.power }} - {{ game.playerMonster.learnMovewaitList[0].move.type.name }}</span> 
+    </button>
+</div>
+<div class="battle-screen__learn-controls">
+    <button
+        class="battle-screen__learn-controls-attack"
+        (click)="game.playerMonster.learnMove(game.forgetMoveSelected)">
+        Learn this move
+    </button>
+    <button
+        class="battle-screen__learn-controls-attack"
+        (click)="game.playerMonster.learnMovewaitList.shift()">
+        Don't learn this move
+    </button>
+</div>

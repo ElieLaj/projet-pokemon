@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, Renderer2, OnDestroy } from '@angular/core';
 import { Monster } from '../../models/monster/monster.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { ActionType, calculateBg } from '../../utils/game.utils';
@@ -6,15 +6,16 @@ import { DialogueComponent } from "../dialogue/dialogue.component";
 import { Game } from '../../models/game.model';
 import { DisplayStageComponent } from "../display-stage/display-stage.component";
 import { ShopComponent } from '../shop/shop.component';
+import { LearnMovesComponent } from "../learn-moves/learn-moves.component";
 
 @Component({
   selector: 'app-battle-screen',
   standalone: true,
-  imports: [MonsterComponent, DialogueComponent, DisplayStageComponent, ShopComponent],
+  imports: [MonsterComponent, DialogueComponent, DisplayStageComponent, ShopComponent, LearnMovesComponent],
   templateUrl: './battle-screen.component.html',
   styleUrl: './battle-screen.component.scss'
 })
-export class BattleScreenComponent implements OnInit {
+export class BattleScreenComponent implements OnDestroy {
   calculateBg = calculateBg;
 
   @Input() game!: Game;
@@ -23,11 +24,76 @@ export class BattleScreenComponent implements OnInit {
   @Output() changeEnemyMonster = new EventEmitter<any>();
   @Output() playerLost = new EventEmitter<number>();
 
+  private keyDownListener: () => void;
 
-  ngOnInit() {
-    if (this.game.dialogues.length === 0) {
-      this.game.dialogues.push('A wild monster appeared!');
-    }
+  constructor(private render: Renderer2) {
+    this.keyDownListener = this.render.listen('document', 'keydown', (event: KeyboardEvent) => {
+      if (!this.game.playerAction && this.game.dialogues.length === 0 && this.game.playerMonster.learnMovewaitList.length === 0 && !this.game.playerMonster.canEvolve) {
+            switch(event.key){
+              case("&"):
+                this.game.setAction(ActionType.SelectAttack);
+                break;
+              case("é"):
+                this.game.setAction(ActionType.SelectItemType);
+                break;
+              case("\""):
+                this.game.setAction(ActionType.SelectSwap);
+                break;
+              case("'"):
+                this.game.setAction(ActionType.Run);
+                break;
+        }
+      }
+      else if(this.game.playerAction === ActionType.SelectAttack && this.game.turnEnded && this.game.dialogues.length === 0 && this.game.playerMonster.learnMovewaitList.length === 0 && !this.game.playerMonster.canEvolve){
+        switch(event.key){
+          case("&"):
+            this.game.playerSelectedAttack = this.game.playerMonster.pokemonMoves[0]?.move;
+            break;
+          case("é"):
+            this.game.playerSelectedAttack = this.game.playerMonster.pokemonMoves[1]?.move;
+            break;
+          case("\""):
+            this.game.playerSelectedAttack = this.game.playerMonster.pokemonMoves[2]?.move;
+            break;
+          case("'"):
+            this.game.playerSelectedAttack = this.game.playerMonster.pokemonMoves[3]?.move;
+            break;
+        }
+        this.game.playerSelectedAttack ? this.game.setAction(ActionType.Attack) : null;
+      }
+      else if(this.game.playerAction === ActionType.SelectSwap && this.game.turnEnded && this.game.dialogues.length === 0 && this.game.playerMonster.learnMovewaitList.length === 0 && !this.game.playerMonster.canEvolve){
+        switch(event.key){
+          case("&"):
+            this.game.playerSelectedMonster = this.game.player.monsters[0];
+            break;
+          case("é"):
+            this.game.playerSelectedMonster = this.game.player.monsters[1];
+            break;
+          case("\""):
+            this.game.playerSelectedMonster = this.game.player.monsters[2];
+            break;
+          case("'"):
+            this.game.playerSelectedMonster = this.game.player.monsters[3];
+            break;
+          case("("):
+            this.game.playerSelectedMonster = this.game.player.monsters[4];
+            break;
+          case("-"):
+            this.game.playerSelectedMonster = this.game.player.monsters[5];
+            break;
+        }
+        this.game.playerSelectedMonster ? this.game.setAction(ActionType.Swap) : null;
+      }
+      else if(this.game.playerAction && this.game.turnEnded && event.key === "Escape"){
+            this.game.playerAction = null;
+        }
+    })
+  }
+
+  ngOnDestroy(): void {
+      if (this.keyDownListener){
+        this.keyDownListener();
+      }
   }
 
   ngDoCheck() {
@@ -40,4 +106,7 @@ export class BattleScreenComponent implements OnInit {
       this.game.enemyLost = false;
     }
   }
+
+
+
 }

@@ -1,0 +1,89 @@
+.battle-screen__attack-options {
+        grid-column: span 2;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, 1fr); 
+        grid-template-rows: repeat(2, 1fr); 
+        grid-auto-rows: 1fr;
+        button {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+            .activated {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(255, 78, 78, 0.5);
+            padding: 12px 17px;
+        }
+        }
+        
+    }
+.battle-screen__learn-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+    button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(255, 78, 78, 0.5);
+        }
+        &:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+    }
+    &-attack {
+        background: linear-gradient(90deg, #ff4e4e, #ff6a6a);
+    }
+}
+
+.battle-screen__learn-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        background: linear-gradient(90deg, #48ab48, #42d442);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(81, 196, 130, 0.6);
+        }
+        &:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        &-attack {
+            background: linear-gradient(90deg, #ff4e4e, #ff6a6a);
+        }
+    }
+}
