@@ -19,9 +19,9 @@
             transition: transform 0.2s, box-shadow 0.2s;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 
-            .activated {
+            &.activated {
             transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(255, 78, 78, 0.5);
+            box-shadow: 0 0px 20px rgba(255, 78, 78, 0.6);
             padding: 12px 17px;
         }
         }
@@ -85,9 +85,9 @@
         &-attack {
             background: linear-gradient(90deg, #ff4e4e, #ff6a6a);
         }
-        .activated {
+        &.activated {
             transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(255, 78, 78, 0.5);
+            box-shadow: 0 0px 20px rgba(255, 78, 78, 0.6);
             padding: 12px 17px;
         }
     }

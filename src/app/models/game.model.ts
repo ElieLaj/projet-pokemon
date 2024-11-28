@@ -86,6 +86,7 @@ export class Game {
       else if (this.player.monsters.length > 1 && this.playerMonster.hp <= 0 && this.checkPokemonsHealth()) {
         this.dialogues.push('Choose another pokemon!');
         this.setAction(ActionType.SelectSwap);
+        this.enemyAction = null;
       }
       else {
         if (this.enemyLost) {

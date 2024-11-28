@@ -36,6 +36,7 @@
                   [maxPokemonSize]="'small'"
                   [maxContainerWidth]="'50vw'"
                   [style]="'dark'"
+                  (selectMonster)="playerUnselectMonster($event)"
                   ></app-pokemon-display>
                 <app-pokemon-display
                   [monsters]="monsters" 

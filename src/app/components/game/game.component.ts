@@ -115,8 +115,12 @@ export class GameComponent implements OnInit {
     this.game.dialogues.push(`A new enemy appears: ${nextEnemyCopy.name}!`);
   }
 
-playerSelectMonster(monster: Monster) {
+  playerSelectMonster(monster: Monster) {
     const monsterCopy = createNewPokemon(monster);
+
+    if (this.playerMonsters.map((m: Monster) => m.id).includes(monsterCopy.id)) {
+      return;
+    }
 
     if (this.playerMonsters.length < 2) {
       this.playerMonsters.push(monsterCopy);
@@ -129,7 +133,16 @@ playerSelectMonster(monster: Monster) {
 
     this.game = new Game(this.player, this.enemyMonster);
     this.game.stage = this.currentStage;
-}
+  }
+
+  playerUnselectMonster(monster: Monster) {
+    this.playerMonsters = this.playerMonsters.filter((m: Monster) => m.id !== monster.id);
+    this.player = new Trainer('Player', this.playerMonsters, 500, this.playerBag);
+
+    this.game = new Game(this.player, this.enemyMonster);
+    this.game.stage = this.currentStage;
+  }
+
 
   onStartBattle() {
       const selectedMonsters = this.playerMonsters || [this.monsters[0], this.monsters[1]];
