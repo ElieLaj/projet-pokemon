@@ -84,7 +84,7 @@ export class GameComponent implements OnInit {
   }
 
   createGame(stages: StageDTO[]) {
-    const stageIndex = 5;
+    const stageIndex = Math.floor(Math.random() * stages.length);
     const selectedStageDTO = stages[stageIndex];
 
     this.currentStage = transformStageDTO(selectedStageDTO);
@@ -171,7 +171,6 @@ export class GameComponent implements OnInit {
 
       this.player = new Trainer('Player', [...selectedMonsters], 500, new Bag([], []));
       this.player.bag.addHealingItem(this.healingItems.sort((a, b) => a.healAmount - b.healAmount)[0], 5);
-            this.player.bag.addPokeball(this.pokeballs.sort((a, b) => b.catchRate - a.catchRate)[0], 10);
       this.player.bag.addPokeball(this.pokeballs.sort((a, b) => a.catchRate - b.catchRate)[0], 10);
       this.game = new Game(this.player, this.enemyMonster);
       this.game.stage = this.currentStage;
