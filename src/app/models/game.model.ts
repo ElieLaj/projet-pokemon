@@ -216,8 +216,6 @@ export class Game {
             ally.gainEnemyExp(defender, this.dialogues);
           }
         }
-      } else {
-        this.playerLost = true;
       }
       this.turnEnded = true;
       return;
@@ -299,7 +297,7 @@ playerChangeMonster(newMonster: Monster) {
       this.playerAction = action;
       return;
     }
-    if (this.turnEnded){
+    if (this.turnEnded && (this.playerMonster.hp > 0 && this.enemyMonster.hp > 0)) {
         this.playerAction = action;
         this.enemyAction = ActionType.Attack;
     }

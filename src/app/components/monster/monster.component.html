@@ -1,5 +1,5 @@
 <div class="monster" [style]="{ border: borderColor, width: componentSize}"
-    (mouseover)="showStats = true" 
+    (mouseover)="showStats = true; updateMousePosition($event)" 
     (mouseout)="showStats = false"
     (mousemove)="updateMousePosition($event)"
 >
@@ -16,12 +16,14 @@
                 </p>
                 <p>HP: {{ monster.hp }} / {{ monster.maxHp }}</p>
             </div>
-            <div class="monster__hp-bar-container" [class.visible]="showHp">
-                <div class="monster__hp-bar" [style]="{width: healthBarClass, background: healthColor }"></div>
-            </div>
-            <div class="monster__exp-bar-container" [class.visible]="showExp">
-                <div class="monster__exp-bar" [style]="{width: expBarClass, background: expColor}"></div>
-            </div>
+                <div class="monster__hp-bar-container">
+                    <div class="monster__hp-bar" [style]="{width: healthBarClass, background: healthColor }"></div>
+                </div>
+                <div class="monster__exp-bar-container">
+                    <div class="monster__exp-bar" [style]="{width: expBarClass, background: expColor}"></div>
+                </div>
+            
+            
         </div>
     }
     <div class="monster__details" 

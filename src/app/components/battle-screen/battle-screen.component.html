@@ -14,6 +14,7 @@
                 <app-monster
                     [monster]="game.playerMonster"
                     [size]="this.sm || this.xs ? 'small' : 'normal'"
+                    [detailsType]="'stats'"
                     [active]="true">
                 </app-monster>
             </div>
@@ -21,6 +22,7 @@
                 <app-monster
                     [monster]="game.enemyMonster"
                     [size]="this.sm || this.xs ? 'small' : 'normal'"
+                    [detailsType]="'stats'"
                     [active]="true"
                     [isPlayer]="false">
                 </app-monster>

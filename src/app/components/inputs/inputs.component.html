@@ -42,7 +42,10 @@
             }
         </div>
     }
-    @else if (game.playerAction === game.ActionType.SelectSwap) {
+    
+</div>
+
+    @if (game.playerAction === game.ActionType.SelectSwap) {
         <div class="battle-screen__swap-options">
             @for (monster of game.player.monsters; track monster.id) {
                 @if (monster.hp > 0 && monster.specialId !== game.playerMonster.specialId) {
@@ -62,9 +65,6 @@
             }
         </div>
     }
-    
-</div>
-
 @if (game.playerAction && game.turnEnded) {
     <button class="battle-screen__cancel" (click)="game.playerAction = null">Cancel</button>
 }

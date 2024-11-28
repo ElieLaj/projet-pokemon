@@ -42,7 +42,7 @@ export class GameComponent implements OnInit {
 
   lastScore: number = 0;
 
-  playerMonster!: Monster;
+  playerMonsters: Monster[] = [];
   enemyMonster!: Monster;
   game!: Game;
   player!: Trainer;
@@ -80,7 +80,6 @@ export class GameComponent implements OnInit {
     this.startBattle = false;
     this.lastScore = score;
     this.playerBag = new Bag([], [])
-    this.playerSelectMonster(this.monsters[0]);
   }
 
   createGame() {
@@ -88,7 +87,6 @@ export class GameComponent implements OnInit {
     this.currentStage = this.stages[stageIndex];
     this.spawnableMonsters = transformManyPokemonDTO(this.currentStage?.pokemons).filter((monster: Monster) => this.spawnableMonsters.find((m: Monster) => m.id === monster.id) === undefined);
     const enemyIndex = Math.floor(Math.random() * (this.spawnableMonsters.length - 1));
-    this.playerSelectMonster(this.monsters[0]);
 
     this.enemyMonster = createNewPokemon(this.spawnableMonsters[enemyIndex], null, this.game.enemyLevel);
 
@@ -120,19 +118,23 @@ export class GameComponent implements OnInit {
 playerSelectMonster(monster: Monster) {
     const monsterCopy = createNewPokemon(monster);
 
-    this.playerMonster = monsterCopy;
+    if (this.playerMonsters.length < 2) {
+      this.playerMonsters.push(monsterCopy);
+    } else {
+      this.playerMonsters[0] = createNewPokemon(this.playerMonsters[1]);
+      this.playerMonsters[1] = monsterCopy;
+    }
 
-    this.player = new Trainer('Player', [monsterCopy], 500, this.playerBag);
+    this.player = new Trainer('Player', this.playerMonsters, 500, this.playerBag);
 
     this.game = new Game(this.player, this.enemyMonster);
     this.game.stage = this.currentStage;
 }
 
   onStartBattle() {
-      const selectedMonster = this.playerMonster || this.monsters[0];
-      const monsterCopy = createNewPokemon(selectedMonster);
+      const selectedMonsters = this.playerMonsters || [this.monsters[0], this.monsters[1]];
 
-      this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));
+      this.player = new Trainer('Player', [...selectedMonsters], 500, new Bag([], []));
       this.player.bag.addHealingItem(this.healingItems.sort((a, b) => a.healAmount - b.healAmount)[0], 5);
       this.player.bag.addPokeball(this.pokeballs.sort((a, b) => a.catchRate - b.catchRate)[0], 10);
       this.game = new Game(this.player, this.enemyMonster);

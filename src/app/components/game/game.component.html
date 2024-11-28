@@ -14,7 +14,15 @@
                 <h1>Your last score was: {{ lastScore }}</h1>
             }
             <p class="game-start-screen__content-bio">I hope you can enjoy this game I made to test my knowledge as a Fullstack Developer!</p>
-            @if (stages.length > 0 && monsters.length > 0) {<button (click)="onStartBattle()">Start Battle</button>}
+            @if (stages.length > 0 && monsters.length > 0) {
+                @if(playerMonsters.length === 0){
+                    <button disabled>Select one or two pokemons</button>
+                }
+                @else {
+                    <button (click)="onStartBattle()">Start Battle</button>
+                }
+            }
+            
             @else {
                 <button disabled>Game is still loading</button>
                 <p class="game-start-screen__content-time">The wait time can extend to 1 or 2 minutes.</p>
@@ -22,6 +30,13 @@
         </div>
         <div class="game-start-screen__monsters">
             @if (stages.length > 0 && monsters.length > 0) {
+                <h2>Selected pokemons ( Up to 2 )</h2>
+                <app-pokemon-display
+                  [monsters]="playerMonsters" 
+                  [maxPokemonSize]="'small'"
+                  [maxContainerWidth]="'50vw'"
+                  [style]="'dark'"
+                  ></app-pokemon-display>
                 <app-pokemon-display
                   [monsters]="monsters" 
                   [maxPokemonSize]="'normal'"

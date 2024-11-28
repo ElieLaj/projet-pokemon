@@ -1,4 +1,75 @@
-.battle-screen__actions {
+.battle-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #1e1e2f, #3e3e5e);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    gap: 20px;
+    height: calc(100vh - 60px);
+    box-sizing: border-box;
+    overflow: auto;
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    &__header {
+        text-align: center;
+        margin-bottom: 20px;
+
+        h1, h2 {
+            margin: 10px 0;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+        }
+        h1 {
+            font-size: 4rem;
+        }
+        h2 {
+            .player {
+                color: #48ab48;
+            }
+            .enemy {
+                color: #ff4e4e;
+            }
+        }
+    }
+
+    &__monsters {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-evenly;
+        gap: 40px;
+        margin-bottom: 20px;
+
+        .battle-screen__player,
+        .battle-screen__enemy {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    &__inputs {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 15px;
+    }
+
+    &__actions {
         display: grid;
 
         grid-template-columns: repeat(2, 1fr);
@@ -32,12 +103,6 @@
             }
         }
 
-        @media (max-width: 767px) {
-            button {
-                width: 100px;
-            }
-        }
-
         &-attack {
             background: linear-gradient(90deg, #ff4e4e, #ff6a6a);
         }
@@ -53,7 +118,7 @@
 
     }
 
-    .battle-screen__attack-options {
+    &__attack-options {
             grid-column: span 2;
             display: grid;
             gap: 10px;
@@ -83,7 +148,7 @@
             }
         }
 
-    .battle-screen__learn-options {
+    &__learn-options {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -120,7 +185,7 @@
         }
     }
 
-    .battle-screen__learn-controls {
+    &__learn-controls {
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -152,12 +217,12 @@
         }
     }
 
-    .battle-screen__item-options {
+    &__item-options {
         grid-column: span 2;
         display: grid;
         gap: 10px;
-        grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
-        grid-template-rows: repeat(2, 1fr);    /* 2 lignes */
+        grid-template-columns: repeat(2, 1fr); 
+        grid-template-rows: repeat(2, 1fr);
         grid-auto-rows: 1fr;
 
         button {
@@ -177,9 +242,10 @@
             }        }
     }
 
-    .battle-screen__swap-options {
+    &__swap-options {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(2, minmax(120px, 1fr)); 
+        grid-template-rows: repeat(3, 1fr);
         gap: 10px;
         justify-items: center;
         width: 100%;
@@ -239,17 +305,17 @@
 
     }
     
-    .battle-screen__cancel {
+    &__cancel {
         padding: 10px 15px;
         font-size: 1rem;
         border: none;
         border-radius: 8px;
-        margin-top: 30px;
         background: linear-gradient(90deg, #ff6a6a, #ff4e4e);
         color: white;
         cursor: pointer;
         transition: transform 0.2s, box-shadow 0.2s;
-
+        margin-top: 15px;
+        
         &:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(255, 78, 78, 0.5);
@@ -260,3 +326,19 @@
             box-shadow: none;
         }
     }
+
+    &__log {
+        width: 100%;
+        overflow-y: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-top: 20px;
+        text-align: center;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+    }
+}

@@ -87,6 +87,7 @@
 
     &__monsters {
         display: flex;
+        flex-direction: column;
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
@@ -95,6 +96,12 @@
         transition: all 0.3s ease-in-out;
 
         margin-bottom: 50px;
+    }
+
+    h2 {
+         font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
     }
 
     &__footer {

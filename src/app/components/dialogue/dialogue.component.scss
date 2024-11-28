@@ -64,11 +64,11 @@
 /* Responsive */
 @media (max-width: 768px) {
   .dialogue {
-    width: 65%; /* Réduit la largeur sur les petits écrans */
+    width: 75vw; /* Réduit la largeur sur les petits écrans */
   }
 
   .dialogue__text {
-    font-size: 14px; /* Réduction de la taille du texte */
+    font-size: 12px; /* Réduction de la taille du texte */
   }
 
   .dialogue__choices button {
