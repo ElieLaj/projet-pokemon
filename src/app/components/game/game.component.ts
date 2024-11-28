@@ -134,7 +134,6 @@ playerSelectMonster(monster: Monster) {
 
       this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));
       this.player.bag.addHealingItem(this.healingItems.sort((a, b) => a.healAmount - b.healAmount)[0], 5);
-      this.player.bag.addPokeball(this.pokeballs.sort((a, b) => b.catchRate - a.catchRate)[0], 10);
       this.player.bag.addPokeball(this.pokeballs.sort((a, b) => a.catchRate - b.catchRate)[0], 10);
       this.game = new Game(this.player, this.enemyMonster);
       this.game.stage = this.currentStage;
