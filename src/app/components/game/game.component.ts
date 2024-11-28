@@ -90,7 +90,7 @@ export class GameComponent implements OnInit {
     const enemyIndex = Math.floor(Math.random() * (this.spawnableMonsters.length - 1));
     this.playerSelectMonster(this.monsters[0]);
 
-    this.enemyMonster = createNewPokemon(this.spawnableMonsters[enemyIndex]);
+    this.enemyMonster = createNewPokemon(this.spawnableMonsters[enemyIndex], null, this.game.enemyLevel);
 
     this.game = new Game(this.player, this.enemyMonster);
     this.game.balls = [...this.pokeballs];
@@ -102,9 +102,17 @@ export class GameComponent implements OnInit {
     const middleStageEvolutions = this.monsters.map((monster: Monster) => 
         monster.evolutions[0]?.levelRequired < this.game.enemyLevel ? monster.evolutions[0]?.toPokemon.id : 0)
         .filter((id: number) => id !== undefined && id !== 0);
+
+    if (this.game.battleCount % 6 === 0) {
+      const stageIndex = Math.floor(Math.random() * (this.stages.length - 1));
+      this.currentStage = this.stages[stageIndex];
+      this.game.stage = this.currentStage;
+      this.spawnableMonsters = transformManyPokemonDTO(this.currentStage?.pokemons).filter((monster: Monster) => this.spawnableMonsters.find((m: Monster) => m.id === monster.id) === undefined);
+    }
+
     this.spawnableMonsters.concat([...this.monsters].filter((monster: Monster) => middleStageEvolutions.includes(monster.id) && this.spawnableMonsters.find((m: Monster) => m.id === monster.id) === undefined));
     const nextEnemy = this.spawnableMonsters[Math.floor(Math.random() * this.spawnableMonsters.length)];
-    const nextEnemyCopy = createNewPokemon(nextEnemy);
+    const nextEnemyCopy = createNewPokemon(nextEnemy, null, this.game.enemyLevel);
     this.game.enemyMonster = nextEnemyCopy;
     this.game.dialogues.push(`A new enemy appears: ${nextEnemyCopy.name}!`);
   }
@@ -126,7 +134,6 @@ playerSelectMonster(monster: Monster) {
 
       this.player = new Trainer('Player', [monsterCopy], 500, new Bag([], []));
       this.player.bag.addHealingItem(this.healingItems.sort((a, b) => a.healAmount - b.healAmount)[0], 5);
-      this.player.bag.addPokeball(this.pokeballs.sort((a, b) => b.catchRate - a.catchRate)[0], 20);
       this.player.bag.addPokeball(this.pokeballs.sort((a, b) => a.catchRate - b.catchRate)[0], 10);
       this.game = new Game(this.player, this.enemyMonster);
       this.game.stage = this.currentStage;

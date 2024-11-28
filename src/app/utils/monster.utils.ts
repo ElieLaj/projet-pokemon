@@ -42,6 +42,13 @@ export enum EffectType {
     Poisoned = 'Poisoned',
     Paralyzed = 'Paralyzed',
     Freezed = 'Freezed',
-    Asleep = 'Asleep',
-    Confused = 'Confused'
+    Sleeping = 'Sleeping',
+    Confused = 'Confused',
+    Flinched = 'Flinched',
+    BadlyPoisoned = 'Badly Poisoned',
+    Heal = 'Heal',
+    HighCrit = 'High Crit',
+    SelfDamage = 'Self Damage',
+    MoveFirst = 'Move First',
+    MoveLast = 'Move Last',
 }

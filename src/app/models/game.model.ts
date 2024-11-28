@@ -1,8 +1,10 @@
 import { ActionType, calculateDamage, TurnType, createNewPokemon } from "../utils/game.utils";
+import { EffectType } from "../utils/monster.utils";
 import { HealingItem } from "./healingItem.model";
 import { Item } from "./item.model";
 import { Monster } from "./monster/monster.model";
 import { Move } from "./monster/move.model";
+import { MoveEffect } from "./monster/moveEffect.model";
 import { Pokeball } from "./pokeball.model";
 import { PokemonMove } from "./pokemonMove.model";
 import { Stage } from "./stage.model";
@@ -31,6 +33,7 @@ export class Game {
 
   playerAction: ActionType | null = null;
   enemyAction: ActionType | null = null;
+  enemySelectedAttack: Move | null = null;
 
   playerMonster: Monster;
 
@@ -67,7 +70,6 @@ export class Game {
     if(this.turn === TurnType.Dialogue) {
       if (this.dialogues.length === 0) {
         if (this.turnEnded){
-          console.log('turn ended');
           this.turn = this.playerMonster.speed > this.enemyMonster.speed ? TurnType.Player : TurnType.Enemy;
         }
         else {
@@ -77,7 +79,7 @@ export class Game {
       }
     }
     if (this.playerMonster.hp <= 0 || this.enemyMonster.hp <= 0) {
-      if (this.playerMonster.hp <= 0 && !this.checkPokemonsHealth()) {
+      if (this.playerMonster.hp <= 0 && this.checkPokemonsHealth() === false) {
         this.dialogues.push('You lost!');
         this.playerLost = true;
       }
@@ -91,9 +93,16 @@ export class Game {
           this.playerAction = null;
           this.enemyAction = null;
           this.battleCount++;
-          this.player.money += this.battleCount + 100;
+          this.player.money += this.enemyLevel * 15;
           this.enemyLevel = Math.floor(this.battleCount / 3) + 5;
           this.shopOpen = this.battleCount % 3 === 0;
+          if (this.battleCount % 6 === 0) {
+            for(const pokemon of this.player.monsters) {
+              pokemon.hp = pokemon.maxHp;
+              pokemon.effect = null;
+              pokemon.effectTurn = 0;
+            }
+          }
           this.enemyLost = false;
         }
       }
@@ -117,12 +126,20 @@ export class Game {
   }
 
   playTurn() {
-    if (this.playerAction != ActionType.Attack && this.playerAction != null) {
+    if (this.enemyAction === ActionType.Attack) {
+      this.enemySelectedAttack = this.enemyMonster.pokemonMoves[Math.floor(Math.random() * this.enemyMonster.pokemonMoves.length)].move;
+    }
+    if (
+      (
+        this.playerAction != ActionType.Attack || 
+        (this.playerSelectedAttack?.moveEffects[0].effect.name === EffectType.MoveFirst && this.enemySelectedAttack?.moveEffects[0].effect.name !== EffectType.MoveFirst)) && 
+        this.playerAction != null 
+      ) 
+    {
         this.playerTurn();
     }
     if (this.turn === TurnType.Enemy)
-      this.performAttack(this.enemyMonster, this.playerMonster, null, false);
-    
+      this.performAttack(this.enemyMonster, this.playerMonster, this.enemySelectedAttack, false);
     else if (this.turn === TurnType.Player) 
       this.playerTurn();
   }
@@ -182,14 +199,10 @@ export class Game {
       return;
     }
 
-    const attack = selectedAttack ?? 
+    const move = selectedAttack ?? 
       attacker.pokemonMoves[Math.floor(Math.random() * attacker.pokemonMoves.length)].move;
 
-    calculateDamage(attacker, defender, attack, this.dialogues);
-
-    if (attacker.effect?.damage) {
-      attacker.hp = Math.max(attacker.hp - Math.floor(attacker.maxHp * attacker.effect.damage), 0);
-    }
+    calculateDamage(attacker, defender, move, this.dialogues);
 
     attacker.sufferEffect(this.dialogues);
 
@@ -210,10 +223,6 @@ export class Game {
       return;
     }
 
-    if (defender.effect?.name === "Flinched") {
-      defender.effect = null;
-    }
-
     if (isPlayer) {
       this.playerAction = null;
       this.playerSelectedAttack = null;
@@ -222,6 +231,11 @@ export class Game {
       this.lastTurn = TurnType.Enemy;
       this.turn = TurnType.Dialogue;
     }
+
+    if (defender.effect?.name === "Flinched" && (this.enemyAction === null && this.playerAction === null)) {
+      defender.effect = null;
+    }
+
   }
 
 playerChangeMonster(newMonster: Monster) {
@@ -308,6 +322,7 @@ playerChangeMonster(newMonster: Monster) {
 
     newMonster.calculateExpToNextLevel();
     newMonster.recalculateStats();
+    newMonster.checkEvolutionMove();
 
     newMonster.currentExp = monster.currentExp;
     newMonster.pokemonMoves = [...monster.pokemonMoves];

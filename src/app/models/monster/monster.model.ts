@@ -142,6 +142,19 @@ export class Monster {
     return this.pokemonMoves;
   }
 
+  checkEvolutionMove() {
+    for (const move of this.learnset) {
+      if (move.level === this.level) {
+        if (this.pokemonMoves.length < 4) {
+          this.pokemonMoves.push(move);
+        }
+        else {
+          this.learnMovewaitList.push(move);
+        }
+      }
+    }
+  }
+
   gainEnemyExp(enemy: Monster, dialogues:string[], isWild: boolean = true) {
     const modifier = isWild ? 1 : 1.5;
     const exp = Math.floor((enemy.expRate * enemy.level * modifier) / 7) * enemy.level;

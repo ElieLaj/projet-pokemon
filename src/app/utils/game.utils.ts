@@ -74,6 +74,12 @@ export const calculateDamage = (
     return;
   }
 
+  if (move.category.name === MoveCategory.Effect) {
+    dialogues.push(`${pokemon.name} used ${move.name}!`);
+    enemy.addEffect(move.moveEffects[0].effect, dialogues);
+    return;
+  }
+
   const stat = move.category.name === MoveCategory.Physical ? pokemon.attack : pokemon.specialAttack;
   const enemyStat = move.category.name === MoveCategory.Physical ? enemy.defense : enemy.specialDefense;
 
@@ -92,6 +98,13 @@ export const calculateDamage = (
   else dialogues.push(`${pokemon.name} used ${move.name} on ${enemy.name} and dealt ${damage}!`);
 
   enemy.hp = Math.max(enemy.hp - damage, 0);
+
+  if (move.moveEffects[0]?.effect.name === EffectType.Heal) {
+    pokemon.hp = Math.min(Math.floor(pokemon.hp + damage * 0.33), pokemon.maxHp);
+  }
+  else if (move.moveEffects[0]?.effect.name === EffectType.SelfDamage) {
+    pokemon.hp = Math.max(Math.floor(pokemon.hp - damage * move.moveEffects[0]?.effect.damage), 0);
+  }
 
   if (enemy.hp <= 0) {
     dialogues.push(`${enemy.name} fainted!`);
@@ -114,16 +127,22 @@ export const calculateBg = (type: string = 'none'): string => {
       return '#F08030';
     case MonsterType.Water:
     case StageType.Sea:
+    case StageType.Beach:
       return '#6890F0';
     case MonsterType.Electric:
+    case EffectType.Paralyzed:
       return '#F8D030';
     case MonsterType.Ice:
     case StageType.IceCave:
+    case EffectType.Freezed:
       return '#98D8D8';
     case MonsterType.Fighting:
     case StageType.Mountain:
+    case EffectType.Flinched:
       return '#C03028';
     case MonsterType.Poison:
+    case EffectType.Poisoned:
+    case EffectType.BadlyPoisoned:
       return '#A040A0';
     case MonsterType.Ground:
     case StageType.Desert:
@@ -132,11 +151,13 @@ export const calculateBg = (type: string = 'none'): string => {
     case StageType.Sky:
       return '#A890F0';
     case MonsterType.Psychic:
+    case EffectType.Confused:
       return '#F85888';
     case MonsterType.Bug:
     case StageType.Farm:
       return '#A8B820';
     case MonsterType.Rock:
+    case StageType.Cave:
     case StageType.Mountain:
       return '#B8A038';
     case MonsterType.Ghost:
@@ -146,7 +167,6 @@ export const calculateBg = (type: string = 'none'): string => {
     case StageType.Space:
       return '#7038F8';
     case MonsterType.Dark:
-    case StageType.Graveyard:
       return '#705848';
     case MonsterType.Steel:
     case StageType.Factory:
@@ -156,10 +176,23 @@ export const calculateBg = (type: string = 'none'): string => {
     case MonsterType.Normal:
     case StageType.City:
       return '#A8A878';
+    case EffectType.Heal:
+      return '#78C850';
+    case EffectType.HighCrit:
+      return '#FFD700';
+    case EffectType.SelfDamage:
+      return '#D02090';
+    case EffectType.MoveFirst:
+      return '#00CED1';
+    case EffectType.MoveLast:
+      return '#8B4513';
+    case EffectType.Sleeping:
+      return '#4682B4';
     default:
       return '#A8A878';
   }
 };
+
 
 
 export const transformManyPokemonDTO = (pokemons: MonsterDTO[]): Monster[] => {
@@ -204,7 +237,7 @@ export const transformPokemonDTO = (pokemon: MonsterDTO): Monster => {
   );
 };
 
-export const createNewPokemon = (monster: Monster, monsterSpecialId: number | null = null): Monster => {
+export const createNewPokemon = (monster: Monster, monsterSpecialId: number | null = null, level: number | null = null): Monster => {
   const newMonster =  new Monster(
     monster.id,
     monster.name,
@@ -215,9 +248,9 @@ export const createNewPokemon = (monster: Monster, monsterSpecialId: number | nu
     monster.baseSpecialDefense,
     monster.baseSpeed,
     monster.expRate,
-    monster.pokemonMoves,
+    monster.learnset,
     monster.types,
-    monster.level,
+    level || monster.level,
     monster.stages,
     monster.catchRate,
     monster.evolutions
