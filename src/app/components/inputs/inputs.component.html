@@ -1,0 +1,70 @@
+<div class="battle-screen__actions">
+    @if (confirmRun && game.playerAction === null) {
+        <div class="battle-screen__item-options">
+            <button (click)="game.setAction(game.ActionType.Run)">Go back to home page</button>
+            <button (click)="confirmRun = false">Stay to fight</button>
+        </div>
+    }
+    @if (!game.playerAction && game.dialogues.length === 0 && game.playerMonster.learnMovewaitList.length === 0 && !game.checkPokemonEvolution()) {
+        <button class="battle-screen__actions-attack" (click)="game.setAction(game.ActionType.SelectAttack)">Attack</button>
+        <button class="battle-screen__actions-item" (click)="game.setAction(game.ActionType.SelectItemType)">Item</button>
+        <button class="battle-screen__actions-swap" (click)="game.setAction(game.ActionType.SelectSwap)">Swap</button>
+        <button class="battle-screen__actions-run" (click)="confirmRun = true">Run</button>
+    }
+    
+    @else if (game.playerAction === game.ActionType.SelectAttack) {
+        <div class="battle-screen__attack-options">
+            @for (pokemonMove of game.playerMonster.pokemonMoves; track pokemonMove.id) {
+                <button
+                    class="battle-screen__attack-options-attack"
+                    (click)="game.playerSelectedAttack = pokemonMove.move; game.setAction(game.ActionType.Attack)"
+                    [style.background]="calculateBg(pokemonMove.move.type.name)">
+                    <span>{{ pokemonMove.move.name }}</span>
+                    <span>{{ pokemonMove.move.power }} - {{ pokemonMove.move.type.name }}</span>
+                </button>
+            }
+        </div>
+    }
+    @else if (game.playerAction === game.ActionType.SelectItemType) {
+        <div class="battle-screen__item-options">
+            <button (click)="game.chooseItemType('pokeball')">Pokeballs</button>
+            <button (click)="game.chooseItemType('heal')">Healing Items</button>
+        </div>
+    }
+    @else if (game.playerAction === game.ActionType.SelectItem) {
+        <div class="battle-screen__item-options">
+            @for (item of game.playerSelectedBag; track item.id) {
+                <button
+                    (click)="game.playerSelectItem(item)"
+                    [style.background]="calculateBg('normal')">
+                    {{ item.name }}
+                </button>
+            }
+        </div>
+    }
+    @else if (game.playerAction === game.ActionType.SelectSwap) {
+        <div class="battle-screen__swap-options">
+            @for (monster of game.player.monsters; track monster.id) {
+                @if (monster.hp > 0 && monster.specialId !== game.playerMonster.specialId) {
+                    <button
+                        (click)="game.playerSelectedMonster = monster; game.setAction(game.ActionType.Swap)"
+                        [style.background]="calculateBg(monster.types[0].name)">
+                        <img [src]="'https://img.pokemondb.net/sprites/black-white/normal/'+monster.name.toLowerCase()+'.png'">
+                        <span>{{ monster.name }}</span>
+                    </button>
+                }
+                @else {
+                    <button disabled>
+                        <img [src]="'https://img.pokemondb.net/sprites/black-white/normal/'+monster.name.toLowerCase()+'.png'">
+                        <span>{{ monster.name }}</span>
+                    </button>
+                }
+            }
+        </div>
+    }
+    
+</div>
+
+@if (game.playerAction && game.turnEnded) {
+    <button class="battle-screen__cancel" (click)="game.playerAction = null">Cancel</button>
+}
