@@ -118,9 +118,12 @@ export class GameComponent implements OnInit {
     if (this.game.battleCount % 6 === 0) {
       const stageIndex = Math.floor(Math.random() * this.stages.length);
       this.currentStage = transformStageDTO(this.stages[stageIndex]);
-      console.log(this.currentStage);
       this.game.stage = this.currentStage;
-      this.spawnableMonsters = this.currentStage.pokemons;
+      const evolutions = this.currentStage.pokemons.map((monster: Monster) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
+
+      this.spawnableMonsters = this.currentStage?.pokemons.filter(
+        (monster: Monster) => !evolutions.includes(monster.id)
+      );
     }
 
     const evolutions = [...this.game.stage.pokemons].map((monster: Monster) => monster.evolutions[0]).filter((evo: Evolution) => evo !== undefined && evo.levelRequired <= this.game.enemyLevel);
