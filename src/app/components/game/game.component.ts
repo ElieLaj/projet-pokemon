@@ -97,20 +97,33 @@ export class GameComponent implements OnInit {
   }
 
   onNextEnemy() {
-    const middleStageEvolutions = this.monsters.map((monster: Monster) => 
-        monster.evolutions[0]?.levelRequired < this.game.enemyLevel ? monster.evolutions[0]?.toPokemon.id : 0)
-        .filter((id: number) => id !== undefined && id !== 0);
+    const middleStageEvolutions = this.monsters
+    .filter((monster: Monster) => 
+      monster.evolutions[0]?.levelRequired <= this.game.enemyLevel
+    )
+    .map((monster: Monster) => monster.evolutions[0]?.toPokemon.id)
+    .filter((id: number | undefined) => id !== undefined);
 
     if (this.game.battleCount % 6 === 0) {
-      const stageIndex = Math.floor(Math.random() * (this.stages.length - 1));
+      const stageIndex = Math.floor(Math.random() * this.stages.length);
       this.currentStage = this.stages[stageIndex];
       this.game.stage = this.currentStage;
-      this.spawnableMonsters = transformManyPokemonDTO(this.currentStage?.pokemons).filter((monster: Monster) => this.spawnableMonsters.find((m: Monster) => m.id === monster.id) === undefined);
+      this.spawnableMonsters = transformManyPokemonDTO(this.currentStage?.pokemons).filter(
+        (monster: Monster) => !this.spawnableMonsters.find((m: Monster) => m.id === monster.id)
+      );
     }
 
-    this.spawnableMonsters.concat([...this.monsters].filter((monster: Monster) => middleStageEvolutions.includes(monster.id) && this.spawnableMonsters.find((m: Monster) => m.id === monster.id) === undefined));
+    const evolvedMonsters = this.monsters.filter(
+      (monster: Monster) =>
+      middleStageEvolutions.includes(monster.id) &&
+      !this.spawnableMonsters.find((m: Monster) => m.id === monster.id)
+    );
+
+   this.spawnableMonsters = [...this.spawnableMonsters, ...(evolvedMonsters)];
+
     const nextEnemy = this.spawnableMonsters[Math.floor(Math.random() * this.spawnableMonsters.length)];
     const nextEnemyCopy = createNewPokemon(nextEnemy, null, this.game.enemyLevel);
+    
     this.game.enemyMonster = nextEnemyCopy;
     this.game.dialogues.push(`A new enemy appears: ${nextEnemyCopy.name}!`);
   }
