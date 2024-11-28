@@ -12,7 +12,7 @@ Bienvenue sur l'application Angular qui permet de jouer à des combats de Pokém
 ## Déploiement
 
 L'application est déployée à l'adresse suivante (si disponible) :  
-[URL de l'application](https://ton-url-angular.com)
+[URL de l'application](https://projet-pokemon-angular.vercel.app/)
 
 ## Technologies utilisées
 
