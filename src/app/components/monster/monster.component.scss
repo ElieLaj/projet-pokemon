@@ -1,22 +1,31 @@
+$shadow-light: rgba(0, 0, 0, 0.5);
+$shadow-dark: rgba(0, 0, 0, 0.7);
+$bg-dark: rgba(0, 0, 0, 0.7);
+$bg-light: rgba(0, 0, 0, 0.8);
+$border-radius: 10px;
+$transition-speed: 0.3s;
+$text-shadow: 2px 2px 2px $shadow-dark;
+
 .monster {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(0, 0, 0, 0.7);
+    background: $bg-dark;
     border-radius: 15px;
     padding: 15px;
     text-align: center;
     color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 16px $shadow-light;
     font-family: 'Arial', sans-serif;
-    transition: 0.5s ease;
+    transition: $transition-speed ease;
 
     &__image {
         margin-bottom: 15px;
-        border-radius: 10px;
+        border-radius: $border-radius;
         z-index: 2;
         object-fit: contain;
     }
+
     &__info {
         width: 100%;
         font-size: 1rem;
@@ -24,46 +33,40 @@
         &-infos {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 1rem;
             margin-bottom: 5px;
         }
         &-effect {
             padding: 3px 10px;
-            border-radius: 10px;
+            border-radius: $border-radius;
             font-size: 0.8rem;
             text-transform: capitalize;
-            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.9);
+            text-shadow: $text-shadow;
         }
     }
 
-    &__details {
+    &__details,
+    &__hp-bar-container,
+    &__exp-bar-container {
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition: opacity $transition-speed ease, visibility $transition-speed ease;
+    }
+
+    &__details {
         position: absolute;
-        background: rgba(0, 0, 0, 0.8);
+        background: $bg-light;
         padding: 10px;
-        border-radius: 10px;
+        border-radius: $border-radius;
         z-index: 10;
         pointer-events: none;
         transform: translate(-50%);
         max-width: 600px;
-
-        &.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        &.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
     }
 
     &__name {
         font-weight: bold;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        text-shadow: 2px 2px 5px $shadow-dark;
     }
 
     &__stats {
@@ -75,35 +78,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-
             span:first-child {
                 font-weight: bold;
             }
         }
     }
 
-    &__hp-bar-container {
-        width: 100%;
-        height: 8px;
-        background: #333;
-        border-radius: 4px;
-        overflow: hidden;
-        margin-top: 5px;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        &.visible {
-            opacity: 1;
-            visibility: visible;;
-        }
-    }
-
-    &__hp-bar {
-        height: 100%;
-        transition: width 0.5s ease-in-out;
-    }
-
+    &__hp-bar-container,
     &__exp-bar-container {
         width: 100%;
         height: 8px;
@@ -111,16 +92,10 @@
         border-radius: 4px;
         overflow: hidden;
         margin-top: 5px;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        &.visible {
-            opacity: 1;
-            visibility: visible;;
-        }
+        box-shadow: inset 0 2px 4px $shadow-light;
     }
 
+    &__hp-bar,
     &__exp-bar {
         height: 100%;
         transition: width 0.5s ease-in-out;
@@ -134,14 +109,26 @@
         align-items: center;
         flex-wrap: wrap;
         max-width: 600px;
-
     }
 
-    &__type {        
+    &__type {
         padding: 5px 10px;
-        border-radius: 10px;
+        border-radius: $border-radius;
         font-size: 0.8rem;
         text-transform: capitalize;
-        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.9);
+        text-shadow: $text-shadow;
+    }
+
+    &__details.visible,
+    &__hp-bar-container.visible,
+    &__exp-bar-container.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &__details.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
     }
 }
