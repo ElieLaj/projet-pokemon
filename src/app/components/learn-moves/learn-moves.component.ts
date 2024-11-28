@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Game } from '../../models/game.model';
 import { calculateBg } from '../../utils/game.utils';
+import { Monster } from '../../models/monster/monster.model';
 @Component({
   selector: 'app-learn-moves',
   standalone: true,
@@ -10,6 +11,7 @@ import { calculateBg } from '../../utils/game.utils';
 })
 export class LearnMovesComponent {
   @Input() game!: Game;
+  @Input() monster!: Monster;
   
   calculateBg = calculateBg;
 }

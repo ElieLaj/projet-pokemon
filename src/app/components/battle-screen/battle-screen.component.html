@@ -31,7 +31,7 @@
         <div class="battle-screen__inputs">
             @for (monster of game.player.monsters; track monster.id) {
                 @if (monster.learnMovewaitList.length > 0) {
-                    <app-learn-moves [game]="game"></app-learn-moves>
+                    <app-learn-moves [game]="game" [monster]="monster"></app-learn-moves>
                 }
                 @else if (monster.canEvolve) {
                 <div class="battle-screen__attack-options">

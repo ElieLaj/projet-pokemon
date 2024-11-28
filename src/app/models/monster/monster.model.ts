@@ -40,6 +40,7 @@ export class Monster {
   specialId!: number;
 
   learnMovewaitList: PokemonMove[] = [];
+  selectedUnlearnMove: PokemonMove | null = null;
 
   evolutions: Evolution[];
 

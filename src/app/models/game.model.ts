@@ -93,9 +93,9 @@ export class Game {
           this.playerAction = null;
           this.enemyAction = null;
           this.battleCount++;
-          this.player.money += this.enemyLevel * 15;
+          this.player.money += this.enemyLevel * 17;
           this.enemyLevel = Math.floor(this.battleCount / 3) + 5;
-          this.shopOpen = this.battleCount % 3 === 0;
+          this.shopOpen = this.battleCount % 4 === 0;
           if (this.battleCount % 6 === 0) {
             for(const pokemon of this.player.monsters) {
               pokemon.hp = pokemon.maxHp;
@@ -175,6 +175,13 @@ export class Game {
 
   performAttack(attacker: Monster, defender: Monster, selectedAttack: Move | null, isPlayer: boolean) {
 
+    if (attacker.effect?.name === EffectType.Flinched) {
+      attacker.removeEffect(this.dialogues);
+      if (isPlayer) this.playerAction = null;
+      else this.enemyAction = null;
+      return;
+    }
+
     attacker.tryRemovingEffect(this.dialogues);
 
     const paralyzed = attacker.effect?.name === 'Paralyzed' && Math.random() < 0.25;
@@ -189,13 +196,6 @@ export class Game {
         this.lastTurn = TurnType.Enemy;
         this.turn = TurnType.Dialogue;
       }
-      return;
-    }
-
-    if (attacker.effect?.name === 'Flinched') {
-      attacker.removeEffect(this.dialogues);
-      if (isPlayer) this.playerAction = null;
-      else this.enemyAction = null;
       return;
     }
 

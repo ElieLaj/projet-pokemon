@@ -85,5 +85,10 @@
         &-attack {
             background: linear-gradient(90deg, #ff4e4e, #ff6a6a);
         }
+        .activated {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(255, 78, 78, 0.5);
+            padding: 12px 17px;
+        }
     }
 }
