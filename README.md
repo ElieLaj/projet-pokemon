@@ -1,27 +1,30 @@
-# ProjetPokemon
+# Pokémon Combat - Application Frontend Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.12.
+Bienvenue sur l'application Angular qui permet de jouer à des combats de Pokémons ! Cette application se connecte à une API Spring Boot pour récupérer les informations des Pokémons et simuler des combats entre eux.
 
-## Development server
+## Fonctionnalités
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Voir la liste des Pokémons disponibles** : Affiche les Pokémons récupérés depuis l'API.
+- **Choisir deux Pokémons pour un combat** : Permet à l'utilisateur de sélectionner deux Pokémons pour les faire combattre.
+- **Simulation de combat** : Effectue un combat entre les deux Pokémons sélectionnés et affiche le résultat.
+- **Afficher les statistiques** : Visualise les statistiques de chaque Pokémon, comme la vie, les attaques et les points de défense.
 
-## Code scaffolding
+## Déploiement
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+L'application est déployée à l'adresse suivante (si disponible) :  
+[URL de l'application](https://ton-url-angular.com)
 
-## Build
+## Technologies utilisées
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Angular** pour le développement du frontend
+- **TypeScript** pour la logique de l'application
+- **HTML/CSS** pour la structure et le style de l'application
+- **RxJS** pour la gestion des flux de données asynchrones
+- **Bootstrap/TailwindCSS** pour le design et la mise en page
+- **Spring Boot** pour l'API backend (voir [Pokemon API](https://pokemon-api-spring.onrender.com/api/v1))
 
-## Running unit tests
+## Installation et configuration locale
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Clonez ce repository :
+   ```bash
+   git clone https://github.com/votre-utilisateur/pokemon-combat-angular.git
