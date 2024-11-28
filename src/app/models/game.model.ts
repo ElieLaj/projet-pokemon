@@ -132,7 +132,7 @@ export class Game {
     if (
       (
         this.playerAction != ActionType.Attack || 
-        (this.playerSelectedAttack?.moveEffects[0].effect.name === EffectType.MoveFirst && this.enemySelectedAttack?.moveEffects[0].effect.name !== EffectType.MoveFirst)) && 
+        (this.playerSelectedAttack?.moveEffects[0]?.effect.name === EffectType.MoveFirst && this.enemySelectedAttack?.moveEffects[0]?.effect.name !== EffectType.MoveFirst)) && 
         this.playerAction != null 
       ) 
     {
