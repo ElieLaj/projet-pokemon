@@ -9,7 +9,9 @@
     <div class="game-start-screen">
         <div class="game-start-screen__content">
             <h1>The PokeDev Journey</h1>
-            <app-display-stage [stage]="currentStage" />
+            @if (game?.stage) {
+                <app-display-stage [stage]="game.stage" />
+            }
             @if (lastScore) {
                 <h1>Your last score was: {{ lastScore }}</h1>
             }

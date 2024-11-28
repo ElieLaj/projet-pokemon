@@ -5,6 +5,8 @@ import { Move } from '../models/monster/move.model';
 import { PokemonMove } from '../models/pokemonMove.model';
 import { EvolutionDTO } from '../models/monster/evolutionDTO.model';
 import { Evolution } from '../models/monster/evolution.model';
+import { StageDTO } from '../models/stageDTO.model';
+import { Stage } from '../models/stage.model';
 
 export enum TurnType {
     Player = 'Player',
@@ -259,6 +261,14 @@ export const createNewPokemon = (monster: Monster, monsterSpecialId: number | nu
     newMonster.specialId = monsterSpecialId;
   }
   return newMonster;
+}
+
+export const transformStageDTO = (stage: StageDTO): Stage => {
+  return {
+    id: stage.id,
+    name: stage.name,
+    pokemons: transformManyPokemonDTO(stage.pokemons)
+  };
 }
 
 export const transformPokemonEvolutionDTO = (evolution: EvolutionDTO): Evolution => {
