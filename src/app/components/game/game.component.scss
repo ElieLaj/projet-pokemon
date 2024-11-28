@@ -37,16 +37,22 @@
         align-items: center;
         text-align: center;
 
+
         h1 {
             font-size: 3rem;
             margin-bottom: 20px;
             text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
         }
 
-        p {
+        &-bio {
             font-size: 1.2rem;
             margin-bottom: 40px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        &-time {
+            font-size: 12px;
+            color: #9f9e9e
         }
 
         button {

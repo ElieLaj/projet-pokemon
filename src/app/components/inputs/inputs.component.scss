@@ -32,6 +32,12 @@
             }
         }
 
+        @media (max-width: 767px) {
+            button {
+                width: 100px;
+            }
+        }
+
         &-attack {
             background: linear-gradient(90deg, #ff4e4e, #ff6a6a);
         }

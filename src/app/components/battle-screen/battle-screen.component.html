@@ -13,12 +13,14 @@
             <div class="battle-screen__player">
                 <app-monster
                     [monster]="game.playerMonster"
+                    [size]="this.sm || this.xs ? 'small' : 'normal'"
                     [active]="true">
                 </app-monster>
             </div>
             <div class="battle-screen__enemy">
                 <app-monster
                     [monster]="game.enemyMonster"
+                    [size]="this.sm || this.xs ? 'small' : 'normal'"
                     [active]="true"
                     [isPlayer]="false">
                 </app-monster>
@@ -56,14 +58,7 @@
             
             
         </div>
-        
-        <div class="battle-screen__status">
-            @if (game.playerMonster.hp <= 0) {
-                <h2>Game Over</h2>
-            } @else if (game.enemyMonster.hp <= 0) {
-                <h2>Victory</h2>
-            }
-        </div>
+    
     </div>
     @if (game.shopOpen) {
         <app-shop [player]="game.player" [balls]="game.balls" [hItems]="game.hItems" (exitShop)="game.shopOpen = false"></app-shop>            

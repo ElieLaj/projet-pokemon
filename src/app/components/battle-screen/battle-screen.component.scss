@@ -12,6 +12,25 @@
     box-sizing: border-box;
     overflow: auto;
 
+    
+         &::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(81, 196, 130, 0.7);
+            border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgba(81, 196, 130, 1);
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #1e1e2f;
+        }
+
     h1 {
         font-size: 2.5rem;
         margin-bottom: 20px;

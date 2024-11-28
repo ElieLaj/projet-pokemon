@@ -25,6 +25,12 @@ export class BattleScreenComponent {
   @Output() changeEnemyMonster = new EventEmitter<any>();
   @Output() playerLost = new EventEmitter<number>();
 
+  xs: boolean = false;
+  sm: boolean = false;
+  md: boolean = false;
+  lg: boolean = false;
+  xl: boolean = false;
+  xxl: boolean = false;
 
   ngDoCheck() {
     this.game.checkTurn();
@@ -35,6 +41,14 @@ export class BattleScreenComponent {
       this.changeEnemyMonster.emit();
       this.game.enemyLost = false;
     }
+    this.xs = window.innerWidth < 640
+    this.sm = window.innerWidth >= 640 && window.innerWidth < 768
+    this.md = window.innerWidth >= 768 && window.innerWidth < 1024
+    this.lg = window.innerWidth >= 1024 && window.innerWidth < 1280
+    this.xl = window.innerWidth >= 1280 && window.innerWidth < 1536
+    this.xxl = window.innerWidth >= 1536
   }
+
+  
 
 }

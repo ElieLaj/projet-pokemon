@@ -69,9 +69,8 @@ export class MonsterComponent implements OnInit, OnChanges {
   changeSize() {
     switch (this.size) {
       case 'small':
-          this.imageSize = '50px';
+          this.imageSize = '75px';
           this.componentSize = '100px';
-          this.detailsPosition = '90px';
           this.nameSize = '1rem';
           this.statSize = '13px';
           this.showHp = false;
@@ -80,14 +79,12 @@ export class MonsterComponent implements OnInit, OnChanges {
       case 'normal':
           this.imageSize = '120px';
           this.componentSize = '250px';
-          this.detailsPosition = '220px';
           this.nameSize = '1.5rem';
           this.statSize = '1rem';
           break;
       case 'big':
           this.imageSize = '200px';
           this.componentSize = '400px';
-          this.detailsPosition = '360px';
           this.nameSize = '2rem';
           this.statSize = '1.5rem';
           break;
