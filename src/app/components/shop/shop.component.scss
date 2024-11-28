@@ -1,22 +1,20 @@
-/* Shop container */
 .shop {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Transparent black background */
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Ensure it is above everything */
-    font-family: 'Press Start 2P', sans-serif; /* Typographie rétro */
+    z-index: 9999;
+    font-family: 'Press Start 2P', sans-serif; 
     padding: 20px;
 
 }
 
-/* Shop header */
 .shop__header {
     display: flex;
     justify-content: space-between;
@@ -36,7 +34,6 @@
   color: gold;
 }
 
-/* Shop items container */
 .shop__items {
   display: flex;
   flex-wrap: wrap;
@@ -48,23 +45,6 @@
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-      &::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(81, 196, 130, 0.7);
-        border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-        background: rgba(81, 196, 130, 1);
-    }
-
-    &::-webkit-scrollbar-track {
-        background: #1e1e2f;
-    }
 }
 
 .shop__heals, .shop__balls {
@@ -76,7 +56,6 @@
   padding: 10px;
 }
 
-/* Individual item styles */
 .shop__item {
   background-color: white;
   padding: 15px;
@@ -90,7 +69,6 @@
   justify-content: space-between;
 }
 
-/* Item header */
 .shop__item-header {
   width: 100%;
   display: flex;
@@ -112,7 +90,6 @@
   margin-bottom: 10px;
 }
 
-/* Item content */
 .shop__item-content {
   display: flex;
   flex-direction: column;
@@ -153,7 +130,6 @@
   background-color: #218838;
 }
 
-/* Exit button */
 .shop__exit {
   padding: 10px 20px;
   font-size: 1rem;
