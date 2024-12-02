@@ -2,20 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Monster } from '../../models/monster/monster.model';
 import { MonsterDTO } from '../../models/monster/monsterDTO.model';
-import { BattleScreenComponent } from '../battle-screen/battle-screen.component';
-import { MonsterComponent } from '../monster/monster.component';
+import { BattleScreenComponent } from '../../components/battle-screen/battle-screen.component';
+import { MonsterComponent } from '../../components/monster/monster.component';
 import { api } from '../../../plugins/api';
 import { transformManyPokemonDTO, transformManyPokemonEvolutionDTO, createNewPokemon, transformStageDTO } from '../../utils/game.utils';
-import { Game } from '../../models/game.model';
-import { Trainer } from '../../models/trainer.model';
-import { Bag } from '../../models/bag.model';
-import { Stage } from '../../models/stage.model';
-import { DisplayStageComponent } from '../display-stage/display-stage.component';
+import { Game } from '../../models/game/game.model';
+import { Trainer } from '../../models/player/trainer.model';
+import { Bag } from '../../models/player/bag.model';
+import { Stage } from '../../models/game/stage.model';
+import { DisplayStageComponent } from '../../components/display-stage/display-stage.component';
 import { forkJoin } from 'rxjs';
-import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
-import { Pokeball } from '../../models/pokeball.model';
-import { HealingItem } from '../../models/healingItem.model';
-import { StageDTO } from '../../models/stageDTO.model';
+import { PokemonDisplayComponent } from '../../components/pokemon-display/pokemon-display.component';
+import { Pokeball } from '../../models/item/pokeball.model';
+import { HealingItem } from '../../models/item/healingItem.model';
+import { StageDTO } from '../../models/game/stageDTO.model';
 import { Evolution } from '../../models/monster/evolution.model';
 
 @Component({
@@ -84,10 +84,7 @@ export class GameComponent implements OnInit {
   }
 
   createGame(stages: StageDTO[]) {
-    let stageIndex = Math.floor(Math.random() * stages.length);
-    while (stages[stageIndex].pokemons.length === 0) {
-      stageIndex = Math.floor(Math.random() * stages.length);
-    }
+    const stageIndex = 5;
     const selectedStageDTO = stages[stageIndex];
 
     this.currentStage = transformStageDTO(selectedStageDTO);
@@ -119,11 +116,6 @@ export class GameComponent implements OnInit {
       const stageIndex = Math.floor(Math.random() * this.stages.length);
       this.currentStage = transformStageDTO(this.stages[stageIndex]);
       this.game.stage = this.currentStage;
-      const evolutions = this.currentStage.pokemons.map((monster: Monster) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
-
-      this.spawnableMonsters = this.currentStage?.pokemons.filter(
-        (monster: Monster) => !evolutions.includes(monster.id)
-      );
     }
 
     const evolutions = [...this.game.stage.pokemons].map((monster: Monster) => monster.evolutions[0]).filter((evo: Evolution) => evo !== undefined && evo.levelRequired <= this.game.enemyLevel);
@@ -179,6 +171,7 @@ export class GameComponent implements OnInit {
 
       this.player = new Trainer('Player', [...selectedMonsters], 500, new Bag([], []));
       this.player.bag.addHealingItem(this.healingItems.sort((a, b) => a.healAmount - b.healAmount)[0], 5);
+            this.player.bag.addPokeball(this.pokeballs.sort((a, b) => b.catchRate - a.catchRate)[0], 10);
       this.player.bag.addPokeball(this.pokeballs.sort((a, b) => a.catchRate - b.catchRate)[0], 10);
       this.game = new Game(this.player, this.enemyMonster);
       this.game.stage = this.currentStage;

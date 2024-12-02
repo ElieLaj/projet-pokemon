@@ -1,5 +1,5 @@
-import { PokemonMove } from "../pokemonMove.model";
-import { Stage } from "../stage.model";
+import { PokemonMove } from "./pokemonMove.model";
+import { Stage } from "../game/stage.model";
 import { EvolutionDTO } from "./evolutionDTO.model";
 import { Type } from "./type.model";
 

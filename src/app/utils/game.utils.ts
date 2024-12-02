@@ -2,11 +2,10 @@ import { EffectType, MonsterType, StageType } from './monster.utils';
 import { MonsterDTO } from '../models/monster/monsterDTO.model';
 import { Monster } from '../models/monster/monster.model';
 import { Move } from '../models/monster/move.model';
-import { PokemonMove } from '../models/pokemonMove.model';
 import { EvolutionDTO } from '../models/monster/evolutionDTO.model';
 import { Evolution } from '../models/monster/evolution.model';
-import { StageDTO } from '../models/stageDTO.model';
-import { Stage } from '../models/stage.model';
+import { StageDTO } from '../models/game/stageDTO.model';
+import { Stage } from '../models/game/stage.model';
 
 export enum TurnType {
     Player = 'Player',

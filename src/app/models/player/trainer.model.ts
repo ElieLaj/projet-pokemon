@@ -1,6 +1,6 @@
 import { Bag } from "./bag.model";
-import { Monster } from "./monster/monster.model";
-import { createNewPokemon } from "../utils/game.utils";
+import { Monster } from "../monster/monster.model";
+import { createNewPokemon } from "../../utils/game.utils";
 
 export class Trainer {
     name: string;

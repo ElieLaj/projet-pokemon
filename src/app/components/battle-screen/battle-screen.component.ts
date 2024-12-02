@@ -3,7 +3,7 @@ import { Monster } from '../../models/monster/monster.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { ActionType, calculateBg } from '../../utils/game.utils';
 import { DialogueComponent } from "../dialogue/dialogue.component";
-import { Game } from '../../models/game.model';
+import { Game } from '../../models/game/game.model';
 import { DisplayStageComponent } from "../display-stage/display-stage.component";
 import { ShopComponent } from '../shop/shop.component';
 import { LearnMovesComponent } from "../learn-moves/learn-moves.component";

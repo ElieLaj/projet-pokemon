@@ -1,14 +1,13 @@
-import { ActionType, calculateDamage, TurnType, createNewPokemon } from "../utils/game.utils";
-import { EffectType } from "../utils/monster.utils";
-import { HealingItem } from "./healingItem.model";
-import { Item } from "./item.model";
-import { Monster } from "./monster/monster.model";
-import { Move } from "./monster/move.model";
-import { MoveEffect } from "./monster/moveEffect.model";
-import { Pokeball } from "./pokeball.model";
-import { PokemonMove } from "./pokemonMove.model";
+import { ActionType, calculateDamage, TurnType, createNewPokemon } from "../../utils/game.utils";
+import { EffectType } from "../../utils/monster.utils";
+import { HealingItem } from "../item/healingItem.model";
+import { Item } from "../item/item.model";
+import { Monster } from "../monster/monster.model";
+import { Move } from "../monster/move.model";
+import { Pokeball } from "../item/pokeball.model";
+import { PokemonMove } from "../monster/pokemonMove.model";
 import { Stage } from "./stage.model";
-import { Trainer } from "./trainer.model";
+import { Trainer } from "../player/trainer.model";
 
 export class Game {
   player: Trainer;

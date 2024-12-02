@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Stage } from '../../models/stage.model';
+import { Stage } from '../../models/game/stage.model';
 import { PokemonDisplayComponent } from "../pokemon-display/pokemon-display.component";
 import { transformManyPokemonDTO } from '../../utils/game.utils';
 

@@ -1,7 +1,7 @@
-import { HealingItem } from "./healingItem.model";
-import { Item } from "./item.model";
-import { Monster } from "./monster/monster.model";
-import { Pokeball } from "./pokeball.model";
+import { HealingItem } from "../item/healingItem.model";
+import { Item } from "../item/item.model";
+import { Monster } from "../monster/monster.model";
+import { Pokeball } from "../item/pokeball.model";
 import { Trainer } from "./trainer.model";
 
 export class Bag {

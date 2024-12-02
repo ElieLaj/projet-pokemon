@@ -9,7 +9,7 @@ import { MonsterDTO } from '../../models/monster/monsterDTO.model';
 import { MonsterComponent } from '../monster/monster.component';
 import { Move } from '../../models/monster/move.model';
 import { PokemonDisplayComponent } from '../pokemon-display/pokemon-display.component';
-import { Category } from '../../models/category.model';
+import { Category } from '../../models/monster/category.model';
 import { Effect } from '../../models/monster/effect.model';
 import { Stage } from '../../models/stage.model';
 import { forkJoin } from 'rxjs';

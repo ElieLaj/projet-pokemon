@@ -1,6 +1,3 @@
-import { Monster } from "./monster/monster.model";
-import { Trainer } from "./trainer.model";
-
 export class Item {
 
     id: number;

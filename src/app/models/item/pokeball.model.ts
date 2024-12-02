@@ -1,6 +1,6 @@
 import { Item } from "./item.model";
-import { Monster } from "./monster/monster.model";
-import { Trainer } from "./trainer.model";
+import { Monster } from "../monster/monster.model";
+import { Trainer } from "../player/trainer.model";
 
 export class Pokeball extends Item {
 

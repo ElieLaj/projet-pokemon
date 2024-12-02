@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Pokeball } from '../../models/pokeball.model';
-import { HealingItem } from '../../models/healingItem.model';
-import { Trainer } from '../../models/trainer.model';
+import { Pokeball } from '../../models/item/pokeball.model';
+import { HealingItem } from '../../models/item/healingItem.model';
+import { Trainer } from '../../models/player/trainer.model';
 
 @Component({
   selector: 'app-shop',

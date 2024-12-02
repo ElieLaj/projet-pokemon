@@ -1,6 +1,6 @@
 import { Effect } from "./effect.model";
-import { PokemonMove } from "../pokemonMove.model";
-import { Stage } from "../stage.model";
+import { PokemonMove } from "./pokemonMove.model";
+import { Stage } from "../game/stage.model";
 import { Type } from "./type.model";
 import { transformManyPokemonDTO } from '../../utils/game.utils';
 import { Evolution } from "./evolution.model";
