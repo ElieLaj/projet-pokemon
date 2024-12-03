@@ -1,0 +1,103 @@
+.pokedex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #1e1e2f, #3e3e5e);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    gap: 20px;
+    height: calc(100vh - 60px);
+    box-sizing: border-box;
+    overflow: auto;
+    
+        &::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(81, 196, 130, 0.7);
+            border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgba(81, 196, 130, 1);
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #1e1e2f;
+        }
+
+    &__monsters {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px; 
+
+        transition: all 0.3s ease-in-out;
+
+        margin-bottom: 50px;
+    }
+
+    &__footer {
+        position: absolute;
+        bottom: 0;
+        font-size: 0.9rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+
+        p {
+            margin-bottom: 5px;
+        }
+    }
+
+    &__search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin: 10px 0;
+
+        input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            font-size: 1rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+
+            &::placeholder {
+                color: #bbb;
+                font-style: italic;
+            }
+
+            &:focus {
+                background: rgba(255, 255, 255, 0.2);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+                transform: scale(1.05);
+            }
+        }
+
+        .icon {
+            position: absolute;
+            right: 15px;
+            color: #bbb;
+            font-size: 1.2rem;
+            pointer-events: none;
+            transition: color 0.3s ease-in-out;
+
+            input:focus ~ & {
+                color: #fff;
+            }
+        }
+    }
+}

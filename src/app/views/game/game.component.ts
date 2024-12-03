@@ -5,7 +5,7 @@ import { MonsterDTO } from '../../models/monster/monsterDTO.model';
 import { BattleScreenComponent } from '../../components/battle-screen/battle-screen.component';
 import { MonsterComponent } from '../../components/monster/monster.component';
 import { api } from '../../../plugins/api';
-import { transformManyPokemonDTO, transformManyPokemonEvolutionDTO, createNewPokemon, transformStageDTO } from '../../utils/game.utils';
+import { transformManyPokemonDTO, createNewPokemon, transformStageDTO } from '../../utils/game.utils';
 import { Game } from '../../models/game/game.model';
 import { Trainer } from '../../models/player/trainer.model';
 import { Bag } from '../../models/player/bag.model';

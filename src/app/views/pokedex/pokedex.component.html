@@ -1,1 +1,23 @@
-<p>pokedex works!</p>
+    <div class="pokedex">
+        <div class="pokedex__monsters">
+            @if (monsters.length > 0) {
+                <div class="pokedex__search">
+                    <input class="" type="text" placeholder="Search..." [(ngModel)]="search"/>
+                </div>
+                <app-pokemon-display
+                  [monsters]="filteredMonsters" 
+                  [maxPokemonSize]="'normal'"
+                  [maxContainerWidth]="'90vw'"
+                  [style]="'dark'"
+                  (selectMonster)="viewMonster($event)"
+                  >
+                </app-pokemon-display>
+            }
+            @else {
+                <p>Loading pokemons...</p>
+            }
+        </div>
+        <div class="pokedex__footer">
+            <p>&copy; {{ currentYear }} - Elie Lajoinie</p>
+        </div>
+    </div>

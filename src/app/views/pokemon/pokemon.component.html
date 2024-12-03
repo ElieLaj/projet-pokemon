@@ -1,0 +1,63 @@
+<div class="pokemon">
+    @if(pokemon)
+    {
+        <div class="pokemon-details">
+            <div class="pokemon-details__header">
+                <h1>{{ pokemon.name }}</h1>
+                <img [src]="pokemonImage" [alt]="pokemon.name" />
+            </div>
+            <div class="pokemon-details__stats">
+                <div class="stat">
+                <p>HP :</p>
+                <span>{{ pokemon.hp }} / {{ pokemon.maxHp }}</span>
+                </div>
+                <div class="stat">
+                <p>Attack :</p>
+                <span>{{ pokemon.attack }}</span>
+                </div>
+                <div class="stat">
+                <p>Defense :</p>
+                <span>{{ pokemon.defense }}</span>
+                </div>
+                <div class="stat">
+                <p>Sp Attack :</p>
+                <span>{{ pokemon.specialAttack }}</span>
+                </div>
+                <div class="stat">
+                <p>Sp Defense :</p>
+                <span>{{ pokemon.specialDefense }}</span>
+                </div>
+                <div class="stat">
+                <p>Speed :</p>
+                <span>{{ pokemon.speed }}</span>
+                </div>
+            </div>
+            <div class="pokemon-details__types">
+                <h2>Types :</h2>
+                <div class="types">
+                    @for(type of pokemon.types; track type.id) {
+                    <span class="type" [style.background]="calculateBg(type.name)">{{ type.name }}</span>
+                    }
+                </div>
+            </div>
+            <div class="pokemon-details__moves">
+                <p>Moves :</p>
+                <ul>
+                    @for (pokemonMove of pokemonMoves; track pokemonMove.id) {
+                    <li><p>{{ pokemonMove.move.name }} (Level {{ pokemonMove.level }})</p><span [style.background]="calculateBg(pokemonMove.move.type.name)">{{ pokemonMove.move.type.name }}</span></li>
+                    }
+                </ul>
+            </div>
+            @if(pokemon.evolutions.length > 0) {
+                <div class="pokemon-details__evolutions">
+                <p>Evolutions :</p>
+                    <ul>
+                        <li>
+                            {{ pokemon.evolutions[0].toPokemon.name }} (Required level : {{ pokemon.evolutions[0].levelRequired }})
+                        </li>
+                    </ul>
+                </div>
+            }
+        </div>
+    }
+</div>
