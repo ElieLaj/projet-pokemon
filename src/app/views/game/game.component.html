@@ -15,20 +15,27 @@
             @if (lastScore) {
                 <h1>Your last score was: {{ lastScore }}</h1>
             }
-            <p class="game-start-screen__content-bio">I hope you can enjoy this game I made to test my knowledge as a Fullstack Developer!</p>
-            @if (stages.length > 0 && monsters.length > 0) {
-                @if(playerMonsters.length === 0){
-                    <button disabled>Select one or two pokemons</button>
+            @if (apiDown) {
+                <p class="game-start-screen__content-bio">Dû aux coûts d'hébergement d'une API et étant étudiant, je n'ai malheureusement pas pu continuer à héberger le serveur. 
+                    <br> Je m'excuse pour la gêne que cela pourrait causer et je reste disponible pour toute question ou pour fournir le code source du projet si vous souhaitez l'explorer ou l'héberger vous-même.
+                </p>
+
+            } @else {
+                <p class="game-start-screen__content-bio">I hope you can enjoy this game I made to test my knowledge as a Fullstack Developer!</p>
+                @if (stages.length > 0 && monsters.length > 0) {
+                    @if(playerMonsters.length === 0){
+                        <button disabled>Select one or two pokemons</button>
+                    }
+                    @else {
+                        <button (click)="onStartBattle()">Start Battle</button>
+                    }
                 }
                 @else {
-                    <button (click)="onStartBattle()">Start Battle</button>
+                    <button disabled>Game is still loading</button>
+                    <p class="game-start-screen__content-time">The wait time can extend to 1 or 2 minutes.</p>
                 }
-            }
-            
-            @else {
-                <button disabled>Game is still loading</button>
-                <p class="game-start-screen__content-time">The wait time can extend to 1 or 2 minutes.</p>
-            }
+            } 
+
         </div>
         <div class="game-start-screen__monsters">
             @if (stages.length > 0 && monsters.length > 0) {

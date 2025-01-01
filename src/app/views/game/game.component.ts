@@ -29,6 +29,8 @@ import { Evolution } from '../../models/monster/evolution.model';
 export class GameComponent implements OnInit {
   currentYear!: number;
 
+  apiDown: boolean = true;
+
   monstersDTO: MonsterDTO[] = [];
   monsters: Monster[] = [];
   spawnableMonsters: Monster[] = []
@@ -65,7 +67,7 @@ export class GameComponent implements OnInit {
       const evolutions = monsters.map((monster: MonsterDTO) => monster.evolutions[0]?.toPokemon.id).filter((id: number) => id !== undefined);
 
       this.monsters = transformManyPokemonDTO([...monsters].filter((monster: MonsterDTO) => !evolutions.includes(monster.id)));
-      this.stages = stages;
+      this.stages = stages.filter((stage: StageDTO) => stage.pokemons.length > 0);
       this.pokeballs = pokeballs;
       this.healingItems = healingItems;
 
@@ -84,7 +86,7 @@ export class GameComponent implements OnInit {
   }
 
   createGame(stages: StageDTO[]) {
-    const stageIndex = 5;
+    const stageIndex = Math.floor(Math.random() * stages.length);
     const selectedStageDTO = stages[stageIndex];
 
     this.currentStage = transformStageDTO(selectedStageDTO);
@@ -116,10 +118,13 @@ export class GameComponent implements OnInit {
       const stageIndex = Math.floor(Math.random() * this.stages.length);
       this.currentStage = transformStageDTO(this.stages[stageIndex]);
       this.game.stage = this.currentStage;
+      this.spawnableMonsters = []
     }
 
     const evolutions = [...this.game.stage.pokemons].map((monster: Monster) => monster.evolutions[0]).filter((evo: Evolution) => evo !== undefined && evo.levelRequired <= this.game.enemyLevel);
     this.middleStageMonsters = evolutions.map((evo: Evolution) => evo.toPokemon);
+
+    this.spawnableMonsters = [...this.game.stage.pokemons].filter((monster: Monster) => !this.middleStageMonsters.find((evo: Monster) => monster.id == evo.id))
 
     const evolvedMonsters = this.middleStageMonsters.filter(
       (monster: Monster) =>
